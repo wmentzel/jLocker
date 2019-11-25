@@ -1,155 +1,138 @@
-
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
 /**
- *
  * @author Willi
- * 
  * @version latest
  */
-public class Room extends javax.swing.JPanel
-{
+public class Room extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
      * by the compiler, even for minor changes. To avoid that it is set
      * by the programmer.
      */
     private static final long serialVersionUID = -859301949546702964L;
-    
+
     private String sClass;
     private String sName;
 
-    /** 
+    /**
      * Creates new form Room
+     *
      * @param name
-     * @param classname 
+     * @param classname
      */
-    public Room(String name, String classname)
-    {
+    public Room(String name, String classname) {
         initComponents();
 
         setCaption(name, classname);
     }
-    
+
     /**
      * XMLEncoder
      * Constructor
      */
-    public Room()
-    {}
-    
+    public Room() {
+    }
+
     /* *************************************************************************
      * Setter
      **************************************************************************/
-    
-    public final void setCaption(String name, String classname)
-    {
+
+    public final void setCaption(String name, String classname) {
         sName = name;
         sClass = classname;
-        
+
         String caption = "<html><div align=\"center\">" + sName;
 
         // if there was a class name specified
-        if(!sClass.equals(""))
-        {
+        if (!sClass.equals("")) {
             caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + sClass + "</div></div></html>";
         }
-        
+
         captionLabel.setText(caption);
-    }
-    
-    /**
-     *
-     * @param newname 
-     */
-    public void setRoomName(String newname)
-    {
-        sName = newname;
-    }
-    
-    /**
-     * XMLEncoder
-     * @param newname 
-     */
-    public void setSName(String newname)
-    {
-        sName = newname;
-    }
-    
-    /**
-     * XMLEncoder
-     * @param newname 
-     */
-    public void setSClass(String newname)
-    {
-        sClass = newname;
-    }
-    
-    /**
-     * 
-     */
-    public void setUpMouseListener()
-    {
-       if(this.getMouseListeners().length == 0)
-       {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) 
-                {
-                    captionLabelMouseReleased(evt);
-                }
-            });
-       }
-    }
-    
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-    /**
-     * XMLEncoder
-     * @return 
-     */
-    public String getSName() 
-    { 
-        return sName; 
-    }
-    
-    /**
-     * XMLEncoder
-     * @return 
-     */
-    public String getSClass() 
-    { 
-        return sClass; 
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public String getRoomName() 
-    { 
-        return sName; 
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public String getClassName() 
-    { 
-        return sClass; 
     }
 
     /**
-     * 
+     * @param newname
+     */
+    public void setRoomName(String newname) {
+        sName = newname;
+    }
+
+    /**
+     * XMLEncoder
+     *
+     * @param newname
+     */
+    public void setSName(String newname) {
+        sName = newname;
+    }
+
+    /**
+     * XMLEncoder
+     *
+     * @param newname
+     */
+    public void setSClass(String newname) {
+        sClass = newname;
+    }
+
+    /**
+     *
+     */
+    public void setUpMouseListener() {
+        if (this.getMouseListeners().length == 0) {
+            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
+                    captionLabelMouseReleased(evt);
+                }
+            });
+        }
+    }
+
+    /* *************************************************************************
+     * Getter
+     **************************************************************************/
+
+    /**
+     * XMLEncoder
+     *
+     * @return
+     */
+    public String getSName() {
+        return sName;
+    }
+
+    /**
+     * XMLEncoder
+     *
+     * @return
+     */
+    public String getSClass() {
+        return sClass;
+    }
+
+    /**
+     * @return
+     */
+    public String getRoomName() {
+        return sName;
+    }
+
+    /**
+     * @return
+     */
+    public String getClassName() {
+        return sClass;
+    }
+
+    /**
      * @param classname
      */
-    public void setClassName(String classname)
-    {
+    public void setClassName(String classname) {
         sClass = classname;
     }
 
@@ -160,8 +143,7 @@ public class Room extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         captionLabel = new javax.swing.JLabel();
 
@@ -171,10 +153,8 @@ public class Room extends javax.swing.JPanel
         captionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         captionLabel.setForeground(new java.awt.Color(255, 255, 255));
         captionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        captionLabel.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseReleased(java.awt.event.MouseEvent evt)
-            {
+        captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 captionLabelMouseReleased(evt);
             }
         });

@@ -13,46 +13,41 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 /**
- *
  * @author Willi
  */
-public class FloorDialog extends javax.swing.JDialog
-{
+public class FloorDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
 
     private final int bMode;
     private final DataManager dataManager;
-    
+
     /**
      * Creates new form FloorDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      * @param mode
      */
-    public FloorDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode)
-    {
+    public FloorDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         bMode = mode;
 
-        if(bMode == EDIT)
-        {
+        if (bMode == EDIT) {
             setTitle("Etagenname bearbeiten");
             entityNameTextField.setText(dataManager.getCurFloor().getName());
-        }
-        else
-        {
+        } else {
             setTitle("Etage hinzufügen");
         }
     }
@@ -64,8 +59,7 @@ public class FloorDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -92,10 +86,8 @@ public class FloorDialog extends javax.swing.JDialog
         centerPanel.add(entityNameTextField, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -104,10 +96,8 @@ public class FloorDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -122,12 +112,9 @@ public class FloorDialog extends javax.swing.JDialog
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        if(bMode == EDIT)
-        {
+        if (bMode == EDIT) {
             dataManager.getCurFloor().setName(entityNameTextField.getText());
-        }
-        else
-        {
+        } else {
             dataManager.getCurFloorList().add(new Floor(entityNameTextField.getText()));
             dataManager.setCurrentFloorIndex(dataManager.getCurFloorList().size() - 1);
 
@@ -140,7 +127,7 @@ public class FloorDialog extends javax.swing.JDialog
             dataManager.setCurrentLockerIndex(0);
         }
 
-        ((MainFrame)this.getParent()).setComboBoxes2CurIndizes();
+        ((MainFrame) this.getParent()).setComboBoxes2CurIndizes();
 
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed

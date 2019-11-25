@@ -14,11 +14,9 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 /**
- *
  * @author Willi
  */
-public class BuildingDialog extends javax.swing.JDialog
-{    
+public class BuildingDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
     private final DataManager dataManager;
@@ -26,33 +24,30 @@ public class BuildingDialog extends javax.swing.JDialog
 
     /**
      * Creates new form BuildingDialog
+     *
      * @param parent
      * @param modal
      * @param dataManager
      * @param mode
      */
-    public BuildingDialog(java.awt.Frame parent, boolean modal, DataManager dataManager, int mode)
-    {
+    public BuildingDialog(java.awt.Frame parent, boolean modal, DataManager dataManager, int mode) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // center dialog on screen
         setLocationRelativeTo(null);
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         this.mode = mode;
 
-        if(this.mode == EDIT)
-        {
+        if (this.mode == EDIT) {
             setTitle("Gebäudename bearbeiten");
             entityNameTextField.setText(dataManager.getCurBuilding().getName());
-        }
-        else
-        {
+        } else {
             setTitle("Gebäude hinzufügen");
         }
     }
@@ -64,8 +59,7 @@ public class BuildingDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -92,10 +86,8 @@ public class BuildingDialog extends javax.swing.JDialog
         centerPanel.add(entityNameTextField, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -104,10 +96,8 @@ public class BuildingDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -122,12 +112,9 @@ public class BuildingDialog extends javax.swing.JDialog
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        if(mode == EDIT)
-        {
+        if (mode == EDIT) {
             dataManager.getCurBuilding().setName(entityNameTextField.getText());
-        }
-        else
-        {
+        } else {
             dataManager.getBuildingList().add(new Building(entityNameTextField.getText(), ""));
             dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
 
@@ -143,7 +130,7 @@ public class BuildingDialog extends javax.swing.JDialog
             dataManager.setCurrentLockerIndex(0);
         }
 
-        ((MainFrame)this.getParent()).setComboBoxes2CurIndizes();
+        ((MainFrame) this.getParent()).setComboBoxes2CurIndizes();
 
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed

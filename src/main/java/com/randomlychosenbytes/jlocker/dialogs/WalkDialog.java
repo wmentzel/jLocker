@@ -7,52 +7,48 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import javax.swing.JOptionPane;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
+import javax.swing.*;
+
 /**
- *
  * @author Willi
  */
-public class WalkDialog extends javax.swing.JDialog
-{
+public class WalkDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
 
     final int bMode;
     DataManager dataManager;
-    
+
     /**
      * Creates new form WalkDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      * @param mode
      */
-    public WalkDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode)
-    {
+    public WalkDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         bMode = mode;
 
-        if(bMode == EDIT)
-        {
+        if (bMode == EDIT) {
             setTitle("Gangname bearbeiten");
             entityNameTextField.setText(dataManager.getCurWalk().getName());
-        }
-        else
-        {
+        } else {
             setTitle("Gang hinzufügen");
         }
     }
@@ -64,8 +60,7 @@ public class WalkDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -92,10 +87,8 @@ public class WalkDialog extends javax.swing.JDialog
         centerPanel.add(entityNameTextField, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -104,10 +97,8 @@ public class WalkDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -127,31 +118,27 @@ public class WalkDialog extends javax.swing.JDialog
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        if(bMode == EDIT)
-        {
+        if (bMode == EDIT) {
             dataManager.getCurWalk().setName(entityNameTextField.getText());
-        }
-        else
-        {
+        } else {
             String name = entityNameTextField.getText();
-            
-            if(name.equals(""))
-            {
+
+            if (name.equals("")) {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Namen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             dataManager.getCurWalkList().add(new Walk(name));
             dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
-            
+
             dataManager.getCurWalk().getManagementUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
             dataManager.setCurrentMUnitIndex(dataManager.getCurWalk().getManagementUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }
-        
-        ((MainFrame)this.getParent()).setComboBoxes2CurIndizes();
-        
+
+        ((MainFrame) this.getParent()).setComboBoxes2CurIndizes();
+
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

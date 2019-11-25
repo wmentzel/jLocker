@@ -6,39 +6,37 @@
 
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import java.awt.print.PrinterException;
-import java.util.LinkedList;
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.print.PrinterException;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- *
  * @author Mu
  */
-public class TasksFrame extends javax.swing.JFrame
-{
+public class TasksFrame extends javax.swing.JFrame {
     private final List<String> columnData;
     private final JTable table;
     private DefaultTableModel tablemodel;
     private final DataManager dataManager;
-    
+
     /**
      * Creates new form TasksFrame
+     *
      * @param dataManager
      */
-    public TasksFrame(DataManager dataManager)
-    {
+    public TasksFrame(DataManager dataManager) {
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
 
@@ -53,49 +51,44 @@ public class TasksFrame extends javax.swing.JFrame
 
         tableScrollPane.setViewportView(table);
     }
-    
+
     /**
-     * 
+     *
      */
-    private void createTableModel()
-    {
+    private void createTableModel() {
         List tableData = new LinkedList();
 
         List<Task> tasks = dataManager.getTasks();
-        
+
         final int numTasks = tasks.size();
-        
-        for (int t = 0; t < numTasks; t++)
-        {
+
+        for (int t = 0; t < numTasks; t++) {
             Task task = tasks.get(numTasks - t - 1);
-            
+
             List v = new LinkedList();
             v.add(task.getSDate());
             v.add(task.getSDescription());
             v.add(task.isDone());
             tableData.add(v);
         }
-        
+
         // Workaround to avoid obsolete Vector class
         Object tableDataArray[][] = new Object[tableData.size()][];
-        
-        for(int i = 0; i < tableData.size(); i++)
-        {
-            tableDataArray[i] = ((List)tableData.get(i)).toArray();
+
+        for (int i = 0; i < tableData.size(); i++) {
+            tableDataArray[i] = ((List) tableData.get(i)).toArray();
         }
-        
-        tablemodel = new DefaultTableModel(tableDataArray, columnData.toArray())
-        {
-            Class[] types = new Class[] 
-            { 
-                java.lang.String.class, 
-                java.lang.String.class, 
-                java.lang.Boolean.class 
-            };
+
+        tablemodel = new DefaultTableModel(tableDataArray, columnData.toArray()) {
+            Class[] types = new Class[]
+                    {
+                            java.lang.String.class,
+                            java.lang.String.class,
+                            java.lang.Boolean.class
+                    };
 
             @Override
-            public Class getColumnClass(int columnIndex)
-            {
+            public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
         };
@@ -211,24 +204,18 @@ public class TasksFrame extends javax.swing.JFrame
 
         final int size = table.getRowCount();
 
-        for(int i = 0; i < size; i++) 
-        {
-            if(!((Boolean) table.getValueAt(size - i - 1, 2)))
-            {
+        for (int i = 0; i < size; i++) {
+            if (!((Boolean) table.getValueAt(size - i - 1, 2))) {
                 newTasksList.add(tasks.get(i));
             }
         }
-        
-        if(newTasksList.size() == tasks.size())
-        {
+
+        if (newTasksList.size() == tasks.size()) {
             JOptionPane.showMessageDialog(null, "Sie haben keine Aufgaben ausgewählt!", "Löschen", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else
-        {
+        } else {
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle erledigten Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
-            if(answer == JOptionPane.YES_OPTION)
-            {
+            if (answer == JOptionPane.YES_OPTION) {
                 dataManager.setTaskList(newTasksList);
 
                 createTableModel();
@@ -239,14 +226,12 @@ public class TasksFrame extends javax.swing.JFrame
     private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deleteAllButtonActionPerformed
     {//GEN-HEADEREND:event_deleteAllButtonActionPerformed
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
-        
-        if(answer == JOptionPane.YES_OPTION)
-        {
-            while(tablemodel.getRowCount() > 0)
-            {
+
+        if (answer == JOptionPane.YES_OPTION) {
+            while (tablemodel.getRowCount() > 0) {
                 tablemodel.removeRow(0);
             }
-            
+
             dataManager.getTasks().clear();
             tableScrollPane.updateUI();
         }
@@ -254,12 +239,9 @@ public class TasksFrame extends javax.swing.JFrame
 
     private void printTasksButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printTasksButtonActionPerformed
     {//GEN-HEADEREND:event_printTasksButtonActionPerformed
-        try 
-        {
+        try {
             table.print();
-        } 
-        catch (PrinterException ex) 
-        {
+        } catch (PrinterException ex) {
             JOptionPane.showMessageDialog(null, "Das Drucken ist aufgrund eines Fehlers nicht möglich!", "Fehler", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_printTasksButtonActionPerformed
@@ -268,13 +250,10 @@ public class TasksFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_addButtonActionPerformed
         String description = descriptionTextField.getText();
         List<Task> tasks = dataManager.getTasks();
-        
-        if(description.equals(""))
-        {
+
+        if (description.equals("")) {
             JOptionPane.showMessageDialog(null, "Sie müssen eine Beschreibung eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
-        }
-        else 
-        {
+        } else {
             tasks.add(new Task(description));
             createTableModel();
             descriptionTextField.setText("");
@@ -285,12 +264,11 @@ public class TasksFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_okButtonActionPerformed
         final int size = table.getRowCount();
         List<Task> tasks = dataManager.getTasks();
-        
-        for(int i = 0; i < size; i++)
-        {
+
+        for (int i = 0; i < size; i++) {
             tasks.get(i).setDone((Boolean) table.getValueAt(i, 2));
         }
-        
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

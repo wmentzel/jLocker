@@ -6,61 +6,55 @@
 
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import java.awt.GridLayout;
-import java.util.LinkedList;
-import java.util.List;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- *
  * @author Willi
  */
-public class SetLockerMinimumSizesDialog extends javax.swing.JDialog
-{
+public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
     private final List<JTextField> textFields = new LinkedList<>();
     private final List<Integer> minSizes = (List<Integer>) DataManager.getInstance().getSettings().get("LockerMinSizes");
     private final DataManager dataManager;
-    
+
     /**
      * Creates new form SetLockerMinSizesDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public SetLockerMinimumSizesDialog(JDialog parent, DataManager dataManager, boolean modal)
-    {
+    public SetLockerMinimumSizesDialog(JDialog parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         buildLayout();
     }
-    
+
     /**
-     * 
+     *
      */
-    private void buildLayout()
-    {
+    private void buildLayout() {
         GridLayout gl = new GridLayout(minSizes.size() + 1, 2);
         gl.setHgap(5);
         gl.setVgap(5);
         centerPanel.setLayout(gl);
-        
+
         centerPanel.add(new JLabel("Schließfach"));
         centerPanel.add(new JLabel("Mindestgröße (cm)"));
-        
-        for(int i = 0; i < minSizes.size(); i++)
-        {
+
+        for (int i = 0; i < minSizes.size(); i++) {
             centerPanel.add(new JLabel(Integer.toString(minSizes.size() - i)));
-            
+
             JTextField textField = new JTextField(minSizes.get(minSizes.size() - i - 1).toString());
             textFields.add(textField);
             centerPanel.add(textField);
@@ -74,8 +68,7 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -91,12 +84,12 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog
         javax.swing.GroupLayout centerPanelLayout = new javax.swing.GroupLayout(centerPanel);
         centerPanel.setLayout(centerPanelLayout);
         centerPanelLayout.setHorizontalGroup(
-            centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 198, Short.MAX_VALUE)
+                centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 198, Short.MAX_VALUE)
         );
         centerPanelLayout.setVerticalGroup(
-            centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 178, Short.MAX_VALUE)
+                centerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 178, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -110,20 +103,16 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog
         bottomPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         bottomPanel.add(okButton);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -139,22 +128,18 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        for(int i = 0; i < minSizes.size(); i++)
-        {
-            try
-            {
+        for (int i = 0; i < minSizes.size(); i++) {
+            try {
                 Integer n = Integer.parseInt(textFields.get(i).getText());
                 minSizes.set(minSizes.size() - i - 1, n);
-            }
-            catch(NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Bitte nur ganze Zahlen eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
-        ((SettingsDialog)this.getParent()).updateLockerMinSizesTextField();
-        
+        ((SettingsDialog) this.getParent()).updateLockerMinSizesTextField();
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

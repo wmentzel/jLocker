@@ -12,96 +12,85 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
+
+import javax.swing.*;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
- *
  * @author Willi
  */
-public class ManagementUnit extends javax.swing.JPanel
-{
+public class ManagementUnit extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
      * by the compiler, even for minor changes. To avoid that it is set
      * by the programmer.
      */
     private static final long serialVersionUID = -8054374141198601700L;
-    
+
     private LockerCabinet cabinet;
     private Room room;
     private Staircase staircase;
-    
+
     /**
      * Can either be 0 (ROOM), 1 (LOCKERCOLUMN) or 2 (STAIRCASE)
      */
     public int mType;
-    
+
     public static final int ROOM = 0;
     public static final int LOCKERCOLUMN = 1;
     public static final int STAIRCASE = 2;
 
-    public ManagementUnit(int kind)
-    {
+    public ManagementUnit(int kind) {
         initComponents();
 
         setAs(kind);
     }
-    
+
     /* *************************************************************************
      * Getter
      **************************************************************************/
-    public int getType() 
-    { 
-        return mType; 
+    public int getType() {
+        return mType;
     }
 
-    public LockerCabinet getLockerCabinet() 
-    { 
-        return cabinet; 
+    public LockerCabinet getLockerCabinet() {
+        return cabinet;
     }
-    public List<Locker> getLockerList() 
-    { 
-        return cabinet.getLockerList(); 
+
+    public List<Locker> getLockerList() {
+        return cabinet.getLockerList();
     }
-    
-    public Room getRoom()
-    { 
-        return room; 
+
+    public Room getRoom() {
+        return room;
     }
-    
-    public Staircase getStaircase()
-    { 
-        return staircase; 
+
+    public Staircase getStaircase() {
+        return staircase;
     }
 
     /* *************************************************************************
      * Setter
      **************************************************************************/
-    
-    public final void setAs(int kind)
-    {
+
+    public final void setAs(int kind) {
         centerPanel.removeAll(); // remove previous child
         mType = kind;
-        
+
         cabinet = new LockerCabinet();
         room = new Room("", "");
         staircase = new Staircase();
-        
-        switch(kind)
-        {
-            case ROOM: 
-            {
-                centerPanel.add(room);         
+
+        switch (kind) {
+            case ROOM: {
+                centerPanel.add(room);
                 break;
             }
-            case LOCKERCOLUMN:  
-            {
-                centerPanel.add(cabinet);      
+            case LOCKERCOLUMN: {
+                centerPanel.add(cabinet);
                 break;
             }
-            case STAIRCASE:
-            {    
+            case STAIRCASE: {
                 centerPanel.add(staircase);
                 break;
             }
@@ -109,100 +98,79 @@ public class ManagementUnit extends javax.swing.JPanel
 
         centerPanel.updateUI();
     }
-    
+
     /**
      * After loading the Management Units from file all event listeners have
      * to be added again.
      */
-    public void setUpMouseListeners()
-    {
-        if(addMUnitLeftLabel.getMouseListeners().length == 0)
-        {
-            addMUnitLeftLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
+    public void setUpMouseListeners() {
+        if (addMUnitLeftLabel.getMouseListeners().length == 0) {
+            addMUnitLeftLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt)
-                {
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
                     addMUnitLeftLabelMouseReleased(evt);
                 }
             });
         }
 
-        if(removeThisMUnitLabel.getMouseListeners().length == 0)
-        {
-            removeThisMUnitLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
+        if (removeThisMUnitLabel.getMouseListeners().length == 0) {
+            removeThisMUnitLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt)
-                {
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
                     removeThisMUnitLabelMouseReleased(evt);
                 }
             });
         }
 
-        if(transformLabel.getMouseListeners().length == 0)
-        {
-            transformLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
+        if (transformLabel.getMouseListeners().length == 0) {
+            transformLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) 
-                {
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
                     transformLabelMouseReleased(evt);
                 }
             });
         }
 
-        if(addMUnitRightLabel.getMouseListeners().length == 0)
-        {
-            addMUnitRightLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
+        if (addMUnitRightLabel.getMouseListeners().length == 0) {
+            addMUnitRightLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) 
-                {
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
                     addMUnitRightLabelMouseReleased(evt);
                 }
             });
         }
 
-        if(cabinet != null)
-        {
+        if (cabinet != null) {
             cabinet.setUpMouseListeners();
         }
-        
-        if(room != null)
-        {
+
+        if (room != null) {
             room.setUpMouseListener();
         }
-        
-        if(staircase != null)
-        {
+
+        if (staircase != null) {
             staircase.setUpMouseListener();
         }
     }
 
-    
-    public static String getNameFromID(final int type)
-    {
-        switch(type)
-        {
-            case LOCKERCOLUMN: 
-            {
+
+    public static String getNameFromID(final int type) {
+        switch (type) {
+            case LOCKERCOLUMN: {
                 return "Schließfachschrank";
             }
-            case ROOM: 
-            {
+            case ROOM: {
                 return "Raum";
             }
-            case STAIRCASE: 
-            {
+            case STAIRCASE: {
                 return "Treppenhauszugang";
             }
-            default: 
-            {
+            default: {
                 return "";
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -288,13 +256,10 @@ public class ManagementUnit extends javax.swing.JPanel
         int index = mus.indexOf(this);
         int iNewIndex;
 
-        if(index == mus.size() - 1)
-        {
+        if (index == mus.size() - 1) {
             mus.add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
             iNewIndex = mus.size() - 1;
-        }
-        else
-        {
+        } else {
             mus.add(index + 1, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
             iNewIndex = index + 1;
         }
@@ -314,14 +279,12 @@ public class ManagementUnit extends javax.swing.JPanel
 
     private void removeThisMUnitLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     {//GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
-        if(DataManager.getInstance().getCurManagmentUnitList().size() > 1)
-        {
+        if (DataManager.getInstance().getCurManagmentUnitList().size() > 1) {
             String type = getNameFromID(mType);
-            
+
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen " + type + " wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
-            if(answer == JOptionPane.YES_OPTION)
-            {
+            if (answer == JOptionPane.YES_OPTION) {
                 List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
                 mus.remove(this);
                 DataManager.getInstance().getMainFrame().drawLockerOverview();
@@ -335,12 +298,9 @@ public class ManagementUnit extends javax.swing.JPanel
 
         int index = mus.indexOf(this);
 
-        if(index == 0)
-        {
-            mus.add(0,new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
-        }
-        else
-        {
+        if (index == 0) {
+            mus.add(0, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+        } else {
             mus.add(index, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
         }
 

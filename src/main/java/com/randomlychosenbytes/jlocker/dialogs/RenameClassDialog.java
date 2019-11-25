@@ -7,39 +7,40 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import java.util.List;
-import javax.swing.JOptionPane;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
+import javax.swing.*;
+import java.util.List;
+
 /**
  * A simple dialog to rename a (school) class.
  * TODO rewrite
+ *
  * @author Willi
  */
-public class RenameClassDialog extends javax.swing.JDialog
-{
+public class RenameClassDialog extends javax.swing.JDialog {
     DataManager dataManager;
-    
+
     /**
      * Creates new form ChangeClassDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public RenameClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public RenameClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // center on screen
         setLocationRelativeTo(null);
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
     }
@@ -51,8 +52,7 @@ public class RenameClassDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -85,20 +85,16 @@ public class RenameClassDialog extends javax.swing.JDialog
         getContentPane().add(centerPanel, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         southPanel.add(okButton);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -112,58 +108,51 @@ public class RenameClassDialog extends javax.swing.JDialog
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+
         String newClassName = changeToTextField.getText();
         String previousClassName = classTextField.getText();
         boolean searchForAgeGroup = previousClassName.indexOf('.') == -1;
         int numMatches = 0;
-        
+
         List<Building> buildings = dataManager.getBuildingList();
 
-        for (Building building : buildings) 
-        {
+        for (Building building : buildings) {
             List<Floor> floors = building.getFloorList();
-            
-            for (Floor floor : floors) 
-            {
+
+            for (Floor floor : floors) {
                 List<Walk> walks = floor.getWalkList();
-                
-                for (Walk walk : walks)
-                {
+
+                for (Walk walk : walks) {
                     List<ManagementUnit> cols = walk.getManagementUnitList();
-                    
-                    for (ManagementUnit col : cols)
-                    {
+
+                    for (ManagementUnit col : cols) {
                         List<Locker> lockers = col.getLockerList();
                         String sSubClass;
-                        
-                        for (Locker locker : lockers)
-                        {
+
+                        for (Locker locker : lockers) {
                             String sFoundClass = locker.getOwnerClass();
                             sSubClass = "";
-                            
+
                             System.out.println("gesucht nach: " + previousClassName);
                             System.out.println("gefunden: " + sFoundClass);
-                            
+
                             //7, E, Kurs
-                            if(searchForAgeGroup) // with dot
+                            if (searchForAgeGroup) // with dot
                             {
                                 int iDotIndex = sFoundClass.indexOf('.');
-                                
-                                if(iDotIndex != -1)
-                                {
+
+                                if (iDotIndex != -1) {
                                     sSubClass = sFoundClass.substring(iDotIndex);
                                     sFoundClass = sFoundClass.substring(0, iDotIndex);
                                 }
-                                
+
                             }
                             // else 7.2, E.2 ...
-                            
-                            if(sFoundClass.equals(previousClassName))
-                            {
+
+                            if (sFoundClass.equals(previousClassName)) {
                                 numMatches++;
                                 locker.setClass(newClassName + sSubClass);
-                                
+
                                 System.out.println("neue Klassenbezeichnung: " + newClassName + sSubClass);
                             }
                             System.out.println("-------------------------");
@@ -173,12 +162,9 @@ public class RenameClassDialog extends javax.swing.JDialog
             }
         }
 
-        if(numMatches == 0)
-        {
+        if (numMatches == 0) {
             JOptionPane.showMessageDialog(null, "Kann Schließfachmieter besucht die Klasse " + previousClassName + "!", "Fehler", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(null, "Die Klasse von " + numMatches + " Schließfachmietern wurde erfolgreich geändert!", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_okButtonActionPerformed

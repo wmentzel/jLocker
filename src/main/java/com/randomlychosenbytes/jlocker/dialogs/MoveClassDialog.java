@@ -8,144 +8,126 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
+import javax.swing.*;
+import java.util.*;
+
 /**
  * This dialog looks simple when you look at the two row GUI, but under the hood
  * this is the most complex part of jLocker.
  * The code in this dialog is responsible for optimizing the distances between
  * lookers and their respective class rooms.
- * 
+ * <p>
  * It utilizes the Dijkstra shortest path algorithm implemented in the library
  * jGraphT.
- * 
+ * <p>
  * SimpleWeightedGraph
+ *
  * @author Willi
  */
-public class MoveClassDialog extends javax.swing.JDialog
-{
+public class MoveClassDialog extends javax.swing.JDialog {
     private final DataManager dataManager;
     private Map<String, String> classToClassRoomNodeId;
     private Set<String> lockerIdWithoutHeights;
-    
+
     /**
      * Creates new form MoveClassDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public MoveClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public MoveClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, false);
         initComponents();
-        
+
         this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         classToClassRoomNodeId = new HashMap<>();
         lockerIdWithoutHeights = new HashSet<>();
-        
+
         findClassesAndClassRooms();
-        
+
         List<String> classNames = new LinkedList<>(classToClassRoomNodeId.keySet());
         Collections.sort(classNames);
 
         classComboBox.setModel(new DefaultComboBoxModel(classNames.toArray()));
     }
-    
+
     /**
-     * Finds all classes that have a classroom. All other classes (the ones that 
+     * Finds all classes that have a classroom. All other classes (the ones that
      * are only assigned to pupils and don't have a room) don't have to
      * be listed because the algorithm can't be used on them anyway.
-
+     * <p>
      * Requires a classroom to be unique! (test to be implemented)
      */
-    private void findClassesAndClassRooms()
-    {
+    private void findClassesAndClassRooms() {
         Set<String> assignedClasses = new HashSet<>();
         List<Building> buildings = dataManager.getBuildingList();
-        
-        for(int b = 0; b < buildings.size(); b++)
-        {
-            List<Floor> floors =  buildings.get(b).getFloorList();
 
-            for(int f = 0; f < floors.size(); f++)
-            {               
-                List<Walk> walks =  floors.get(f).getWalkList();
-                
-                for (int w = 0; w < walks.size(); w++)
-                {
+        for (int b = 0; b < buildings.size(); b++) {
+            List<Floor> floors = buildings.get(b).getFloorList();
+
+            for (int f = 0; f < floors.size(); f++) {
+                List<Walk> walks = floors.get(f).getWalkList();
+
+                for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
 
-                    for(int m = 0; m < managementUnits.size(); m++)
-                    {
+                    for (int m = 0; m < managementUnits.size(); m++) {
                         ManagementUnit munit = managementUnits.get(m);
-  
-                        if(munit.getType() == ManagementUnit.ROOM)
-                        {
+
+                        if (munit.getType() == ManagementUnit.ROOM) {
                             String className = munit.getRoom().getClassName();
-                            
-                            if(!className.isEmpty())
-                            {
+
+                            if (!className.isEmpty()) {
                                 classToClassRoomNodeId.put(className, b + "-" + f + "-" + w + "-" + m);
                             }
                         }
-                        
+
                         //
                         // Find classes assigned to pupils
                         //
                         List<Locker> lockers = munit.getLockerList();
-                        
-                        for(Locker locker : lockers)
-                        {
+
+                        for (Locker locker : lockers) {
                             String className = locker.getOwnerClass();
                             int pupilHeight = locker.getOwnerSize();
-                             
-                            if(pupilHeight == 0)
-                            {
+
+                            if (pupilHeight == 0) {
                                 lockerIdWithoutHeights.add(locker.getId());
                             }
-                            
-                            if(!className.isEmpty())
-                            {
+
+                            if (!className.isEmpty()) {
                                 assignedClasses.add(className);
                             }
                         }
                     }
                 }
             }
-            
+
             Map<String, String> map = new HashMap<>();
-            
+
             //
             // Remove the class from the map that are not assigned to a pupil
             //
-            for(String className : classToClassRoomNodeId.keySet())
-            {
-                if(assignedClasses.contains(className))
-                {
+            for (String className : classToClassRoomNodeId.keySet()) {
+                if (assignedClasses.contains(className)) {
                     map.put(className, classToClassRoomNodeId.get(className));
                 }
             }
-            
+
             classToClassRoomNodeId = map;
         }
     }
@@ -157,8 +139,7 @@ public class MoveClassDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         classPanel = new javax.swing.JPanel();
@@ -203,20 +184,16 @@ public class MoveClassDialog extends javax.swing.JDialog
         buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 10, 5));
 
         okButton.setText("Optimale Belegung finden");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(okButton);
 
         cancelButton.setText("Schließen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -240,23 +217,20 @@ public class MoveClassDialog extends javax.swing.JDialog
         // TODO gather infor from drop down menu
         String className = (String) classComboBox.getSelectedItem();
         String classRoomNodeId = classToClassRoomNodeId.get(className);
-        
-        if(lockerIdWithoutHeights.size() > 0)
-        {
+
+        if (lockerIdWithoutHeights.size() > 0) {
             String ids = "";
-            
-            for(String id : lockerIdWithoutHeights)
-            {
+
+            for (String id : lockerIdWithoutHeights) {
                 ids += id + "\n";
             }
-            
+
             JOptionPane.showMessageDialog(null, "Nicht alle Schüler der Klasse " + className + " haben eine gültige Größe!\n"
                     + "Es handelt sich um folgende Schließfächer: " + ids, "Fehler", JOptionPane.OK_OPTION);
             return;
         }
-        
-        if(className.length() == 0)
-        {
+
+        if (className.length() == 0) {
             JOptionPane.showMessageDialog(null, "Bitte geben Sie die Klasse ein!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }
@@ -265,46 +239,37 @@ public class MoveClassDialog extends javax.swing.JDialog
 
         final int status = scrd.getStatus();
         String statusMessage = "";
-        
-        switch(status)
-        {
-            case ShortenClassRoomDistances.CLASS_HAS_NO_ROOM:
-            {
+
+        switch (status) {
+            case ShortenClassRoomDistances.CLASS_HAS_NO_ROOM: {
                 statusMessage = "Die Klasse " + className + " hat keinen noch keinen Raum. Bitte fügen Sie diesen erst hinzu!";
                 break;
             }
-            case ShortenClassRoomDistances.NO_EMPTY_LOCKERS_AVAILABLE:
-            {
+            case ShortenClassRoomDistances.NO_EMPTY_LOCKERS_AVAILABLE: {
                 statusMessage = "Es gibt momentan keine leeren Schließfächer im Gebäude des Klassenraums!";
                 break;
             }
-            case ShortenClassRoomDistances.CLASS_HAS_NO_PUPILS:
-            {
+            case ShortenClassRoomDistances.CLASS_HAS_NO_PUPILS: {
                 statusMessage = "Kein Schüler der Klasse " + className + " hat momentan  ein Schließfach gemietet!";
                 break;
             }
-            case ShortenClassRoomDistances.NON_REACHABLE_LOCKERS_EXIST:
-            {
+            case ShortenClassRoomDistances.NON_REACHABLE_LOCKERS_EXIST: {
                 statusMessage = "Folgende Schließfächer können vom Klassenraum nicht erreicht werden: " + scrd.getIdsOfUnreachableLockers();
                 break;
             }
         }
-        
-        if(status == ShortenClassRoomDistances.SUCCESS)
-        {
+
+        if (status == ShortenClassRoomDistances.SUCCESS) {
             int answer = JOptionPane.showConfirmDialog(null, "Soll der Klassenumzug ausgeführt werden?", "Klassenumzug", JOptionPane.YES_NO_OPTION);
 
-            if(answer == JOptionPane.YES_OPTION)
-            {
+            if (answer == JOptionPane.YES_OPTION) {
                 textArea.setText(scrd.execute());
             }
-        }
-        else
-        {
+        } else {
             JOptionPane.showMessageDialog(null, statusMessage, "Fehler", JOptionPane.OK_OPTION);
             this.dispose();
         }
-        
+
         okButton.setEnabled(false);
     }//GEN-LAST:event_okButtonActionPerformed
 

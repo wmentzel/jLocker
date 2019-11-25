@@ -7,63 +7,56 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import javax.swing.JOptionPane;
+
+import javax.swing.*;
 
 /**
- *
  * @author Willi
  */
-public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog
-{
+public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     int chosenType;
-    
+
     ManagementUnit munit;
+
     /**
      * Creates new form ChooseMUnitTypeDialog
      */
-    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ManagementUnit mu)
-    {
+    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ManagementUnit mu) {
         super(parent, modal);
         initComponents();
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         munit = mu;
-        
+
         // Deactivate the radio button that represents the current type
-        switch(munit.getType())
-        {
-            case ManagementUnit.LOCKERCOLUMN:
-            {
-                lockerButton.setEnabled(false); 
-                break; 
-            }
-            case  ManagementUnit.ROOM: 
-            {
-                roomButton.setEnabled(false); 
+        switch (munit.getType()) {
+            case ManagementUnit.LOCKERCOLUMN: {
+                lockerButton.setEnabled(false);
                 break;
             }
-            case ManagementUnit.STAIRCASE:
-            {
-                staircaseButton.setEnabled(false); 
+            case ManagementUnit.ROOM: {
+                roomButton.setEnabled(false);
+                break;
+            }
+            case ManagementUnit.STAIRCASE: {
+                staircaseButton.setEnabled(false);
                 break;
             }
         }
     }
-    
+
     /**
-     * 
-     * @return 
+     * @return
      */
-    public int getChosenType() 
-    { 
-        return chosenType; 
+    public int getChosenType() {
+        return chosenType;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,8 +64,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup = new javax.swing.ButtonGroup();
@@ -119,20 +111,16 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog
         getContentPane().add(northPanel, java.awt.BorderLayout.PAGE_START);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(okButton);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -145,33 +133,27 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-                
-        if(lockerButton.isSelected())
-        {
+
+        if (lockerButton.isSelected()) {
             chosenType = ManagementUnit.LOCKERCOLUMN;
-        }
-        else if(roomButton.isSelected())
-        {
+        } else if (roomButton.isSelected()) {
             chosenType = ManagementUnit.ROOM;
-        }
-        else
-        {
+        } else {
             chosenType = ManagementUnit.STAIRCASE;
         }
-        
+
         String text = "Wollen Sie diesen "
-                      + ManagementUnit.getNameFromID(munit.getType()) 
-                      + " in einen " 
-                      + ManagementUnit.getNameFromID(chosenType) 
-                      + " transformieren?";
+                + ManagementUnit.getNameFromID(munit.getType())
+                + " in einen "
+                + ManagementUnit.getNameFromID(chosenType)
+                + " transformieren?";
 
         int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
 
-        if(answer == JOptionPane.YES_OPTION)
-        {
+        if (answer == JOptionPane.YES_OPTION) {
             munit.setAs(chosenType);
         }
-             
+
         // close after the selection
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed

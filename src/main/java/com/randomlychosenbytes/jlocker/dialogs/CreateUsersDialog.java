@@ -7,71 +7,59 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import java.awt.CardLayout;
+import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.nonabstractreps.*;
+
+import javax.crypto.SecretKey;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
-import javax.crypto.SecretKey;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
-import com.randomlychosenbytes.jlocker.nonabstractreps.User;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 /**
- *
  * @author Willi
  */
-public class CreateUsersDialog extends javax.swing.JDialog
-{
+public class CreateUsersDialog extends javax.swing.JDialog {
     private int iDisplayedCard;
     private final CardLayout cl;
     private final List<User> newUsers;
     private boolean isFirstRun;
     private SecretKey ukey;
     private final DataManager dataManager;
-    
+
     /**
      * Creates new form CreateUsersDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         isFirstRun = dataManager.getBuildingList().isEmpty();
-        
+
         addWindowListener
-        (
-            new java.awt.event.WindowAdapter()
-            {
-                @Override
-                public void windowClosing(WindowEvent winEvt)
-                {
-                    if(isFirstRun)
-                    {
-                        System.exit(0);
-                    }
-                    else
-                    {
-                        ((JDialog)winEvt.getSource()).dispose();
-                    }
-                }
-            }
-        );
-        
+                (
+                        new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent winEvt) {
+                                if (isFirstRun) {
+                                    System.exit(0);
+                                } else {
+                                    ((JDialog) winEvt.getSource()).dispose();
+                                }
+                            }
+                        }
+                );
+
         newUsers = new LinkedList<>();
 
         cl = new CardLayout();
@@ -80,11 +68,10 @@ public class CreateUsersDialog extends javax.swing.JDialog
         centerPanel.add(welcomePanel, "card1");
         centerPanel.add(superUserPanel, "card2");
         centerPanel.add(userPanel, "card3");
-        
+
         iDisplayedCard = 0;
-        
-        if(!isFirstRun)
-        {
+
+        if (!isFirstRun) {
             cl.next(centerPanel);
             iDisplayedCard = 1;
         }
@@ -99,8 +86,7 @@ public class CreateUsersDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -232,10 +218,8 @@ public class CreateUsersDialog extends javax.swing.JDialog
         southPanel.setLayout(new java.awt.GridBagLayout());
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -246,10 +230,8 @@ public class CreateUsersDialog extends javax.swing.JDialog
         southPanel.add(cancelButton, gridBagConstraints);
 
         previousButton.setText("< Zurück");
-        previousButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previousButtonActionPerformed(evt);
             }
         });
@@ -258,10 +240,8 @@ public class CreateUsersDialog extends javax.swing.JDialog
         southPanel.add(previousButton, gridBagConstraints);
 
         nextButton.setText("Weiter >");
-        nextButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextButtonActionPerformed(evt);
             }
         });
@@ -277,12 +257,9 @@ public class CreateUsersDialog extends javax.swing.JDialog
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cancelButtonActionPerformed
     {//GEN-HEADEREND:event_cancelButtonActionPerformed
-        if(isFirstRun)
-        {
+        if (isFirstRun) {
             System.exit(0);
-        }
-        else
-        {
+        } else {
             this.dispose();
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -291,97 +268,78 @@ public class CreateUsersDialog extends javax.swing.JDialog
     {//GEN-HEADEREND:event_previousButtonActionPerformed
         // Prevent the user from returning to the welcome screen, because
         // that would make no sense.
-        if((iDisplayedCard - 1) > 0)
-        {
+        if ((iDisplayedCard - 1) > 0) {
             iDisplayedCard--;
             cl.previous(centerPanel);
         }
 
-        if(iDisplayedCard != 2)
-        {
+        if (iDisplayedCard != 2) {
             nextButton.setText("Weiter >");
         }
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_nextButtonActionPerformed
     {//GEN-HEADEREND:event_nextButtonActionPerformed
-        
-        if(iDisplayedCard < 2)
-        {
+
+        if (iDisplayedCard < 2) {
             cl.next(centerPanel); // display next card
         }
-        
-        iDisplayedCard++; 
-        
-        switch(iDisplayedCard - 1)
-        {
-            case 1:
-            {
+
+        iDisplayedCard++;
+
+        switch (iDisplayedCard - 1) {
+            case 1: {
                 String supassword = suPasswordTextField.getText();
-                
-                if(supassword.equals("") || supassword.length() < 8)
-                {
+
+                if (supassword.equals("") || supassword.length() < 8) {
                     JOptionPane.showMessageDialog(this, "Bitte geben Sie ein Passwort mit\nmindestens 8 Zeichen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if(supassword.equals(suRepeatPasswordTextField.getText()))
-                {
+                if (supassword.equals(suRepeatPasswordTextField.getText())) {
                     newUsers.add(new User("Superuser", supassword));
                     ukey = newUsers.get(0).getUserMasterKey();
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
+
                 previousButton.setEnabled(true);
                 nextButton.setText("Fertigstellen");
-                
+
                 break;
             }
-            case 2:
-            {
+            case 2: {
                 String password = userPasswordTextField.getText();
 
-                if(password.equals("") || password.length() < 8)
-                {
+                if (password.equals("") || password.length() < 8) {
                     JOptionPane.showMessageDialog(this, "Bitte geben Sie ein Passwort mit\nmindestens 8 Zeichen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if(password.equals(userRepeatPasswordTextField.getText()))
+                if (password.equals(userRepeatPasswordTextField.getText()))
                     newUsers.add(new User("LimitedUser", password, ukey));
-                else
-                {
+                else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                    return ;
+                    return;
                 }
 
                 // Reencrypt all codes
-                if(!isFirstRun)
-                {
+                if (!isFirstRun) {
                     List<Building> buildings = dataManager.getBuildingList();
 
-                    for (Building building : buildings)
-                    {
-                        for (int f = 0; f < building.getFloorList().size(); f++)
-                        {
-                            for (int w = 0; w < building.getFloorList().get(f).getWalkList().size(); w++)
-                            {
-                                for (int c = 0; c < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().size(); c++)
-                                {
-                                    for (int l = 0; l < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().size(); l++)
-                                    {
+                    for (Building building : buildings) {
+                        for (int f = 0; f < building.getFloorList().size(); f++) {
+                            for (int w = 0; w < building.getFloorList().get(f).getWalkList().size(); w++) {
+                                for (int c = 0; c < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().size(); c++) {
+                                    for (int l = 0; l < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
                                         Locker locker = building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().get(l);
                                         String[] codes = locker.getCodes(dataManager.getCurUser().getSuperUMasterKey());
-                                        
-                                        for(int i = 0; i < 5; i++)
-                                        {
+
+                                        for (int i = 0; i < 5; i++) {
                                             codes[i] = codes[i].replace("-", "");
                                         }
-                                        
+
                                         locker.setCodes(codes, newUsers.get(0).getSuperUMasterKey());
                                     }
                                 }
@@ -389,25 +347,22 @@ public class CreateUsersDialog extends javax.swing.JDialog
                         }
                     }
                 }
-     
+
                 // apply changes
                 dataManager.setUserList(newUsers);
-                
-                if(isFirstRun)
-                {
+
+                if (isFirstRun) {
                     //
                     // Create initial data
                     //
-                    
+
                     List tasks = dataManager.getTasks();
 
-                    if(tasks == null)
-                    {
+                    if (tasks == null) {
                         dataManager.setTaskList(new LinkedList<Task>());
                     }
 
-                    if(dataManager.getSettings() == null)
-                    {
+                    if (dataManager.getSettings() == null) {
                         dataManager.loadDefaultSettings();
                     }
 
@@ -416,9 +371,9 @@ public class CreateUsersDialog extends javax.swing.JDialog
                     dataManager.getCurWalkList().add(new Walk("-"));
                     dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
                 }
-                
+
                 dataManager.saveAndCreateBackup();
-                
+
                 this.dispose();
             }
         } // end of switch 

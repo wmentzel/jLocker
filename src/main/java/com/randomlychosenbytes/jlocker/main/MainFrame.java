@@ -1,116 +1,91 @@
-
 package com.randomlychosenbytes.jlocker.main;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import com.randomlychosenbytes.jlocker.dialogs.AboutBox;
-import com.randomlychosenbytes.jlocker.dialogs.BuildingDialog;
-import com.randomlychosenbytes.jlocker.dialogs.CreateUsersDialog;
-import com.randomlychosenbytes.jlocker.dialogs.EditCodesDialog;
-import com.randomlychosenbytes.jlocker.dialogs.FloorDialog;
-import com.randomlychosenbytes.jlocker.dialogs.LogInDialog;
-import com.randomlychosenbytes.jlocker.dialogs.MoveClassDialog;
-import com.randomlychosenbytes.jlocker.dialogs.MoveLockerDialog;
-import com.randomlychosenbytes.jlocker.dialogs.RenameClassDialog;
-import com.randomlychosenbytes.jlocker.dialogs.SearchFrame;
-import com.randomlychosenbytes.jlocker.dialogs.SettingsDialog;
-import com.randomlychosenbytes.jlocker.dialogs.TasksFrame;
-import com.randomlychosenbytes.jlocker.dialogs.WalkDialog;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
-import javax.swing.UIManager;
+import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * This is the main windows of the application. It is displayed right after
  * the login-dialog/create new user dialog.
- * 
+ *
  * @author Willi
  */
-public class MainFrame extends javax.swing.JFrame 
-{
+public class MainFrame extends javax.swing.JFrame {
     private SearchFrame searchFrame;
     private TasksFrame tasksFrame;
     Timer timer;
-    
+
     /**
      * In the future the DataManager class won't be a singleton anymore.
      * The reference will be passed from object to object.
      */
     DataManager dataManager = DataManager.getInstance();
-    
+
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() 
-    {
+    public MainFrame() {
         initComponents();
-        
+
         // center on screen
         setLocationRelativeTo(null);
-        
+
         //
         // Set application title from resources
         //
         setTitle(dataManager.getAppTitle() + " " + dataManager.getAppVersion());
-        
+
         // TODO remove in later versions
         dataManager.setMainFrame(this);
-        
+
         //
         // Ask to save changes on exit
         //
         addWindowListener
-        (
-            new java.awt.event.WindowAdapter()
-            {
-                @Override
-                public void windowClosing(WindowEvent winEvt)
-                {
-                    if(dataManager.hasDataChanged())
-                    {
-                        int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie Ihre Änderungen speichern?", "Speichern und beenden", JOptionPane.YES_NO_CANCEL_OPTION);
+                (
+                        new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent winEvt) {
+                                if (dataManager.hasDataChanged()) {
+                                    int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie Ihre Änderungen speichern?", "Speichern und beenden", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                        if(answer == JOptionPane.CANCEL_OPTION)
-                        {
-                            return;
-                        }  
-                        
-                        if(answer == JOptionPane.YES_OPTION)
-                        {
-                            dataManager.saveAndCreateBackup(); 
+                                    if (answer == JOptionPane.CANCEL_OPTION) {
+                                        return;
+                                    }
+
+                                    if (answer == JOptionPane.YES_OPTION) {
+                                        dataManager.saveAndCreateBackup();
+                                    }
+                                }
+
+                                System.exit(0);
+                            }
                         }
-                    }
-                    
-                    System.exit(0);
-                }
-            }
-        );
+                );
 
         //
         // Initialize status message timer
         //
-        ActionListener resetStatusMessage = new ActionListener()
-        {
+        ActionListener resetStatusMessage = new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent evt)
-            {
+            public void actionPerformed(ActionEvent evt) {
                 statusMessageLabel.setText("");
             }
         };
-            
+
         timer = new Timer(5000, resetStatusMessage);
         timer.setRepeats(true);
 
@@ -118,9 +93,8 @@ public class MainFrame extends javax.swing.JFrame
         // Show CreateUserDialog if there are none
         //
         File newResFile = new File(dataManager.getRessourceFilePath());
-        
-        if(!newResFile.exists())
-        {
+
+        if (!newResFile.exists()) {
             CreateUsersDialog dialog = new CreateUsersDialog(this, dataManager, true);
             dialog.setVisible(true);
         }
@@ -128,9 +102,9 @@ public class MainFrame extends javax.swing.JFrame
         //
         // LogIn
         //
-        LogInDialog dialog = new LogInDialog(this, dataManager, true); 
+        LogInDialog dialog = new LogInDialog(this, dataManager, true);
         dialog.setVisible(true);
-        
+
         //
         // Initialize UI
         //
@@ -139,51 +113,45 @@ public class MainFrame extends javax.swing.JFrame
         // If the super user is logged in, he is allowed to change to passwords.
         changeUserPWMenuItem.setEnabled(dataManager.getCurUser().isSuperUser());
     }
-    
+
     /**
      * Put the lockers of the current walk in the layout manager.
      */
-    public void drawLockerOverview()
-    {
+    public void drawLockerOverview() {
         // Remove old panels
         lockerOverviewPanel.removeAll();
-                
+
         List<ManagementUnit> mus = dataManager.getCurManagmentUnitList();
-        
+
         final int numMUnits = mus.size();
         boolean firstLockerFound = false;
-        
-        for (int i = numMUnits - 1; i >= 0; i--)
-        {
+
+        for (int i = numMUnits - 1; i >= 0; i--) {
             ManagementUnit mu = mus.get(i);
-            
+
             //
             // mouse listeners get unattached during serialization, so they have to be set up again
             //
             mu.setUpMouseListeners();
-            
+
             //
             // add management units to gui
             //
             lockerOverviewPanel.add(mu);
-            
+
             //
             // set appropriate colors
             //
             List<Locker> lockers = mu.getLockerCabinet().getLockerList();
-            
-            for (Locker locker : lockers)
-            {
+
+            for (Locker locker : lockers) {
                 // always set a standard locker as selected
-                if (mu.getLockerList().size() > 0 && !firstLockerFound)
-                {
+                if (mu.getLockerList().size() > 0 && !firstLockerFound) {
                     mu.getLockerList().get(0).setSelected();
                     dataManager.setCurrentMUnitIndex(i);
                     dataManager.setCurrentLockerIndex(0);
                     firstLockerFound = true;
-                } 
-                else
-                {
+                } else {
                     locker.setAppropriateColor();
                 }
             }
@@ -197,13 +165,11 @@ public class MainFrame extends javax.swing.JFrame
      * When a locker is clicked, it's data is displayed in the respective
      * GUI components (surname, name, etc.)
      */
-    public void showLockerInformation()
-    {
+    public void showLockerInformation() {
         //
         // Initialize all childs of userDataPanel
         //
-        if(dataManager.getCurLockerList().size() > 0)
-        {
+        if (dataManager.getCurLockerList().size() > 0) {
             containerPanel.setVisible(true);
 
             Locker locker = dataManager.getCurLocker();
@@ -228,20 +194,15 @@ public class MainFrame extends javax.swing.JFrame
             remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
 
             // Combobox initialization
-            if(dataManager.getCurUser().isSuperUser())
-            {
+            if (dataManager.getCurUser().isSuperUser()) {
                 codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
-            }
-            else
-            {
+            } else {
                 codeTextField.setText("00-00-00");
             }
 
             lockTextField.setText(locker.getLock());
             noteTextArea.setText(locker.getNote());
-        }
-        else
-        {
+        } else {
             containerPanel.setVisible(false);
         }
     }
@@ -250,105 +211,81 @@ public class MainFrame extends javax.swing.JFrame
      * When executed the data from the GUI components is written into the locker
      * object.
      */
-    private void setLockerInformation()
-    {
+    private void setLockerInformation() {
         Locker locker = dataManager.getCurLocker();
-        
+
         locker.setSirName(surnameTextField.getText());
         locker.setOwnerName(nameTextField.getText());
-        locker.setClass (classTextField.getText()); 
+        locker.setClass(classTextField.getText());
         locker.setContract(hasContractCheckbox.isSelected());
         locker.setOutOfOrder(outOfOrderCheckbox.isSelected());
         locker.setLock(lockTextField.getText());
         locker.setNote(noteTextArea.getText());
-        
+
         String id = lockerIDTextField.getText();
 
-        if(!dataManager.getCurLocker().getId().equals(id))
-        {
-            if(dataManager.isLockerIdUnique(id) && !id.equals("") && !id.equals(" "))
-            {
+        if (!dataManager.getCurLocker().getId().equals(id)) {
+            if (dataManager.isLockerIdUnique(id) && !id.equals("") && !id.equals(" ")) {
                 locker.setID(id);
-            }
-            else
-            {
+            } else {
                 JOptionPane.showMessageDialog(null, "Diese Schließfach-ID existiert bereits! Wählen Sie eine andere.", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
-        
+
         int size = 0;
         String sizeString = sizeTextField.getText();
-        
-        if(!sizeString.isEmpty())
-        {
-            try
-            {
+
+        if (!sizeString.isEmpty()) {
+            try {
                 size = new Integer(sizeString);
-            }
-            catch(NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Die eigegebene Größe ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
-        
+
         locker.setOwnerSize(size);
-        
+
         String from = fromDateTextField.getText();
-        
-        if(from.length() != 0)
-        {
-            if(!Locker.isDateValid(from))
-            {
+
+        if (from.length() != 0) {
+            if (!Locker.isDateValid(from)) {
                 JOptionPane.showMessageDialog(null, "Das Anfangsdatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
-            }
-            else
-            {
+            } else {
                 locker.setFromDate(from);
             }
-        }
-        else
-        {
+        } else {
             locker.setFromDate(from);
         }
 
         String until = untilDateTextField.getText();
-        
-        if(until.length() != 0)
-        {
-            if(!Locker.isDateValid(until))
-            {
+
+        if (until.length() != 0) {
+            if (!Locker.isDateValid(until)) {
                 JOptionPane.showMessageDialog(null, "Das Enddatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
-            }
-            else
-            {
+            } else {
                 locker.setUntilDate(until);
             }
-        }
-        else
-        {
+        } else {
             locker.setUntilDate(until);
         }
-        
+
         Long months = locker.getRemainingTimeInMonths();
         remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
     }
 
     /**
      * Sets a status message at the bottom for a certain period of time.
+     *
      * @param message Message to be displayed
      */
-    public void setStatusMessage(String message)
-    {
-        if(timer.isRunning())
-        {
+    public void setStatusMessage(String message) {
+        if (timer.isRunning()) {
             timer.restart();
-        }
-        else
-        {
+        } else {
             timer.start();
         }
 
@@ -358,57 +295,54 @@ public class MainFrame extends javax.swing.JFrame
     /**
      * Determines the scroll position to bring a certain locker into sight.
      */
-    public void bringCurrentLockerInSight()
-    {
+    public void bringCurrentLockerInSight() {
         Rectangle r = dataManager.getCurManamentUnit().getBounds();
 
         lockerOverviewScrollPane.getHorizontalScrollBar().setValue(r.x);
         lockerOverviewScrollPane.getVerticalScrollBar().setValue(dataManager.getCurLocker().getBounds().y);
     }
-    
+
     /**
      * Initializes a combo box with a given list of entities.
+     *
      * @param obj
-     * @param combobox 
+     * @param combobox
      */
-    private void initializeComboBox(Object obj, JComboBox combobox)
-    {
+    private void initializeComboBox(Object obj, JComboBox combobox) {
         // cast here to avoid it during method call
-        List<Entity> entityList = (List<Entity>) obj; 
-        
+        List<Entity> entityList = (List<Entity>) obj;
+
         // list which will contain all entity names
         List<String> entityNames = new LinkedList<>();
-        
-        for(Object entity : entityList)
-        {
-            entityNames.add(((Entity)entity).getSName());
+
+        for (Object entity : entityList) {
+            entityNames.add(((Entity) entity).getSName());
         }
-        
+
         combobox.setModel(new DefaultComboBoxModel(entityNames.toArray()));
     }
-    
+
     /**
      * Sets all three combo boxes to the current indices of the building,
      * floor and walk.
      */
-    public final void setComboBoxes2CurIndizes()
-    {       
+    public final void setComboBoxes2CurIndizes() {
         initializeComboBox(dataManager.getBuildingList(), buildingComboBox);
         buildingComboBox.setSelectedIndex(dataManager.getCurBuildingIndex());
-        
+
         initializeComboBox(dataManager.getCurFloorList(), floorComboBox);
         floorComboBox.setSelectedIndex(dataManager.getCurFloorIndex());
-        
+
         initializeComboBox(dataManager.getCurWalkList(), walkComboBox);
         walkComboBox.setSelectedIndex(dataManager.getCurWalkIndex());
-        
+
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
         removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);
         removeWalkButton.setEnabled(dataManager.getCurWalkList().size() > 1);
-        
+
         drawLockerOverview();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -536,9 +470,11 @@ public class MainFrame extends javax.swing.JFrame
         buildingComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
+
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 buildingComboBoxPopupMenuWillBecomeInvisible(evt);
             }
+
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
@@ -581,9 +517,11 @@ public class MainFrame extends javax.swing.JFrame
         floorComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
+
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 floorComboBoxPopupMenuWillBecomeInvisible(evt);
             }
+
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
@@ -626,9 +564,11 @@ public class MainFrame extends javax.swing.JFrame
         walkComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
+
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 walkComboBoxPopupMenuWillBecomeInvisible(evt);
             }
+
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
@@ -692,12 +632,12 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.GroupLayout noContractColorLabelLayout = new javax.swing.GroupLayout(noContractColorLabel);
         noContractColorLabel.setLayout(noContractColorLabelLayout);
         noContractColorLabelLayout.setHorizontalGroup(
-            noContractColorLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                noContractColorLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
         noContractColorLabelLayout.setVerticalGroup(
-            noContractColorLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                noContractColorLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
 
         noContractPanel.add(noContractColorLabel);
@@ -716,12 +656,12 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.GroupLayout freeColorPanelLayout = new javax.swing.GroupLayout(freeColorPanel);
         freeColorPanel.setLayout(freeColorPanelLayout);
         freeColorPanelLayout.setHorizontalGroup(
-            freeColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 6, Short.MAX_VALUE)
+                freeColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 6, Short.MAX_VALUE)
         );
         freeColorPanelLayout.setVerticalGroup(
-            freeColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 6, Short.MAX_VALUE)
+                freeColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 6, Short.MAX_VALUE)
         );
 
         freePanel.add(freeColorPanel);
@@ -739,12 +679,12 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.GroupLayout rentedColorPanelLayout = new javax.swing.GroupLayout(rentedColorPanel);
         rentedColorPanel.setLayout(rentedColorPanelLayout);
         rentedColorPanelLayout.setHorizontalGroup(
-            rentedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                rentedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
         rentedColorPanelLayout.setVerticalGroup(
-            rentedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                rentedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
 
         rentedPanel.add(rentedColorPanel);
@@ -762,12 +702,12 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.GroupLayout outOfOrderColorPanelLayout = new javax.swing.GroupLayout(outOfOrderColorPanel);
         outOfOrderColorPanel.setLayout(outOfOrderColorPanelLayout);
         outOfOrderColorPanelLayout.setHorizontalGroup(
-            outOfOrderColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                outOfOrderColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
         outOfOrderColorPanelLayout.setVerticalGroup(
-            outOfOrderColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                outOfOrderColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
 
         outOfOrderPanel.add(outOfOrderColorPanel);
@@ -785,12 +725,12 @@ public class MainFrame extends javax.swing.JFrame
         javax.swing.GroupLayout oneMonthRemainingColorPanelLayout = new javax.swing.GroupLayout(oneMonthRemainingColorPanel);
         oneMonthRemainingColorPanel.setLayout(oneMonthRemainingColorPanelLayout);
         oneMonthRemainingColorPanelLayout.setHorizontalGroup(
-            oneMonthRemainingColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                oneMonthRemainingColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
         oneMonthRemainingColorPanelLayout.setVerticalGroup(
-            oneMonthRemainingColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 8, Short.MAX_VALUE)
+                oneMonthRemainingColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 8, Short.MAX_VALUE)
         );
 
         oneMonthRemainingPanel.add(oneMonthRemainingColorPanel);
@@ -1107,9 +1047,8 @@ public class MainFrame extends javax.swing.JFrame
 
     private void removeBuildingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBuildingButtonActionPerformed
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie dieses Gebäude wirklich löschen?", "Gebäude löschen", JOptionPane.YES_NO_CANCEL_OPTION);
-        
-        if(answer == JOptionPane.YES_OPTION)
-        {
+
+        if (answer == JOptionPane.YES_OPTION) {
             dataManager.getBuildingList().remove(dataManager.getCurBuildingIndex());
 
             dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
@@ -1125,8 +1064,7 @@ public class MainFrame extends javax.swing.JFrame
     private void removeFloorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFloorButtonActionPerformed
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diese Etage wirklich löschen?", "Etage löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
-        if(answer == JOptionPane.YES_OPTION)
-        {
+        if (answer == JOptionPane.YES_OPTION) {
             dataManager.getCurFloorList().remove(dataManager.getCurFloorIndex());
 
             dataManager.setCurrentFloorIndex(dataManager.getCurFloorList().size() - 1);
@@ -1141,13 +1079,12 @@ public class MainFrame extends javax.swing.JFrame
     private void removeWalkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeWalkButtonActionPerformed
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen Gang wirklich löschen?", "Gang löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
-        if(answer == JOptionPane.YES_OPTION)
-        {
+        if (answer == JOptionPane.YES_OPTION) {
             dataManager.getCurWalkList().remove(dataManager.getCurWalkIndex());
             dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
             dataManager.setCurrentMUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
-        
+
             setComboBoxes2CurIndizes();
         }
     }//GEN-LAST:event_removeWalkButtonActionPerformed
@@ -1160,8 +1097,7 @@ public class MainFrame extends javax.swing.JFrame
 
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
     {//GEN-HEADEREND:event_codeTextFieldMouseClicked
-        if(dataManager.getCurUser().isSuperUser())
-        {
+        if (dataManager.getCurUser().isSuperUser()) {
             EditCodesDialog dialog = new EditCodesDialog(this, dataManager, true);
             dialog.setVisible(true);
         }
@@ -1173,8 +1109,7 @@ public class MainFrame extends javax.swing.JFrame
 
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie dieses Schließfach wirklich leeren?", "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
 
-        if(answer == JOptionPane.YES_OPTION)
-        {
+        if (answer == JOptionPane.YES_OPTION) {
             surnameTextField.setText("");
             nameTextField.setText("");
             classTextField.setText("");
@@ -1186,17 +1121,14 @@ public class MainFrame extends javax.swing.JFrame
             fromDateTextField.setText("");
             untilDateTextField.setText("");
             noteTextArea.setText("");
-            
+
             Locker locker = dataManager.getCurLocker();
             locker.empty();
-            
+
             // Combobox initialization
-            if(dataManager.getCurUser().isSuperUser())
-            {
+            if (dataManager.getCurUser().isSuperUser()) {
                 codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
-            }
-            else
-            {
+            } else {
                 codeTextField.setText("00-00-00");
             }
         }
@@ -1241,9 +1173,9 @@ public class MainFrame extends javax.swing.JFrame
     private void buildingComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt)//GEN-FIRST:event_buildingComboBoxPopupMenuWillBecomeInvisible
     {//GEN-HEADEREND:event_buildingComboBoxPopupMenuWillBecomeInvisible
         dataManager.setCurrentBuildingIndex(buildingComboBox.getSelectedIndex());
-        
+
         initializeComboBox(dataManager.getCurFloorList(), floorComboBox);
-        
+
         // move on to next combobox
         floorComboBoxPopupMenuWillBecomeInvisible(null);
     }//GEN-LAST:event_buildingComboBoxPopupMenuWillBecomeInvisible
@@ -1253,7 +1185,7 @@ public class MainFrame extends javax.swing.JFrame
         dataManager.setCurrentFloorIndex(floorComboBox.getSelectedIndex());
 
         initializeComboBox(dataManager.getCurWalkList(), walkComboBox);
-        
+
         // move on to next combobox
         walkComboBoxPopupMenuWillBecomeInvisible(null);
     }//GEN-LAST:event_floorComboBoxPopupMenuWillBecomeInvisible
@@ -1266,38 +1198,34 @@ public class MainFrame extends javax.swing.JFrame
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
         removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);
         removeWalkButton.setEnabled(dataManager.getCurWalkList().size() > 1);
-        
+
         drawLockerOverview();
     }//GEN-LAST:event_walkComboBoxPopupMenuWillBecomeInvisible
 
     private void addAmountButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addAmountButtonActionPerformed
     {//GEN-HEADEREND:event_addAmountButtonActionPerformed
-        try
-        {
+        try {
             int amount = new Integer(currentAmountTextField.getText());
-            
+
             dataManager.getCurLocker().setPrevAmount(amount);
             int iNewFullAmount = dataManager.getCurLocker().getMoney() + amount;
             dataManager.getCurLocker().setMoney(iNewFullAmount);
 
             previousAmountTextField.setText(Integer.toString(amount));
             moneyTextField.setText(Integer.toString(iNewFullAmount));
-            
+
             currentAmountTextField.setText("");
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Bitte geben Sie einen gültigen Geldbetrag ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addAmountButtonActionPerformed
 
     private void showTasksMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_showTasksMenuItemActionPerformed
     {//GEN-HEADEREND:event_showTasksMenuItemActionPerformed
-        if(tasksFrame != null)
-        {
+        if (tasksFrame != null) {
             tasksFrame.dispose();
         }
-        
+
         tasksFrame = new TasksFrame(dataManager);
         tasksFrame.setVisible(true);
     }//GEN-LAST:event_showTasksMenuItemActionPerformed
@@ -1305,17 +1233,15 @@ public class MainFrame extends javax.swing.JFrame
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveMenuItemActionPerformed
     {//GEN-HEADEREND:event_saveMenuItemActionPerformed
         // if the tasks object has not been initialised, it is done now
-        if(dataManager.getTasks() == null)
-        {
+        if (dataManager.getTasks() == null) {
             dataManager.setTaskList(new LinkedList<Task>());
         }
-        
+
         // if the settings object has not been initialised, it is done now
-        if(dataManager.getSettings() == null)
-        {
+        if (dataManager.getSettings() == null) {
             dataManager.loadDefaultSettings();
         }
-        
+
         dataManager.saveAndCreateBackup();
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
@@ -1360,11 +1286,10 @@ public class MainFrame extends javax.swing.JFrame
 
     private void searchMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_searchMenuItemActionPerformed
     {//GEN-HEADEREND:event_searchMenuItemActionPerformed
-        if(searchFrame != null)
-        {
+        if (searchFrame != null) {
             searchFrame.dispose();
         }
-        
+
         searchFrame = new SearchFrame(this, dataManager);
         searchFrame.setVisible(true);
 
@@ -1381,27 +1306,21 @@ public class MainFrame extends javax.swing.JFrame
         MoveLockerDialog dialog = new MoveLockerDialog(this, dataManager, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_moveLockerMenuItemActionPerformed
-   
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) 
-    {
-        try 
-        {
+    public static void main(String args[]) {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) 
-        {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             System.err.println("Could not set design!");
         }
 
         // Create and display the form
-        java.awt.EventQueue.invokeLater(new Runnable() 
-        {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run() 
-            {
+            public void run() {
                 new MainFrame().setVisible(true);
             }
         });

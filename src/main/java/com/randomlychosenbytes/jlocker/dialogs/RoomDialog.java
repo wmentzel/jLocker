@@ -6,34 +6,35 @@
 
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import javax.swing.JOptionPane;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
+
+import javax.swing.*;
 
 /**
  * TODO check if classroom is unique!
+ *
  * @author Willi
  */
-public class RoomDialog extends javax.swing.JDialog
-{
+public class RoomDialog extends javax.swing.JDialog {
     private final Room room;
-    
+
     /**
      * Creates new form RoomDialog
+     *
      * @param parent
      * @param modal
      * @param room
      */
-    public RoomDialog(java.awt.Frame parent, boolean modal, Room room)
-    {
+    public RoomDialog(java.awt.Frame parent, boolean modal, Room room) {
         super(parent, modal);
         initComponents();
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         this.room = room;
 
         roomNameTextField.setText(room.getRoomName());
@@ -47,8 +48,7 @@ public class RoomDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -89,10 +89,8 @@ public class RoomDialog extends javax.swing.JDialog
         centerPanel.add(classNameTextField, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -101,10 +99,8 @@ public class RoomDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -121,11 +117,10 @@ public class RoomDialog extends javax.swing.JDialog
     {//GEN-HEADEREND:event_okButtonActionPerformed
         String name = roomNameTextField.getText();
 
-        if (name.equals(""))
-        {
+        if (name.equals("")) {
             JOptionPane.showMessageDialog(null, "Sie müssen einen Raumnamen angeben!", "Fehler", JOptionPane.OK_OPTION);
         }
-        
+
         room.setCaption(name, classNameTextField.getText());
 
         dispose();

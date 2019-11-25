@@ -1,64 +1,60 @@
-
 package com.randomlychosenbytes.jlocker.dialogs;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
 
 /**
  * A simple dialog that displays information about this program.
- * 
+ *
  * @author Willi
  */
-public class AboutBox extends javax.swing.JDialog
-{
+public class AboutBox extends javax.swing.JDialog {
     // TODO put in properties/resource file
-    final String names[] = 
-    {  
-        "Babette Mentzel",
-        "Torsten Brandes", 
-        "Heiko Niemeyer",
-        "Indra Beeske",
-        "Hang Ming Pham",
-        "Anne Hauer",
-        "Die Schließfach-AG der RLO"
-    };
- 
+    final String names[] =
+            {
+                    "Babette Mentzel",
+                    "Torsten Brandes",
+                    "Heiko Niemeyer",
+                    "Indra Beeske",
+                    "Hang Ming Pham",
+                    "Anne Hauer",
+                    "Die Schließfach-AG der RLO"
+            };
+
     /**
      * Creates new form AboutBox
+     *
      * @param parent
      * @param modal
      */
-    public AboutBox(java.awt.Frame parent, boolean modal)
-    {
+    public AboutBox(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(closeButton);
-        
+
         // focus in the middle
         this.setLocationRelativeTo(null);
-        
+
         // start with the first name
         appThanks2Label.setText(names[0]);
-        
+
         Timer timer = new Timer(1500, changeText);
         timer.setRepeats(true);
         timer.start();
     }
-    
-    ActionListener changeText = new ActionListener()
-    {
+
+    ActionListener changeText = new ActionListener() {
         private int textIndex = 1;
-        
+
         @Override
-        public void actionPerformed(ActionEvent evt)
-        {    
+        public void actionPerformed(ActionEvent evt) {
             appThanks2Label.setText(names[textIndex]);
-                        
-            if(++textIndex > names.length - 1)
+
+            if (++textIndex > names.length - 1)
                 textIndex = 0;
         }
     };

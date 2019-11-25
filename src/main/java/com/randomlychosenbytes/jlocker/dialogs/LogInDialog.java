@@ -1,62 +1,57 @@
-
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import java.awt.event.WindowEvent;
-import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+
 /**
- *
  * @author Willi
  */
-public class LogInDialog extends javax.swing.JDialog
-{
+public class LogInDialog extends javax.swing.JDialog {
     String resPath = "";
     private final DataManager dataManager;
- 
+
     /**
      * Creates new form LogInDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public LogInDialog(java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public LogInDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        this.dataManager = dataManager; 
-     
+
+        this.dataManager = dataManager;
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         // set title from resources
         setTitle(dataManager.getAppTitle() + " " + dataManager.getAppVersion() + " - Anmeldung");
 
         //
         // Default closing operation
         //
-        addWindowListener(new java.awt.event.WindowAdapter() 
-        {
+        addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent winEvt) 
-            {
+            public void windowClosing(WindowEvent winEvt) {
                 System.exit(0);
             }
         });
-        
+
         //
         // Check if backup directory exists. If not, create it.
         //
         String sBackupDir = dataManager.getHomePath() + "Backup/";
-        File fBackupDir = new File (sBackupDir);
+        File fBackupDir = new File(sBackupDir);
         loadBackupButton.setEnabled(fBackupDir.exists());
     }
 
@@ -100,7 +95,7 @@ public class LogInDialog extends javax.swing.JDialog
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
         loginPanel.add(userNameLabel, gridBagConstraints);
 
-        chooseUserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SuperUser", "Eingeschränkter Benutzer" }));
+        chooseUserComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"SuperUser", "Eingeschränkter Benutzer"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
@@ -155,13 +150,10 @@ public class LogInDialog extends javax.swing.JDialog
         //
         // Loading...
         //
-        if(resPath.length() == 0)
-        {
-           dataManager.loadData(); // default path
-        }
-        else
-        {
-           dataManager.loadFromCustomFile(resPath); // backup loading
+        if (resPath.length() == 0) {
+            dataManager.loadData(); // default path
+        } else {
+            dataManager.loadFromCustomFile(resPath); // backup loading
         }
 
         //
@@ -171,14 +163,13 @@ public class LogInDialog extends javax.swing.JDialog
 
         dataManager.setCurrentUserIndex(chooseUserComboBox.getSelectedIndex());
 
-        if(!dataManager.getCurUser().isPasswordCorrect(password))
-        {
+        if (!dataManager.getCurUser().isPasswordCorrect(password)) {
             JOptionPane.showMessageDialog(this, "Das Passwort ist falsch!", "Fehler", JOptionPane.OK_OPTION);
             return;
-        } 
+        }
 
         dataManager.setBuildingsObject(SecurityManager.unsealBuidingsObject(dataManager.getSealedBuildingsObject(), dataManager.getUserList().get(0).getUserMasterKey()));
-        
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -186,21 +177,18 @@ public class LogInDialog extends javax.swing.JDialog
     {//GEN-HEADEREND:event_loadBackupButtonActionPerformed
         final JFileChooser fc = new JFileChooser(new File(dataManager.getHomePath() + "Backup/"));
 
-        FileFilter filter = new FileFilter()
-        {
+        FileFilter filter = new FileFilter() {
             @Override
-            public boolean accept(File pathname)
-            {
+            public boolean accept(File pathname) {
                 String path = pathname.toString();
                 int dotindex = path.lastIndexOf('.');
                 String ext = path.substring(dotindex);
-                
+
                 return ext.equals(".dat");
             }
 
             @Override
-            public String getDescription() 
-            {
+            public String getDescription() {
                 return "jLocker-Dateien";
             }
         };
@@ -210,8 +198,7 @@ public class LogInDialog extends javax.swing.JDialog
 
         int returnVal = fc.showOpenDialog(this);
 
-        if (returnVal == JFileChooser.APPROVE_OPTION)
-        {
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             resPath = fc.getSelectedFile().getAbsolutePath();
         }
     }//GEN-LAST:event_loadBackupButtonActionPerformed

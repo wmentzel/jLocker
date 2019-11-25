@@ -8,11 +8,6 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import java.awt.print.PrinterException;
-import java.util.LinkedList;
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
@@ -20,45 +15,48 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
+import javax.swing.*;
+import java.awt.print.PrinterException;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- *
  * @author Mu
  */
-public class SearchFrame extends javax.swing.JFrame
-{
+public class SearchFrame extends javax.swing.JFrame {
     private JTable table;
     private List<EntityCoordinates<Locker>> foundLockers;
-    
+
     private final List<String> columnData = new LinkedList<>();
     private final List<Class> dataTypes = new LinkedList<>();
-    
+
     private final MainFrame mainFrame;
     private final DataManager dataManager;
-    
+
     /**
      * Creates new form SearchFrame
-     * 
+     * <p>
      * TODO find a way to search for checkboxes
+     *
      * @param mainFrame
      * @param dataManager
      */
-    public SearchFrame(MainFrame mainFrame, DataManager dataManager)
-    {
+    public SearchFrame(MainFrame mainFrame, DataManager dataManager) {
         initComponents();
-        
+
         this.mainFrame = mainFrame;
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(searchButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         resultsPanel.removeAll();
         table = null;
-        
+
         printResultsButton.setEnabled(false);
         emptySelectedButton.setEnabled(false);
 
@@ -77,7 +75,7 @@ public class SearchFrame extends javax.swing.JFrame
         columnData.add("von:");
         columnData.add("bis:");
         columnData.add("Schloss");
-       
+
 
         dataTypes.add(java.lang.String.class);
         dataTypes.add(java.lang.String.class);
@@ -90,44 +88,40 @@ public class SearchFrame extends javax.swing.JFrame
         dataTypes.add(java.lang.String.class);
         dataTypes.add(java.lang.String.class);
         dataTypes.add(java.lang.String.class);
-        
-        
-        if(dataManager.getCurUser().isSuperUser())
-        {
+
+
+        if (dataManager.getCurUser().isSuperUser()) {
             columnData.add("Codes");
             dataTypes.add(java.lang.String.class);
         }
     }
-    
-    private void rowClicked (java.awt.event.MouseEvent evt)
-    {
+
+    private void rowClicked(java.awt.event.MouseEvent evt) {
         int row = ((JTable) evt.getSource()).getSelectedRow();
-        
+
         String id = (String) table.getValueAt(row, 0);
-        
-        
+
+
         //
         // through the process of reordering the rows by a user defined column,
         // we dont know which index belongs to which locker
         //
         int index = 0;
-        
-        for (int i = 0; i < foundLockers.size(); i++)
-        {
-            if(foundLockers.get(i).getEntity().getId().equals(id))
+
+        for (int i = 0; i < foundLockers.size(); i++) {
+            if (foundLockers.get(i).getEntity().getId().equals(id))
                 index = i;
         }
-        
-        if(evt.getClickCount() == 2)
-        {
+
+        if (evt.getClickCount() == 2) {
             this.toBack();
-          
+
             EntityCoordinates coords = foundLockers.get(index);
-            
+
             dataManager.setCurrentBuildingIndex(coords.getBValue());
             dataManager.setCurrentFloorIndex(coords.getFValue());
             dataManager.setCurrentWalkIndex(coords.getWValue());
-            
+
             final int iMUnitIndex = coords.getMValue();
             final int iLockerIndex = coords.getLValue();
 
@@ -138,36 +132,33 @@ public class SearchFrame extends javax.swing.JFrame
             // So we save the indexes of the MUnit of the current locker and the index
             // of the current locker itself and reset it after the call of this method.
             mainFrame.setComboBoxes2CurIndizes();
-            
+
             dataManager.getCurLocker().setAppropriateColor();
-            
+
             // reset
             dataManager.setCurrentMUnitIndex(iMUnitIndex);
             dataManager.setCurrentLockerIndex(iLockerIndex);
             dataManager.getCurLocker().setSelected();
-            
+
             mainFrame.showLockerInformation();
             mainFrame.bringCurrentLockerInSight();
         }
     }
-    
+
     /**
      * This is necessary because the row order can be user defined, so the row
      * order and the found lockers order isn't the same
-     * 
+     *
      * @param row
-     * @return 
+     * @return
      */
-    private int getLockerFromRow(int row)
-    {           
+    private int getLockerFromRow(int row) {
         String id = (String) table.getValueAt(row, 0);
 
-        for (int i = 0; i < foundLockers.size(); i++)
-        {
+        for (int i = 0; i < foundLockers.size(); i++) {
             Locker locker = foundLockers.get(i).getEntity();
 
-            if(locker.getId().equals(id))
-            {
+            if (locker.getId().equals(id)) {
                 return i;
             }
         }
@@ -182,8 +173,7 @@ public class SearchFrame extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jCheckBox1 = new javax.swing.JCheckBox();
@@ -286,10 +276,8 @@ public class SearchFrame extends javax.swing.JFrame
         lockerDataPanel.add(containerPanel, gridBagConstraints);
 
         searchButton.setText("Suchen");
-        searchButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchButtonActionPerformed(evt);
             }
         });
@@ -301,12 +289,12 @@ public class SearchFrame extends javax.swing.JFrame
         javax.swing.GroupLayout fillPanelLayout = new javax.swing.GroupLayout(fillPanel);
         fillPanel.setLayout(fillPanelLayout);
         fillPanelLayout.setHorizontalGroup(
-            fillPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
+                fillPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 260, Short.MAX_VALUE)
         );
         fillPanelLayout.setVerticalGroup(
-            fillPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+                fillPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 30, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -316,10 +304,8 @@ public class SearchFrame extends javax.swing.JFrame
         lockerDataPanel.add(fillPanel, gridBagConstraints);
 
         emptySelectedButton.setText("Auswahl leeren");
-        emptySelectedButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        emptySelectedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emptySelectedButtonActionPerformed(evt);
             }
         });
@@ -328,10 +314,8 @@ public class SearchFrame extends javax.swing.JFrame
         lockerDataPanel.add(emptySelectedButton, gridBagConstraints);
 
         printResultsButton.setText("Ergebnisse drucken");
-        printResultsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        printResultsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printResultsButtonActionPerformed(evt);
             }
         });
@@ -366,12 +350,9 @@ public class SearchFrame extends javax.swing.JFrame
 
         int size;
 
-        try 
-        {
+        try {
             size = new Integer(sizeTextField.getText());
-        } 
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             size = -1;
         }
 
@@ -379,159 +360,123 @@ public class SearchFrame extends javax.swing.JFrame
 
         int money;
 
-        try 
-        {
+        try {
             money = new Integer(moneyTextField.getText());
-        } 
-        catch (NumberFormatException e)
-        { 
-            money = -1; 
+        } catch (NumberFormatException e) {
+            money = -1;
         }
 
         int remainingTimeInMonths;
 
-        try 
-        {
+        try {
             remainingTimeInMonths = new Integer(durationTextField.getText());
-        } 
-        catch(NumberFormatException e)
-        { 
-            remainingTimeInMonths = -1; 
+        } catch (NumberFormatException e) {
+            remainingTimeInMonths = -1;
         }
 
         String fromdate = fromDateTextField.getText();
         String untildate = untilDateTextField.getText();
         String lock = lockTextField.getText();
-        
+
         List tableData = new LinkedList();
-        
+
         foundLockers = new LinkedList<>();
 
         List<Building> buildings = dataManager.getBuildingList();
-        
-        for(int b = 0; b < buildings.size(); b++)
-        {
-            List<Floor> floors =  buildings.get(b).getFloorList();
 
-            for(int f = 0; f < floors.size(); f++)
-            {
-                List<Walk> walks =  floors.get(f).getWalkList();
-                
-                for (int w = 0; w < walks.size(); w++)
-                {
+        for (int b = 0; b < buildings.size(); b++) {
+            List<Floor> floors = buildings.get(b).getFloorList();
+
+            for (int f = 0; f < floors.size(); f++) {
+                List<Walk> walks = floors.get(f).getWalkList();
+
+                for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> cols = walks.get(w).getManagementUnitList();
-                    
-                    for(int c = 0; c < cols.size(); c++)
-                    {
+
+                    for (int c = 0; c < cols.size(); c++) {
                         List<Locker> lockers = cols.get(c).getLockerList();
 
-                        for (int l = 0; l < lockers.size(); l++)
-                        {
+                        for (int l = 0; l < lockers.size(); l++) {
                             Locker locker = lockers.get(l);
 
-                            if(!emptyCheckbox.isSelected())
-                            {
-                                if(!id.equals(""))
-                                {
-                                    if(!locker.getId().equals(id))
-                                    {
+                            if (!emptyCheckbox.isSelected()) {
+                                if (!id.equals("")) {
+                                    if (!locker.getId().equals(id)) {
                                         continue;
                                     }
                                 }
-                                
-                                if(surname.length() != 0)
-                                {
-                                    if(!surname.equals(locker.getSurname()))
-                                    {
+
+                                if (surname.length() != 0) {
+                                    if (!surname.equals(locker.getSurname())) {
                                         continue;
                                     }
                                 }
-                                
-                                if(!name.equals(""))
-                                {
-                                    if(!name.equals(locker.getOwnerName()))
-                                    {
+
+                                if (!name.equals("")) {
+                                    if (!name.equals(locker.getOwnerName())) {
                                         continue;
                                     }
                                 }
-                                
-                                if(!_class.equals(""))
-                                {
+
+                                if (!_class.equals("")) {
                                     String cl = locker.getOwnerClass();
-                                    
-                                    if(!_class.contains(".") && !_class.equals("Kurs"))
-                                    {
-                                        if(cl.contains("."))
-                                        {
+
+                                    if (!_class.contains(".") && !_class.equals("Kurs")) {
+                                        if (cl.contains(".")) {
                                             int index = cl.indexOf('.');
                                             cl = cl.substring(0, index);
 
                                             System.out.println(cl);
                                         }
                                     }
-                                    
-                                    if(!_class.equals(cl))
-                                    {
+
+                                    if (!_class.equals(cl)) {
                                         continue;
                                     }
                                 }
-                                
-                                if(size != -1)
-                                {
-                                    if(size != locker.getOwnerSize())
-                                    {
+
+                                if (size != -1) {
+                                    if (size != locker.getOwnerSize()) {
                                         continue;
                                     }
                                 }
-                                
-                                if(money != -1)
-                                {
-                                    if(money != locker.getMoney())
-                                    {
+
+                                if (money != -1) {
+                                    if (money != locker.getMoney()) {
                                         continue;
                                     }
                                 }
-                                    
-                                if(remainingTimeInMonths != -1)
-                                {
-                                    if(locker.getRemainingTimeInMonths() != remainingTimeInMonths)
-                                    {
+
+                                if (remainingTimeInMonths != -1) {
+                                    if (locker.getRemainingTimeInMonths() != remainingTimeInMonths) {
                                         continue;
                                     }
                                 }
-                                
-                                if(!fromdate.equals(""))
-                                {
-                                    if(!fromdate.equals(locker.getFromDate()))
-                                    {
+
+                                if (!fromdate.equals("")) {
+                                    if (!fromdate.equals(locker.getFromDate())) {
                                         continue;
                                     }
                                 }
-                                
-                                if(!untildate.equals(""))
-                                {
-                                    if(!untildate.equals(locker.getUntilDate()))
-                                    {
+
+                                if (!untildate.equals("")) {
+                                    if (!untildate.equals(locker.getUntilDate())) {
                                         continue;
                                     }
                                 }
-                                
-                                if(!lock.equals(""))
-                                {
-                                    if(!lock.equals(locker.getLock()))
-                                    {
+
+                                if (!lock.equals("")) {
+                                    if (!lock.equals(locker.getLock())) {
                                         continue;
                                     }
                                 }
                             } // if
-                            else
-                            {
-                                if(!locker.isFree())
-                                {
+                            else {
+                                if (!locker.isFree()) {
                                     continue;
                                 }
                             }
-                            
+
                             List rowData = new LinkedList();
                             rowData.add(locker.getId());
                             rowData.add(locker.getSurname());
@@ -544,22 +489,20 @@ public class SearchFrame extends javax.swing.JFrame
                             rowData.add(locker.getFromDate());
                             rowData.add(locker.getUntilDate());
                             rowData.add(locker.getLock());
-                            
-                            if(dataManager.getCurUser().isSuperUser())
-                            {
+
+                            if (dataManager.getCurUser().isSuperUser()) {
                                 String codearray[] = locker.getCodes(dataManager.getCurUser().getSuperUMasterKey());
                                 String codes = "";
 
-                                for(int i = 0; i < 5; i++)
-                                {
+                                for (int i = 0; i < 5; i++) {
                                     codes += codearray[i] + (i < 4 ? ", " : "");
                                 }
-                                
+
                                 rowData.add(codes);
                             }
-                            
+
                             tableData.add(rowData);
-                            
+
                             foundLockers.add(new EntityCoordinates(locker, b, f, w, c, l));
                         } // for
                     } // for
@@ -568,54 +511,45 @@ public class SearchFrame extends javax.swing.JFrame
         } // for
 
         resultsPanel.removeAll();
-        
+
         // Workaround to avoid obsolete Vector class
         Object tableDataArray[][] = new Object[tableData.size()][];
-        
-        for(int i = 0; i < tableData.size(); i++)
-        {
-            tableDataArray[i] = ((List)tableData.get(i)).toArray();
+
+        for (int i = 0; i < tableData.size(); i++) {
+            tableDataArray[i] = ((List) tableData.get(i)).toArray();
         }
-        
+
         printResultsButton.setEnabled(foundLockers.size() > 0);
         emptySelectedButton.setEnabled(foundLockers.size() > 0);
-        
-        if(foundLockers.size() > 0)
-        {
+
+        if (foundLockers.size() > 0) {
             table = new JTable();
             table.setAutoCreateRowSorter(true);
 
             table.setModel
-            (
-                new javax.swing.table.DefaultTableModel(tableDataArray, columnData.toArray())
-                {
-                    @Override
-                    public Class getColumnClass(int columnIndex)
-                    {
-                        return dataTypes.get(columnIndex);
-                    }
-                    
-                    @Override
-                    public boolean isCellEditable(int row, int col)
-                    {
-                        return false;
-                    }
-                }
-            );
+                    (
+                            new javax.swing.table.DefaultTableModel(tableDataArray, columnData.toArray()) {
+                                @Override
+                                public Class getColumnClass(int columnIndex) {
+                                    return dataTypes.get(columnIndex);
+                                }
 
-            table.addMouseListener(new java.awt.event.MouseAdapter()
-            {
+                                @Override
+                                public boolean isCellEditable(int row, int col) {
+                                    return false;
+                                }
+                            }
+                    );
+
+            table.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt)
-                {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
                     rowClicked(evt);
                 }
             });
 
             resultsScrollPane.setViewportView(table);
-        }
-        else
-        {
+        } else {
             resultsScrollPane.setViewportView(noDataFoundLabel);
         }
 
@@ -624,16 +558,12 @@ public class SearchFrame extends javax.swing.JFrame
 
     private void printResultsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printResultsButtonActionPerformed
     {//GEN-HEADEREND:event_printResultsButtonActionPerformed
-        if(table != null)
-        {
+        if (table != null) {
             System.out.print("* printing... ");
-            try
-            {
+            try {
                 table.print();
                 System.out.print("successfull");
-            }
-            catch (PrinterException ex)
-            {
+            } catch (PrinterException ex) {
                 System.out.print("failed");
             }
         }
@@ -643,41 +573,35 @@ public class SearchFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_emptySelectedButtonActionPerformed
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie die markierten Schließfächer wirklich leeren?", "Bestätigung", JOptionPane.YES_NO_CANCEL_OPTION);
 
-        if(answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION || answer == JOptionPane.CLOSED_OPTION)
-        {
+        if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION || answer == JOptionPane.CLOSED_OPTION) {
             return;
         }
-        
+
         int[] selectedRows = table.getSelectedRows();
-        
-        for(int r = 0; r < selectedRows.length; r++)
-        {
+
+        for (int r = 0; r < selectedRows.length; r++) {
             int row = selectedRows[r];
-            
+
             int lockerIndex = getLockerFromRow(row);
             Locker locker = foundLockers.get(lockerIndex).getEntity();
 
-            for(int j = 1; j < 10; j++)
-            {
-                if(dataTypes.get(j) == java.lang.String.class)
-                {
+            for (int j = 1; j < 10; j++) {
+                if (dataTypes.get(j) == java.lang.String.class) {
                     table.setValueAt("", row, j);
                 }
-                
-                if(dataTypes.get(j) == java.lang.Integer.class)
-                {
+
+                if (dataTypes.get(j) == java.lang.Integer.class) {
                     table.setValueAt(0, row, j);
                 }
-                
-                if(dataTypes.get(j) == java.lang.Boolean.class)
-                {
+
+                if (dataTypes.get(j) == java.lang.Boolean.class) {
                     table.setValueAt(false, row, j);
                 }
             }
 
             locker.empty();
         }
-        
+
         JOptionPane.showMessageDialog(this, "Die ausgewälten Schließfächer wurden erfolgreich geleert!", "Info", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_emptySelectedButtonActionPerformed
 

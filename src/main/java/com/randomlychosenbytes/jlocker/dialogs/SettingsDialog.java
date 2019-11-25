@@ -6,61 +6,58 @@
 
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import java.util.List;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
+import java.util.List;
+
 /**
- *
  * @author Willi
  */
-public class SettingsDialog extends javax.swing.JDialog
-{
+public class SettingsDialog extends javax.swing.JDialog {
     DataManager dataManager;
+
     /**
      * Creates new form SettingsDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public SettingsDialog(java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public SettingsDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         int numBackups = (Integer) dataManager.getSettings().get("NumOfBackups");
         numBackupsSlider.setValue(numBackups);
         numBackupsTextField.setText(Integer.toString(numBackups));
-        
+
         updateLockerMinSizesTextField();
     }
-    
+
     /**
-     * 
+     *
      */
-    public final void updateLockerMinSizesTextField()
-    {
+    public final void updateLockerMinSizesTextField() {
         String text = "";
-        
+
         List<Integer> minSizes = (List<Integer>) dataManager.getSettings().get("LockerMinSizes");
-        
-        for(int i = 0; i < minSizes.size(); i++)
-        {
-            if(i != 0)
-            {
+
+        for (int i = 0; i < minSizes.size(); i++) {
+            if (i != 0) {
                 text += ", ";
             }
-            
-            text += minSizes.get(minSizes.size() - i - 1).toString(); 
+
+            text += minSizes.get(minSizes.size() - i - 1).toString();
         }
-        
+
         lockerMinSizesTextField.setText(text);
     }
 
@@ -71,8 +68,7 @@ public class SettingsDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
@@ -107,10 +103,8 @@ public class SettingsDialog extends javax.swing.JDialog
 
         mainPanel.add(backupPanel);
 
-        numBackupsSlider.addChangeListener(new javax.swing.event.ChangeListener()
-        {
-            public void stateChanged(javax.swing.event.ChangeEvent evt)
-            {
+        numBackupsSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 numBackupsSliderStateChanged(evt);
             }
         });
@@ -120,10 +114,8 @@ public class SettingsDialog extends javax.swing.JDialog
         mainPanel.add(lockerMinSizesLabel);
 
         lockerMinSizesTextField.setEditable(false);
-        lockerMinSizesTextField.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
+        lockerMinSizesTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lockerMinSizesTextFieldMouseClicked(evt);
             }
         });
@@ -138,20 +130,16 @@ public class SettingsDialog extends javax.swing.JDialog
         buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         buttonPanel.add(okButton);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -168,7 +156,7 @@ public class SettingsDialog extends javax.swing.JDialog
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
         dataManager.getSettings().put("NumOfBackups", numBackupsSlider.getValue());
-        
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -180,7 +168,7 @@ public class SettingsDialog extends javax.swing.JDialog
     private void numBackupsSliderStateChanged(javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_numBackupsSliderStateChanged
     {//GEN-HEADEREND:event_numBackupsSliderStateChanged
         int num = numBackupsSlider.getValue();
-        numBackupsTextField.setText(Integer.toString(num)); 
+        numBackupsTextField.setText(Integer.toString(num));
     }//GEN-LAST:event_numBackupsSliderStateChanged
 
     private void lockerMinSizesTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_lockerMinSizesTextFieldMouseClicked

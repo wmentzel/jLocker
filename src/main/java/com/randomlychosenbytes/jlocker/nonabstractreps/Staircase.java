@@ -9,80 +9,71 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
 /**
- *
  * @author Willi
- * 
  * @version latest
  */
-public class Staircase extends javax.swing.JPanel
-{
+public class Staircase extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
      * by the compiler, even for minor changes. To avoid that it is set
      * by the programmer.
-     */    
-    private static final long serialVersionUID = 0L;
-    
-    private String sName;
-     
-    /** 
-     * Creates new form Staircase 
      */
-    public Staircase() 
-    {
+    private static final long serialVersionUID = 0L;
+
+    private String sName;
+
+    /**
+     * Creates new form Staircase
+     */
+    public Staircase() {
         initComponents();
     }
-    
+
     /* *************************************************************************
      * Setter
      **************************************************************************/
-    public void setEntityName(String n)
-    {
+    public void setEntityName(String n) {
         sName = n;
         captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + sName + "</div></div></html>");
     }
-    
+
     /**
      * XMLEncoder
-     * @param n 
+     *
+     * @param n
      */
-    public void setSName(String n)
-    {
+    public void setSName(String n) {
         sName = n;
     }
- 
-    public void setUpMouseListener()
-    {
-       if(this.getMouseListeners().length == 0)
-       {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() 
-            {
+
+    public void setUpMouseListener() {
+        if (this.getMouseListeners().length == 0) {
+            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) 
-                {
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
                     captionLabelMouseReleased(evt);
                 }
             });
-       }
+        }
     }
-    
+
     /* *************************************************************************
      * Getter
      **************************************************************************/
-    
+
     /**
      * XMLEncoder
-     * @return 
+     *
+     * @return
      */
-    public String getSName()
-    {
+    public String getSName() {
         return sName;
     }
-    
-    public String getEntityName()
-    {
+
+    public String getEntityName() {
         return sName;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,8 +81,7 @@ public class Staircase extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         captionLabel = new javax.swing.JLabel();
 
@@ -101,10 +91,8 @@ public class Staircase extends javax.swing.JPanel
         captionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         captionLabel.setForeground(new java.awt.Color(255, 255, 255));
         captionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        captionLabel.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseReleased(java.awt.event.MouseEvent evt)
-            {
+        captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
                 captionLabelMouseReleased(evt);
             }
         });

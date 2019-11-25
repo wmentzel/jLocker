@@ -6,33 +6,33 @@
 
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import javax.swing.JOptionPane;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 
+import javax.swing.*;
+
 /**
- *
  * @author Willi
  */
-public class MoveLockerDialog extends javax.swing.JDialog
-{
+public class MoveLockerDialog extends javax.swing.JDialog {
     private final DataManager dataManager;
+
     /**
      * Creates new form MoveLockerDialog
+     *
      * @param parent
      * @param dataManager
      * @param modal
      */
-    public MoveLockerDialog(java.awt.Frame parent, DataManager dataManager, boolean modal)
-    {
+    public MoveLockerDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         this.dataManager = dataManager;
-        
+
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
     }
@@ -44,8 +44,7 @@ public class MoveLockerDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -86,10 +85,8 @@ public class MoveLockerDialog extends javax.swing.JDialog
         centerPanel.add(destinationIDTextField, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -98,10 +95,8 @@ public class MoveLockerDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -123,45 +118,38 @@ public class MoveLockerDialog extends javax.swing.JDialog
     {//GEN-HEADEREND:event_okButtonActionPerformed
         Locker sourceLocker = dataManager.getLockerByID(sourceIDTextField.getText());
 
-        if(sourceLocker == null)
-        {
+        if (sourceLocker == null) {
             JOptionPane.showMessageDialog(this, "Das Quellschließfach existiert nicht!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }
-        
+
         Locker destLocker = dataManager.getLockerByID(destinationIDTextField.getText());
 
-        if(destLocker == null)
-        {
+        if (destLocker == null) {
             JOptionPane.showMessageDialog(this, "Das Zielschließfach existiert nicht!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }
-        
-        try 
-        {
+
+        try {
             dataManager.moveLockers(sourceLocker, destLocker, false);
-            
-            if(!sourceLocker.isFree())
-            {
+
+            if (!sourceLocker.isFree()) {
                 // TODO check null pointer dereferencing getSurname()
-                String task1 = sourceLocker.getSurname() + ", " + sourceLocker.getOwnerName() + " ("+ sourceLocker.getOwnerClass() + ") über Umzug informieren (" + destLocker.getId() + " -> " + sourceLocker.getId() + ")";
+                String task1 = sourceLocker.getSurname() + ", " + sourceLocker.getOwnerName() + " (" + sourceLocker.getOwnerClass() + ") über Umzug informieren (" + destLocker.getId() + " -> " + sourceLocker.getId() + ")";
                 dataManager.addTask(task1);
             }
-            
-            if(!destLocker.isFree())
-            {
-                String task2 = destLocker.getSurname() + ", " + destLocker.getOwnerName() + " ("+ destLocker.getOwnerClass() + ") über Umzug informieren (" + sourceLocker.getId()  + " -> " + destLocker.getId() + ")";
+
+            if (!destLocker.isFree()) {
+                String task2 = destLocker.getSurname() + ", " + destLocker.getOwnerName() + " (" + destLocker.getOwnerClass() + ") über Umzug informieren (" + sourceLocker.getId() + " -> " + destLocker.getId() + ")";
                 dataManager.addTask(task2);
             }
             sourceIDTextField.setText("");
             destinationIDTextField.setText("");
-            
-        } 
-        catch (CloneNotSupportedException ex) 
-        {
+
+        } catch (CloneNotSupportedException ex) {
             JOptionPane.showMessageDialog(this, "Die Daten sind beschädigt! Das Schließfach konnte nicht verschoben werden!", "Fehler", JOptionPane.OK_OPTION);
         }
-        
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

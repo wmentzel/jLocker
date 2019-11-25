@@ -9,32 +9,30 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 
 /**
- *
  * @author Willi
  */
-public class StaircaseDialog extends javax.swing.JDialog
-{
+public class StaircaseDialog extends javax.swing.JDialog {
     private final Staircase staircase;
-    
+
     /**
      * Creates new form StaircaseDialog
+     *
      * @param parent
      * @param modal
      * @param staircase
      */
-    public StaircaseDialog(java.awt.Frame parent, boolean modal, Staircase staircase)
-    {
+    public StaircaseDialog(java.awt.Frame parent, boolean modal, Staircase staircase) {
         super(parent, modal);
         initComponents();
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
-        
+
         // focus in the middle
         setLocationRelativeTo(null);
-        
+
         this.staircase = staircase;
-        
+
         staircaseNameTextBox.setText(staircase.getEntityName());
     }
 
@@ -45,8 +43,7 @@ public class StaircaseDialog extends javax.swing.JDialog
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         centerPanel = new javax.swing.JPanel();
@@ -74,10 +71,8 @@ public class StaircaseDialog extends javax.swing.JDialog
         centerPanel.add(staircaseNameTextBox, gridBagConstraints);
 
         okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
@@ -86,10 +81,8 @@ public class StaircaseDialog extends javax.swing.JDialog
         centerPanel.add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
