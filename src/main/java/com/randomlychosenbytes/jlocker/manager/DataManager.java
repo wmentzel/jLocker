@@ -8,7 +8,6 @@ import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -44,8 +43,8 @@ public class DataManager {
 
     private boolean hasDataChanged;
 
-    private String ressourceFilePath;
-    private String sHomeDir;
+    private File ressourceFilePath;
+    private File sHomeDir;
 
     private List<Building> buildings;
     private List<User> users;
@@ -110,16 +109,13 @@ public class DataManager {
         // Create Backup
         //
 
-        String backupDirectoryPath = sHomeDir + "Backup/";
-        File backupDirectoryFile = new File(backupDirectoryPath);
+        File backupDirectoryFile = new File(sHomeDir, "Backup");
 
         //
         // Check if backup directory exists. If not, create it.
         //
-        if (!(backupDirectoryFile.exists())) {
-            if (backupDirectoryFile.mkdir() == false) {
-                System.out.println("Backup failed!");
-            }
+        if (!backupDirectoryFile.exists() && !backupDirectoryFile.mkdir()) {
+            System.out.println("Backup failed!");
         }
 
         //
@@ -129,14 +125,14 @@ public class DataManager {
         today.setLenient(false);
         today.getTime();
 
-        String path = String.format(backupDirectoryPath + "jlocker-%04d-%02d-%02d.dat",
+        File backupFile = new File(backupDirectoryFile, String.format("jlocker-%04d-%02d-%02d.dat",
                 today.get(Calendar.YEAR),
                 today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH));
+                today.get(Calendar.DAY_OF_MONTH)));
 
         // if a backup from this day doesnt exist, create one!
-        if (!(new File(path).exists())) {
-            saveData(path);
+        if (!backupFile.exists()) {
+            saveData(backupFile);
         }
 
         //
@@ -176,16 +172,16 @@ public class DataManager {
     /**
      * Only called by saveAndCreateBackup
      *
-     * @param path Path to the jlocker.dat file
+     * @param file Path to the jlocker.dat file
      * @return status (true for error)
      */
-    private boolean saveData(String path) {
+    private boolean saveData(File file) {
         byte b[] = SecurityManager.serialize(buildings);
         sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
 
-        System.out.print("* saving " + path + "... ");
+        System.out.print("* saving " + file.getAbsolutePath() + "... ");
 
-        ObjectOutputStream oos = SecurityManager.getOos(path);
+        ObjectOutputStream oos = SecurityManager.getOos(file);
 
         try {
             oos.writeObject(users);
@@ -211,10 +207,11 @@ public class DataManager {
     public void loadData() {
         String status;
 
-        if (!loadFromCustomFile(ressourceFilePath))
-            status = "erfolgreich";
-        else
+        if (loadFromCustomFile(ressourceFilePath)) {
             status = "fehlgeschlagen";
+        } else {
+            status = "erfolgreich";
+        }
 
         mainFrame.setStatusMessage("Laden " + status + "!");
     }
@@ -224,13 +221,10 @@ public class DataManager {
      * buildings, tasks and settings objects. When called directly this is used
      * to load backup files. If you want to load the current "jlocker.dat" file
      * please use loadData() method instead.
-     *
-     * @param path File path to the jlocker.dat file
-     * @return status (true for error)
      */
-    public boolean loadFromCustomFile(String path) {
-        ObjectInputStream ois = SecurityManager.getOis(path);
-        System.out.print("* loading " + path + "... ");
+    public boolean loadFromCustomFile(File file) {
+        ObjectInputStream ois = SecurityManager.getOis(file);
+        System.out.print("* loading " + file + "... ");
 
         try {
             users = (LinkedList<User>) ois.readObject();
@@ -373,14 +367,14 @@ public class DataManager {
     /**
      * @return
      */
-    public String getHomePath() {
+    public File getHomePath() {
         return sHomeDir;
     }
 
     /**
      * @return
      */
-    public String getRessourceFilePath() {
+    public File getRessourceFilePath() {
         return ressourceFilePath;
     }
 
@@ -660,25 +654,15 @@ public class DataManager {
 
     private void determineAppDir() {
         URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
-        File file = new File(url.getFile());
+        sHomeDir = new File(url.getFile());
 
         System.out.print("* determine program directory... ");
 
-        try {
-            sHomeDir = URLDecoder.decode(file.getAbsolutePath(), "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            System.out.println("failed!");
-            System.exit(0);
+        if (!sHomeDir.isDirectory()) {
+            sHomeDir = sHomeDir.getParentFile();
         }
 
-        if (file.isDirectory())
-            sHomeDir += '\\';
-        else {
-            int index = sHomeDir.lastIndexOf('\\');
-            sHomeDir = sHomeDir.substring(0, index + 1);
-        }
-
-        ressourceFilePath = sHomeDir + "jlocker.dat";
+        ressourceFilePath = new File(sHomeDir, "jlocker.dat");
 
         System.out.println("successful!");
         System.out.println("  program directory is: \"" + sHomeDir + "\"");

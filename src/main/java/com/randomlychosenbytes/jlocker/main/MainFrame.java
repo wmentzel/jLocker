@@ -54,27 +54,26 @@ public class MainFrame extends javax.swing.JFrame {
         //
         // Ask to save changes on exit
         //
-        addWindowListener
-                (
-                        new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent winEvt) {
-                                if (dataManager.hasDataChanged()) {
-                                    int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie Ihre Änderungen speichern?", "Speichern und beenden", JOptionPane.YES_NO_CANCEL_OPTION);
+        addWindowListener(
+                new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent winEvt) {
+                        if (dataManager.hasDataChanged()) {
+                            int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie Ihre Änderungen speichern?", "Speichern und beenden", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                                    if (answer == JOptionPane.CANCEL_OPTION) {
-                                        return;
-                                    }
+                            if (answer == JOptionPane.CANCEL_OPTION) {
+                                return;
+                            }
 
-                                    if (answer == JOptionPane.YES_OPTION) {
-                                        dataManager.saveAndCreateBackup();
-                                    }
-                                }
-
-                                System.exit(0);
+                            if (answer == JOptionPane.YES_OPTION) {
+                                dataManager.saveAndCreateBackup();
                             }
                         }
-                );
+
+                        System.exit(0);
+                    }
+                }
+        );
 
         //
         // Initialize status message timer
@@ -92,7 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
         //
         // Show CreateUserDialog if there are none
         //
-        File newResFile = new File(dataManager.getRessourceFilePath());
+        File newResFile = dataManager.getRessourceFilePath();
 
         if (!newResFile.exists()) {
             CreateUsersDialog dialog = new CreateUsersDialog(this, dataManager, true);

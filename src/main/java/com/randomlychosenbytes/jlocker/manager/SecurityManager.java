@@ -94,16 +94,12 @@ public class SecurityManager {
 
     /**
      * Returns the ObjectInputStream to a given path.
-     *
-     * @param filename
-     * @return
      */
-    static public ObjectInputStream getOis(String filename) {
+    static public ObjectInputStream getOis(File file) {
         Object o = null;
 
         try {
-            File f = new File(filename);
-            FileInputStream fis = new FileInputStream(f);
+            FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
             return ois;
         } catch (IOException e) {
@@ -113,14 +109,10 @@ public class SecurityManager {
 
     /**
      * Returns the ObjectOutputStream to a given path.
-     *
-     * @param filename
-     * @return
      */
-    static public ObjectOutputStream getOos(String filename) {
+    static public ObjectOutputStream getOos(File file) {
         try {
-            File f = new File(filename);
-            FileOutputStream fos = new FileOutputStream(f);
+            FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             // The encrypted master keys from the user objects remain untouchend 
@@ -183,8 +175,6 @@ public class SecurityManager {
     }
 
     /**
-     * http://www.exampledepot.com/egs/javax.crypto/EncryptObject.html
-     *
      * @param o
      * @param key
      * @return

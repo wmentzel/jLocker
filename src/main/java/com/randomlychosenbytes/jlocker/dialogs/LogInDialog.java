@@ -12,7 +12,7 @@ import java.io.File;
  * @author Willi
  */
 public class LogInDialog extends javax.swing.JDialog {
-    String resPath = "";
+    File resPath = null;
     private final DataManager dataManager;
 
     /**
@@ -150,7 +150,7 @@ public class LogInDialog extends javax.swing.JDialog {
         //
         // Loading...
         //
-        if (resPath.length() == 0) {
+        if (resPath == null) {
             dataManager.loadData(); // default path
         } else {
             dataManager.loadFromCustomFile(resPath); // backup loading
@@ -199,7 +199,7 @@ public class LogInDialog extends javax.swing.JDialog {
         int returnVal = fc.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            resPath = fc.getSelectedFile().getAbsolutePath();
+            resPath = fc.getSelectedFile();
         }
     }//GEN-LAST:event_loadBackupButtonActionPerformed
 
