@@ -80,7 +80,7 @@ public class DataManager {
 
         determineAppDir();
 
-        // Deterimine app version and name from resources       
+        // Determine app version and name from resources
         ResourceBundle bundle = java.util.ResourceBundle.getBundle("App");
         appTitle = bundle.getString("Application.title");
         appVersion = bundle.getString("Application.version");
@@ -96,8 +96,7 @@ public class DataManager {
     public void saveAndCreateBackup() {
         String status;
 
-        if (saveData(ressourceFilePath)) // save to file jlocker.dat
-        {
+        if (saveData(ressourceFilePath)) { // save to file jlocker.dat
             status = "fehlgeschlagen";
         } else {
             status = "erfolgreich";
@@ -145,7 +144,7 @@ public class DataManager {
 
         if (filesHomeDir.exists()) // if there are not backups yet, we dont have to delete any files
         {
-            // This filter only returns directories
+            // This filter only returns files (and not directories)
             FileFilter fileFilter = new FileFilter() {
                 @Override
                 public boolean accept(File file) {
@@ -176,14 +175,14 @@ public class DataManager {
      * @return status (true for error)
      */
     private boolean saveData(File file) {
-        byte b[] = SecurityManager.serialize(buildings);
-        sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
-
-        System.out.print("* saving " + file.getAbsolutePath() + "... ");
-
-        ObjectOutputStream oos = SecurityManager.getOos(file);
-
         try {
+            byte[] b = SecurityManager.serialize(buildings);
+            sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
+
+            System.out.print("* saving " + file.getAbsolutePath() + "... ");
+
+            ObjectOutputStream oos = SecurityManager.getOos(file);
+
             oos.writeObject(users);
             oos.writeObject(sealedBuildingsObject);
             oos.writeObject(tasks);
@@ -191,12 +190,12 @@ public class DataManager {
 
             oos.flush();
             oos.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("failed!");
             return true;
         }
-        System.out.println("successful!");
 
+        System.out.println("successful!");
         return false;
     }
 

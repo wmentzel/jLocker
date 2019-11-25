@@ -131,21 +131,15 @@ public class SecurityManager {
      * @param obj
      * @return
      */
-    public static byte[] serialize(Object obj) {
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(obj);
+    public static byte[] serialize(Object obj) throws IOException {
 
-            os.close();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
 
-            return out.toByteArray();
-        } catch (IOException e) {
-            System.err.println("SecurityManager.serialization failed");
-            System.err.println(e);
-        }
+        os.close();
 
-        return null;
+        return out.toByteArray();
     }
 
     /**
@@ -179,18 +173,12 @@ public class SecurityManager {
      * @param key
      * @return
      */
-    static public SealedObject encryptObject(byte o[], SecretKey key) {
-        try {
-            Cipher ecipher = Cipher.getInstance("DES");
-            ecipher.init(Cipher.ENCRYPT_MODE, key);
+    static public SealedObject encryptObject(byte o[], SecretKey key) throws Exception {
 
-            return new SealedObject(o, ecipher);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException e) {
-            System.err.println("SecurityMngr.encryptObject failed");
-            System.err.println(e);
-        }
+        Cipher ecipher = Cipher.getInstance("DES");
+        ecipher.init(Cipher.ENCRYPT_MODE, key);
 
-        return null;
+        return new SealedObject(o, ecipher);
     }
 
     public static byte[] decryptObject(SealedObject so, SecretKey key) // Key is saved as string
