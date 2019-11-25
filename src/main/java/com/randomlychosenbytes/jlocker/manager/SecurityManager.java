@@ -93,32 +93,6 @@ public class SecurityManager {
     }
 
     /**
-     * @deprecated found at: http://www.javafaq.nu/java-article236.html
-     */
-    private byte[] getObjectBytes(Object obj) throws java.io.IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(obj);
-        oos.flush();
-        oos.close();
-        bos.close();
-        byte[] data = bos.toByteArray();
-        return data;
-    }
-
-    /**
-     * TODO utilisize to see if changes have been made before closing the
-     * application
-     *
-     * @param obj
-     * @return
-     */
-    public String getObjectHash(Object obj) {
-        // or serialize method
-        return getHash(serializeXml(obj));
-    }
-
-    /**
      * Returns the ObjectInputStream to a given path.
      *
      * @param filename
