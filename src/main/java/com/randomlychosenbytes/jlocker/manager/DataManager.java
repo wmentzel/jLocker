@@ -160,22 +160,26 @@ public class DataManager {
      * @return status (true for error)
      */
     private void saveData(File file) {
-        try (
-                FileOutputStream fos = new FileOutputStream(file);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-        ) {
+
+        System.out.print("* saving " + file.getAbsolutePath() + "... ");
+
+        try {
             byte[] b = SecurityManager.serialize(buildings);
             sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
 
-            System.out.print("* saving " + file.getAbsolutePath() + "... ");
+            try (
+                    FileOutputStream fos = new FileOutputStream(file);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos)
+            ) {
 
-            oos.writeObject(users);
-            oos.writeObject(sealedBuildingsObject);
-            oos.writeObject(tasks);
-            oos.writeObject(settings);
+                oos.writeObject(users);
+                oos.writeObject(sealedBuildingsObject);
+                oos.writeObject(tasks);
+                oos.writeObject(settings);
 
-            System.out.println("successful");
-            mainFrame.setStatusMessage("Speichern erfolgreich");
+                System.out.println("successful");
+                mainFrame.setStatusMessage("Speichern erfolgreich");
+            }
         } catch (Exception ex) {
             System.out.println("failed");
             mainFrame.setStatusMessage("Speichern fehlgeschlagen");
