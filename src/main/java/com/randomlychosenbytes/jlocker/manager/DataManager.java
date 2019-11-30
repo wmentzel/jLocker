@@ -94,25 +94,12 @@ public class DataManager {
      * Saves all data and creates a backup file with a time stamp.
      */
     public void saveAndCreateBackup() {
-        String status;
 
-        if (saveData(ressourceFilePath)) { // save to file jlocker.dat
-            status = "fehlgeschlagen";
-        } else {
-            status = "erfolgreich";
-        }
+        saveData(ressourceFilePath); // save to file jlocker.dat
 
-        mainFrame.setStatusMessage("Speichern " + status + "!");
-
-        //
-        // Create Backup
-        //
-
+        // Check if backup directory exists. If not, create it.
         File backupDirectoryFile = new File(sHomeDir, "Backup");
 
-        //
-        // Check if backup directory exists. If not, create it.
-        //
         if (!backupDirectoryFile.exists() && !backupDirectoryFile.mkdir()) {
             System.out.println("Backup failed!");
         }
@@ -137,8 +124,6 @@ public class DataManager {
         //
         // Just keep a certain number of last saved building files
         //
-
-        // The list of files can also be retrieved as File objects
 
         File filesHomeDir = new File(sHomeDir + "Backup");
 
@@ -174,30 +159,28 @@ public class DataManager {
      * @param file Path to the jlocker.dat file
      * @return status (true for error)
      */
-    private boolean saveData(File file) {
-        try {
+    private void saveData(File file) {
+        try (
+                FileOutputStream fos = new FileOutputStream(file);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+        ) {
             byte[] b = SecurityManager.serialize(buildings);
             sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
 
             System.out.print("* saving " + file.getAbsolutePath() + "... ");
-
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeObject(users);
             oos.writeObject(sealedBuildingsObject);
             oos.writeObject(tasks);
             oos.writeObject(settings);
 
-            oos.flush();
-            oos.close();
-        } catch (Exception e) {
-            System.out.println("failed!");
-            return true;
+            System.out.println("successful");
+            mainFrame.setStatusMessage("Speichern erfolgreich");
+        } catch (Exception ex) {
+            System.out.println("failed");
+            mainFrame.setStatusMessage("Speichern fehlgeschlagen");
+            ex.printStackTrace();
         }
-
-        System.out.println("successful!");
-        return false;
     }
 
     public void loadDefaultFile() {
@@ -213,25 +196,23 @@ public class DataManager {
     public void loadFromCustomFile(File file) {
 
         System.out.print("* reading " + file.getName() + "... ");
-        String status;
 
-        try (FileInputStream fis = new FileInputStream(file)) {
-            try (ObjectInputStream ois = new ObjectInputStream(fis)) {
-                users = (List<User>) ois.readObject();
-                sealedBuildingsObject = (SealedObject) ois.readObject();
-                tasks = (LinkedList<Task>) ois.readObject();
-                settings = (TreeMap) ois.readObject();
+        try (
+                FileInputStream fis = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fis)
+        ) {
+            users = (List<User>) ois.readObject();
+            sealedBuildingsObject = (SealedObject) ois.readObject();
+            tasks = (LinkedList<Task>) ois.readObject();
+            settings = (TreeMap) ois.readObject();
 
-                status = "successful!";
-            } catch (Exception ex) {
-                status = "failed!";
-            }
+            System.out.println("successful");
+            mainFrame.setStatusMessage("Laden erfolgreich");
         } catch (Exception ex) {
-            status = "failed!";
+            System.out.println("failed");
+            mainFrame.setStatusMessage("Laden fehlgeschlagen");
+            ex.printStackTrace();
         }
-
-        System.out.println(status);
-        mainFrame.setStatusMessage("Laden " + (status == "successfull" ? "erfolgreich" : "fehlgeschlagen") + "!");
     }
 
     /**
@@ -258,10 +239,6 @@ public class DataManager {
         Getter
     ***************************************************************************/
 
-    /**
-     * @param id
-     * @return
-     */
     public Locker getLockerByID(String id) {
         for (Building building : buildings) {
             List<Floor> floors = building.getFloorList();
@@ -290,9 +267,6 @@ public class DataManager {
 
     /**
      * Determines whether the given name is already assigned to a building.
-     *
-     * @param name
-     * @return
      */
     public boolean isBuildingNameUnique(String name) {
         int iSize = buildings.size();

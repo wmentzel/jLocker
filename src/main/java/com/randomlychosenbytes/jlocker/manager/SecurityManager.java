@@ -41,13 +41,13 @@ public class SecurityManager {
      */
     public static byte[] serialize(Object obj) throws IOException {
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(obj);
-
-        os.close();
-
-        return out.toByteArray();
+        try (
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                ObjectOutputStream os = new ObjectOutputStream(out);
+        ) {
+            os.writeObject(obj);
+            return out.toByteArray();
+        }
     }
 
     /**
@@ -56,13 +56,14 @@ public class SecurityManager {
      * http://stackoverflow.com/questions/3736058/java-object-to-byte-and-byte-to-object-converter-for-tokyo-cabinet
      */
     public static <T> T deserialize(byte[] data) throws Exception {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        Object o = is.readObject();
 
-        is.close();
-
-        return (T) o;
+        try (
+                ByteArrayInputStream in = new ByteArrayInputStream(data);
+                ObjectInputStream is = new ObjectInputStream(in)
+        ) {
+            Object o = is.readObject();
+            return (T) o;
+        }
     }
 
     public static SealedObject encryptObject(byte o[], SecretKey key) throws Exception {

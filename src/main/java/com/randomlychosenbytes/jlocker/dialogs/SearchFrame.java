@@ -556,7 +556,7 @@ public class SearchFrame extends javax.swing.JFrame {
             System.out.print("* printing... ");
             try {
                 table.print();
-                System.out.print("successfull");
+                System.out.print("successful");
             } catch (PrinterException ex) {
                 System.out.print("failed");
             }
