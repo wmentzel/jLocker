@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -151,7 +150,7 @@ public class LogInDialog extends javax.swing.JDialog {
         // Loading...
         //
         if (resPath == null) {
-            dataManager.loadData(); // default path
+            dataManager.loadDefaultFile();
         } else {
             dataManager.loadFromCustomFile(resPath); // backup loading
         }
@@ -168,7 +167,7 @@ public class LogInDialog extends javax.swing.JDialog {
             return;
         }
 
-        dataManager.setBuildingsObject(SecurityManager.unsealBuidingsObject(dataManager.getSealedBuildingsObject(), dataManager.getUserList().get(0).getUserMasterKey()));
+        dataManager.initBuildingObject();
 
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed

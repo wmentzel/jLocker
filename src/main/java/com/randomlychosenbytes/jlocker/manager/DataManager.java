@@ -181,7 +181,8 @@ public class DataManager {
 
             System.out.print("* saving " + file.getAbsolutePath() + "... ");
 
-            ObjectOutputStream oos = SecurityManager.getOos(file);
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeObject(users);
             oos.writeObject(sealedBuildingsObject);
@@ -199,20 +200,8 @@ public class DataManager {
         return false;
     }
 
-    /**
-     * Wrapper for loadData(String path). This is used to load the current
-     * "jlocker.dat" file.
-     */
-    public void loadData() {
-        String status;
-
-        if (loadFromCustomFile(ressourceFilePath)) {
-            status = "fehlgeschlagen";
-        } else {
-            status = "erfolgreich";
-        }
-
-        mainFrame.setStatusMessage("Laden " + status + "!");
+    public void loadDefaultFile() {
+        loadFromCustomFile(ressourceFilePath);
     }
 
     /**
@@ -221,25 +210,28 @@ public class DataManager {
      * to load backup files. If you want to load the current "jlocker.dat" file
      * please use loadData() method instead.
      */
-    public boolean loadFromCustomFile(File file) {
-        ObjectInputStream ois = SecurityManager.getOis(file);
-        System.out.print("* loading " + file + "... ");
+    public void loadFromCustomFile(File file) {
 
-        try {
-            users = (LinkedList<User>) ois.readObject();
-            sealedBuildingsObject = (SealedObject) ois.readObject();
-            tasks = (LinkedList<Task>) ois.readObject();
-            settings = (TreeMap) ois.readObject();
+        System.out.print("* reading " + file.getName() + "... ");
+        String status;
 
-            ois.close();
-        } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("failed!");
-            return true;
+        try (FileInputStream fis = new FileInputStream(file)) {
+            try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                users = (List<User>) ois.readObject();
+                sealedBuildingsObject = (SealedObject) ois.readObject();
+                tasks = (LinkedList<Task>) ois.readObject();
+                settings = (TreeMap) ois.readObject();
+
+                status = "successful!";
+            } catch (Exception ex) {
+                status = "failed!";
+            }
+        } catch (Exception ex) {
+            status = "failed!";
         }
 
-        System.out.println("successful!");
-
-        return false;
+        System.out.println(status);
+        mainFrame.setStatusMessage("Laden " + (status == "successfull" ? "erfolgreich" : "fehlgeschlagen") + "!");
     }
 
     /**
@@ -544,8 +536,10 @@ public class DataManager {
     /* *************************************************************************
         Setter
     ***************************************************************************/
-    public void setBuildingsObject(List<Building> buildings) {
-        this.buildings = buildings;
+    public void initBuildingObject() {
+        this.buildings = SecurityManager.unsealAndDeserializeBuildings(
+                getSealedBuildingsObject(), getUserList().get(0).getUserMasterKey()
+        );
     }
 
     /**
@@ -655,15 +649,12 @@ public class DataManager {
         URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
         sHomeDir = new File(url.getFile());
 
-        System.out.print("* determine program directory... ");
-
         if (!sHomeDir.isDirectory()) {
             sHomeDir = sHomeDir.getParentFile();
         }
 
         ressourceFilePath = new File(sHomeDir, "jlocker.dat");
 
-        System.out.println("successful!");
-        System.out.println("  program directory is: \"" + sHomeDir + "\"");
+        System.out.println("* program directory is: \"" + sHomeDir + "\"");
     }
 }

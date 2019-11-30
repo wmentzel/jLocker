@@ -3,7 +3,6 @@ package com.randomlychosenbytes.jlocker.main;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
@@ -1248,8 +1247,8 @@ public class MainFrame extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_loadMenuItemActionPerformed
         String decUserPW = dataManager.getCurUser().getUserPW();
 
-        dataManager.loadData();
-        dataManager.setBuildingsObject(SecurityManager.unsealBuidingsObject(dataManager.getSealedBuildingsObject(), dataManager.getUserList().get(0).getUserMasterKey()));
+        dataManager.loadDefaultFile();
+        dataManager.initBuildingObject();
 
         dataManager.getCurUser().isPasswordCorrect(decUserPW);
     }//GEN-LAST:event_loadMenuItemActionPerformed
