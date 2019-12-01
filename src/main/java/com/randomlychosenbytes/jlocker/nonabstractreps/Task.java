@@ -3,11 +3,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-/**
- * XMLEncoder
- *
- * @author Willi
- */
 public class Task implements java.io.Serializable {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
@@ -31,9 +26,6 @@ public class Task implements java.io.Serializable {
                 today.get(Calendar.YEAR));
     }
 
-    /**
-     * For XMLEncoder
-     */
     public Task() {
     }
 

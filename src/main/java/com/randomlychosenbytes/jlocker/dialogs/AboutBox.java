@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 
 /**
  * A simple dialog that displays information about this program.
- *
- * @author Willi
  */
 public class AboutBox extends javax.swing.JDialog {
     // TODO put in properties/resource file
@@ -25,12 +23,6 @@ public class AboutBox extends javax.swing.JDialog {
                     "Die Schließfach-AG der RLO"
             };
 
-    /**
-     * Creates new form AboutBox
-     *
-     * @param parent
-     * @param modal
-     */
     public AboutBox(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

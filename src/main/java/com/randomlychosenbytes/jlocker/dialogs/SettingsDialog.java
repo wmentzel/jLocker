@@ -4,19 +4,9 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 
 import java.util.List;
 
-/**
- * @author Willi
- */
 public class SettingsDialog extends javax.swing.JDialog {
     DataManager dataManager;
 
-    /**
-     * Creates new form SettingsDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public SettingsDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -36,9 +26,6 @@ public class SettingsDialog extends javax.swing.JDialog {
         updateLockerMinSizesTextField();
     }
 
-    /**
-     *
-     */
     public final void updateLockerMinSizesTextField() {
         String text = "";
 

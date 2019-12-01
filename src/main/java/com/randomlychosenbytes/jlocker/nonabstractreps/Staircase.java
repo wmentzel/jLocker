@@ -2,10 +2,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
-/**
- * @author Willi
- * @version latest
- */
 public class Staircase extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
@@ -16,9 +12,6 @@ public class Staircase extends javax.swing.JPanel {
 
     private String sName;
 
-    /**
-     * Creates new form Staircase
-     */
     public Staircase() {
         initComponents();
     }
@@ -31,11 +24,6 @@ public class Staircase extends javax.swing.JPanel {
         captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + sName + "</div></div></html>");
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @param n
-     */
     public void setSName(String n) {
         sName = n;
     }
@@ -55,11 +43,6 @@ public class Staircase extends javax.swing.JPanel {
      * Getter
      **************************************************************************/
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public String getSName() {
         return sName;
     }

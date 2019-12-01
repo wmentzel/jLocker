@@ -9,20 +9,12 @@ import java.awt.print.PrinterException;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Mu
- */
 public class TasksFrame extends javax.swing.JFrame {
     private final List<String> columnData;
     private final JTable table;
     private DefaultTableModel tablemodel;
     private final DataManager dataManager;
 
-    /**
-     * Creates new form TasksFrame
-     *
-     * @param dataManager
-     */
     public TasksFrame(DataManager dataManager) {
         initComponents();
 
@@ -46,9 +38,6 @@ public class TasksFrame extends javax.swing.JFrame {
         tableScrollPane.setViewportView(table);
     }
 
-    /**
-     *
-     */
     private void createTableModel() {
         List tableData = new LinkedList();
 

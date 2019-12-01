@@ -3,10 +3,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 /**
  * Sometimes a map with a single element is needed. Java has no object like this
  * so I created one.
- *
- * @param <T1>
- * @param <T2>
- * @author Willi
  */
 public class Pair<T1, T2> {
     private T1 x;

@@ -7,21 +7,11 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Willi
- */
 public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
     private final List<JTextField> textFields = new LinkedList<>();
     private final List<Integer> minSizes = (List<Integer>) DataManager.getInstance().getSettings().get("LockerMinSizes");
     private final DataManager dataManager;
 
-    /**
-     * Creates new form SetLockerMinSizesDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public SetLockerMinimumSizesDialog(JDialog parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -34,9 +24,6 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
         buildLayout();
     }
 
-    /**
-     *
-     */
     private void buildLayout() {
         GridLayout gl = new GridLayout(minSizes.size() + 1, 2);
         gl.setHgap(5);

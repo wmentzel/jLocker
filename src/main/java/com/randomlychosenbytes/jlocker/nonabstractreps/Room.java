@@ -2,10 +2,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
-/**
- * @author Willi
- * @version latest
- */
 public class Room extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
@@ -17,22 +13,12 @@ public class Room extends javax.swing.JPanel {
     private String sClass;
     private String sName;
 
-    /**
-     * Creates new form Room
-     *
-     * @param name
-     * @param classname
-     */
     public Room(String name, String classname) {
         initComponents();
 
         setCaption(name, classname);
     }
 
-    /**
-     * XMLEncoder
-     * Constructor
-     */
     public Room() {
     }
 
@@ -54,34 +40,18 @@ public class Room extends javax.swing.JPanel {
         captionLabel.setText(caption);
     }
 
-    /**
-     * @param newname
-     */
     public void setRoomName(String newname) {
         sName = newname;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @param newname
-     */
     public void setSName(String newname) {
         sName = newname;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @param newname
-     */
     public void setSClass(String newname) {
         sClass = newname;
     }
 
-    /**
-     *
-     */
     public void setUpMouseListener() {
         if (this.getMouseListeners().length == 0) {
             captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -97,37 +67,22 @@ public class Room extends javax.swing.JPanel {
      * Getter
      **************************************************************************/
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public String getSName() {
         return sName;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public String getSClass() {
         return sClass;
     }
-
 
     public String getRoomName() {
         return sName;
     }
 
-
     public String getClassName() {
         return sClass;
     }
 
-    /**
-     * @param classname
-     */
     public void setClassName(String classname) {
         sClass = classname;
     }

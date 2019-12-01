@@ -20,11 +20,6 @@ public class Entity implements java.io.Serializable {
         sName = newname;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @param newname
-     */
     public void setSName(String newname) {
         sName = newname;
     }
@@ -36,9 +31,6 @@ public class Entity implements java.io.Serializable {
         return sName;
     }
 
-    /**
-     * XMLEncoder
-     */
     public String getSName() {
         return sName;
     }

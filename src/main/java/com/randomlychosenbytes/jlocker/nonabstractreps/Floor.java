@@ -18,9 +18,6 @@ public class Floor extends Entity {
         walks = new LinkedList<>();
     }
 
-    /**
-     *
-     */
     public Floor() {
     }
 
@@ -47,16 +44,10 @@ public class Floor extends Entity {
         return true;
     }
 
-
     public List<Walk> getWalkList() {
         return walks;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public List<Walk> getWalks() {
         return walks;
     }

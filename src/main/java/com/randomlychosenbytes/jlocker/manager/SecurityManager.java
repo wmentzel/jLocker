@@ -15,9 +15,6 @@ import java.util.List;
 /**
  * The SecurityManager class handles everything regarding encryption and
  * decryption.
- *
- * @author Willi
- * @version latest
  */
 public class SecurityManager {
     /**

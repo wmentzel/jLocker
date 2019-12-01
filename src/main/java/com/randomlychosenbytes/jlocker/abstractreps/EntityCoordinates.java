@@ -8,9 +8,6 @@ package com.randomlychosenbytes.jlocker.abstractreps;
  * locker. For this we need to set the drop down menus to the building
  * (1st coordinate), floor (2nd coordinate) and walk (3rd coordinate) the locker
  * is in.
- *
- * @param <T>
- * @author Willi
  */
 public class EntityCoordinates<T> {
     T obj;

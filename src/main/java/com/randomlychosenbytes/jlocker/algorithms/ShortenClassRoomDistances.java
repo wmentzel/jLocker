@@ -16,9 +16,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Willi
- */
 public class ShortenClassRoomDistances {
     /* *************************************************************************
         Status codes
@@ -77,12 +74,6 @@ public class ShortenClassRoomDistances {
         status = check();
     }
 
-
-    /**
-     * Creates a list of free lockers and does the actual moving.
-     *
-     * @return
-     */
     private int check() {
         // create a list of all free lockers
         // and all the lockers that belong to people of that class
@@ -155,8 +146,6 @@ public class ShortenClassRoomDistances {
     /**
      * Does the actual moving based on the data gathered before.
      * and returns a list of the moving operations.
-     *
-     * @return
      */
     public final String execute() {
         String statusMessage = "";
@@ -226,34 +215,18 @@ public class ShortenClassRoomDistances {
 
         return statusMessage;
     }
-    
-    /* *************************************************************************
-        Getter
-     **************************************************************************/
 
-    /**
-     * The graph can be drawn for debugging reasons
-     *
-     * @return
-     */
     public SimpleWeightedGraph<String, DefaultWeightedEdge> getWeightedGraph() {
         return managementUnitGraph;
     }
 
-    /**
-     * Returns the status
-     *
-     * @return
-     */
     public int getStatus() {
         return status;
     }
 
-
     public List<EntityCoordinates<Locker>> getEntityCoordinatesOfFreeLockers() {
         return freeLockersEntityCoordinatesList;
     }
-
 
     public String getIdsOfUnreachableLockers() {
         String s = "";
@@ -272,9 +245,6 @@ public class ShortenClassRoomDistances {
 
         return s;
     }
-    /* *************************************************************************
-        Private Methods
-     **************************************************************************/
 
     /**
      * Connects MangementUnits on a floor with each other and each ManamentUnit
@@ -395,9 +365,6 @@ public class ShortenClassRoomDistances {
 
     /**
      * Returns the IDs of all ManagementUnits on the given floor with the given name
-     *
-     * @param name
-     * @return
      */
     private List<String> findStaircasesOnFloor(int b, int f, String name) {
         List<Building> buildings = dataManager.getBuildingList();
@@ -466,9 +433,6 @@ public class ShortenClassRoomDistances {
 
     /**
      * Returns the IDs of all Staircases for a given building
-     *
-     * @param name
-     * @return
      */
     private List<String> findStaircasesForBuilding(int b, String name) {
         Building building = dataManager.getBuildingList().get(b);
@@ -514,13 +478,6 @@ public class ShortenClassRoomDistances {
         return -1; // not reachable 
     }
 
-    /**
-     * @param b
-     * @param f
-     * @param w
-     * @param m
-     * @return
-     */
     private String createNodeId(int b, int f, int w, int m) {
         return b + "-" + f + "-" + w + "-" + m;
     }

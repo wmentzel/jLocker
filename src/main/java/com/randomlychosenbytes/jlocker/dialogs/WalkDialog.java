@@ -7,9 +7,6 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 import javax.swing.*;
 
-/**
- * @author Willi
- */
 public class WalkDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
@@ -17,14 +14,6 @@ public class WalkDialog extends javax.swing.JDialog {
     final int bMode;
     DataManager dataManager;
 
-    /**
-     * Creates new form WalkDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     * @param mode
-     */
     public WalkDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
         super(parent, modal);
         initComponents();

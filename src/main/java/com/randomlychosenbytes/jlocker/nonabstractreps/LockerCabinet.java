@@ -8,10 +8,6 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Willi
- * @version latest
- */
 public class LockerCabinet extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
@@ -33,11 +29,6 @@ public class LockerCabinet extends javax.swing.JPanel {
      * Setter
      **************************************************************************/
 
-    /**
-     * XMLEncoder
-     *
-     * @param lockers
-     */
     public void setLockers(List<Locker> lockers) {
         this.lockers = lockers;
     }
@@ -69,9 +60,6 @@ public class LockerCabinet extends javax.swing.JPanel {
         remLockerLabel.setEnabled(true);
     }
 
-    /**
-     * @param rows
-     */
     private void updateCabinet(int rows) {
         cabinetPanel.removeAll();
         cabinetPanel.setLayout(new GridLayout(0, 1, 0, 10));
@@ -89,9 +77,6 @@ public class LockerCabinet extends javax.swing.JPanel {
         cabinetPanel.updateUI();
     }
 
-    /**
-     *
-     */
     public void setUpMouseListeners() {
         if (addLockerLabel.getMouseListeners().length == 0) {
             addLockerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,10 +105,6 @@ public class LockerCabinet extends javax.swing.JPanel {
      * Getter
      **************************************************************************/
 
-    /**
-     * @param id
-     * @return
-     */
     public int getLockerRowByID(String id) {
         for (int l = 0; l < lockers.size(); l++) {
             if (lockers.get(l).getId().equals(id))
@@ -133,16 +114,10 @@ public class LockerCabinet extends javax.swing.JPanel {
         return 0;
     }
 
-
     public List<Locker> getLockerList() {
         return lockers;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public List<Locker> getLockers() {
         return lockers;
     }

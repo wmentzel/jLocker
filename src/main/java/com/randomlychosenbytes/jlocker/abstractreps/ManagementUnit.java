@@ -10,9 +10,6 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * @author Willi
- */
 public class ManagementUnit extends javax.swing.JPanel {
     /**
      * If the object is manipulated another serialVersionUID will be assigned

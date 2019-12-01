@@ -14,21 +14,11 @@ import java.util.*;
  * DataManager is a singleton class. There can only be one instance of this
  * class at any time and it has to be accessed from anywhere. This may not be
  * the best design but it stays that way for the time being.
- *
- * @author Willi
- * @version latest
  */
 public class DataManager {
-    /**
-     * Singleton mechanism
-     */
+
     final private static DataManager instance = new DataManager();
 
-    /**
-     * Returns the one and only instance of this singleton class
-     *
-     * @return
-     */
     public static DataManager getInstance() {
         return instance;
     }
@@ -62,9 +52,6 @@ public class DataManager {
 
     private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
-    /**
-     * Initializes the class on the first call
-     */
     public DataManager() {
         currentBuildingIndex = 0;
         currentFloorIndex = 0;
@@ -147,12 +134,6 @@ public class DataManager {
         }
     }
 
-    /**
-     * Only called by saveAndCreateBackup
-     *
-     * @param file Path to the jlocker.dat file
-     * @return status (true for error)
-     */
     private void saveData(File file) {
 
         System.out.print("* saving " + file.getName() + "... ");
@@ -279,11 +260,6 @@ public class DataManager {
 
     /**
      * Moves a student from one locker to another.
-     *
-     * @param sourceLocker
-     * @param destLocker
-     * @param withCodes
-     * @throws CloneNotSupportedException
      */
     public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) throws CloneNotSupportedException {
         Locker destCopy = destLocker.getCopy();
@@ -323,121 +299,93 @@ public class DataManager {
         return ressourceFilePath;
     }
 
-    /**
-     * Returns whether this ID already exists or not.
-     *
-     * @param id
-     * @return
-     */
     public boolean isLockerIdUnique(String id) {
         return getLockerByID(id) == null;
     }
-
 
     public SealedObject getSealedBuildingsObject() {
         return sealedBuildingsObject;
     }
 
-
     public User getCurUser() {
         return users.get(currentUserIndex);
     }
-
 
     public List<User> getUserList() {
         return users;
     }
 
-
     public List<Building> getBuildingList() {
         return buildings;
     }
-
 
     public int getCurBuildingIndex() {
         return currentBuildingIndex;
     }
 
-
     public Building getCurBuilding() {
         return buildings.get(currentBuildingIndex);
     }
-
 
     public List<Floor> getCurFloorList() {
         return getCurBuilding().getFloorList();
     }
 
-
     public Floor getCurFloor() {
         return getCurFloorList().get(currentFloorIndex);
     }
-
 
     public int getCurFloorIndex() {
         return currentFloorIndex;
     }
 
-
     public List<Walk> getCurWalkList() {
         return getCurFloor().getWalkList();
     }
-
 
     public Walk getCurWalk() {
         return getCurWalkList().get(currentWalkIndex);
     }
 
-
     public int getCurWalkIndex() {
         return currentWalkIndex;
     }
-
 
     public List<ManagementUnit> getCurManagmentUnitList() {
         return getCurWalk().getManagementUnitList();
     }
 
-
     public ManagementUnit getCurManamentUnit() {
         return getCurManagmentUnitList().get(currentColumnIndex);
     }
-
 
     public int getCurManagementUnitIndex() {
         return currentColumnIndex;
     }
 
-
     public List<Locker> getCurLockerList() {
         return getCurManamentUnit().getLockerList();
     }
-
 
     public Locker getCurLocker() {
         return getCurLockerList().get(currentLockerIndex);
     }
 
-
     public int getCurLockerIndex() {
         return currentLockerIndex;
     }
-
 
     public Room getCurRoom() {
         return getCurManamentUnit().getRoom();
     }
 
-
     public LockerCabinet getCurLockerCabinet() {
         return getCurManamentUnit().getLockerCabinet();
     }
 
-
     public boolean hasDataChanged() {
         return hasDataChanged;
     }
-
 
     public List<Task> getTasks() {
         return tasks;
@@ -452,101 +400,46 @@ public class DataManager {
         );
     }
 
-    /**
-     * Setter
-     *
-     * @param mainFrame
-     */
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
 
-    /**
-     * Setter
-     *
-     * @param users
-     */
     public void setUserList(List<User> users) {
         this.users = users;
     }
 
-    /**
-     * Setter
-     *
-     * @param changed
-     */
     public void setDataChanged(boolean changed) {
         hasDataChanged = changed;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentBuildingIndex(int index) {
         currentBuildingIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentFloorIndex(int index) {
         currentFloorIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentWalkIndex(int index) {
         currentWalkIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentMUnitIndex(int index) {
         currentColumnIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentLockerIndex(int index) {
         currentLockerIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param index
-     */
     public void setCurrentUserIndex(int index) {
         currentUserIndex = index;
     }
 
-    /**
-     * Setter
-     *
-     * @param description
-     */
     public void addTask(String description) {
         tasks.add(new Task(description));
     }
 
-    /**
-     * Setter
-     *
-     * @param tasks
-     */
     public void setTaskList(List<Task> tasks) {
         this.tasks = tasks;
     }

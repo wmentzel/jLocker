@@ -10,17 +10,8 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * @author Willi
- */
 public class DisplayGraphDialog extends JDialog {
-    /**
-     * Creates new form DisplayGraphForm
-     *
-     * @param parent
-     * @param g
-     * @param modal
-     */
+
     public DisplayGraphDialog(final Frame parent, SimpleWeightedGraph g, boolean modal) {
         super(parent, modal);
 

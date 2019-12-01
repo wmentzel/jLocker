@@ -13,8 +13,6 @@ import java.security.spec.InvalidKeySpecException;
  * Represents a User of the program. There are two different kinds a the moment
  * a restricted user and a super user. The super user can do everything the
  * restricted user can, plus he can view/edit the locker codes.
- *
- * @author Willi
  */
 public class User extends Entity {
     /**
@@ -35,9 +33,6 @@ public class User extends Entity {
     transient private SecretKey decSuperUMasterKey;
     transient private String decUserPW;
 
-    /**
-     * For XMLEncoder
-     */
     public User() {
     }
 
@@ -79,12 +74,6 @@ public class User extends Entity {
         }
     }
 
-    /**
-     * Decrypts password!
-     *
-     * @param pw
-     * @return
-     */
     public boolean isPasswordCorrect(String pw) {
         if (new SecurityManager().getHash(pw.getBytes()).equals(sHash)) {
             decUserPW = pw;

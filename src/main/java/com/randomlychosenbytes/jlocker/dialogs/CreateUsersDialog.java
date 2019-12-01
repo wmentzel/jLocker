@@ -11,9 +11,6 @@ import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Willi
- */
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int iDisplayedCard;
     private final CardLayout cl;
@@ -22,13 +19,6 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     private SecretKey ukey;
     private final DataManager dataManager;
 
-    /**
-     * Creates new form CreateUsersDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();

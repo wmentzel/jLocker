@@ -4,9 +4,6 @@ import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 
 import javax.swing.*;
 
-/**
- * @author Willi
- */
 public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     int chosenType;
 

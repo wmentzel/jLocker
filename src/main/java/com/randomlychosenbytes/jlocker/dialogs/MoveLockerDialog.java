@@ -5,19 +5,9 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 
 import javax.swing.*;
 
-/**
- * @author Willi
- */
 public class MoveLockerDialog extends javax.swing.JDialog {
     private final DataManager dataManager;
 
-    /**
-     * Creates new form MoveLockerDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public MoveLockerDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();

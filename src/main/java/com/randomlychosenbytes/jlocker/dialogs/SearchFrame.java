@@ -14,9 +14,6 @@ import java.awt.print.PrinterException;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Mu
- */
 public class SearchFrame extends javax.swing.JFrame {
     private JTable table;
     private List<EntityCoordinates<Locker>> foundLockers;
@@ -27,14 +24,6 @@ public class SearchFrame extends javax.swing.JFrame {
     private final MainFrame mainFrame;
     private final DataManager dataManager;
 
-    /**
-     * Creates new form SearchFrame
-     * <p>
-     * TODO find a way to search for checkboxes
-     *
-     * @param mainFrame
-     * @param dataManager
-     */
     public SearchFrame(MainFrame mainFrame, DataManager dataManager) {
         initComponents();
 
@@ -142,9 +131,6 @@ public class SearchFrame extends javax.swing.JFrame {
     /**
      * This is necessary because the row order can be user defined, so the row
      * order and the found lockers order isn't the same
-     *
-     * @param row
-     * @return
      */
     private int getLockerFromRow(int row) {
         String id = (String) table.getValueAt(row, 0);

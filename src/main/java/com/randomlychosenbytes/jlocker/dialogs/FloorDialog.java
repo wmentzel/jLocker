@@ -6,9 +6,6 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
-/**
- * @author Willi
- */
 public class FloorDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
@@ -16,14 +13,6 @@ public class FloorDialog extends javax.swing.JDialog {
     private final int bMode;
     private final DataManager dataManager;
 
-    /**
-     * Creates new form FloorDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     * @param mode
-     */
     public FloorDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
         super(parent, modal);
         initComponents();

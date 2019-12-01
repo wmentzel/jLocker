@@ -28,11 +28,6 @@ public class Walk extends Entity {
      * Setter
      **************************************************************************/
 
-    /**
-     * XMLEncoder
-     *
-     * @param mus
-     */
     public void setMus(List<ManagementUnit> mus) {
         this.mus = mus;
     }
@@ -55,16 +50,10 @@ public class Walk extends Entity {
      * Getter
      **************************************************************************/
 
-
     public List<ManagementUnit> getManagementUnitList() {
         return mus;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public List<ManagementUnit> getMus() {
         return mus;
     }

@@ -3,11 +3,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Represents a building in real-life.
- *
- * @author Willi
- */
 public class Building extends Entity {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
@@ -31,30 +26,16 @@ public class Building extends Entity {
         floors = new LinkedList<>();
     }
 
-    /**
-     * XMLEncoder
-     */
     public Building() {
     }
 
     /* *************************************************************************
      * Setter
      **************************************************************************/
-
-    /**
-     * Setter
-     *
-     * @param notes a string with a note
-     */
     public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @param floors
-     */
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
     }
@@ -63,20 +44,12 @@ public class Building extends Entity {
      * Getter
      **************************************************************************/
 
-    /**
-     * Getter
-     *
-     * @return the notes
-     */
     public String getNotes() {
         return notes;
     }
 
     /**
      * Determines whether or not the floor number is unique.
-     *
-     * @param name
-     * @return
      */
     public boolean isFloorNameUnique(String name) {
         int iSize = floors.size();
@@ -90,20 +63,10 @@ public class Building extends Entity {
         return true;
     }
 
-    /**
-     * Getter
-     *
-     * @return list of floors
-     */
     public List<Floor> getFloorList() {
         return floors;
     }
 
-    /**
-     * XMLEncoder
-     *
-     * @return
-     */
     public List<Floor> getFloors() {
         return floors;
     }

@@ -16,26 +16,17 @@ import java.util.*;
  * this is the most complex part of jLocker.
  * The code in this dialog is responsible for optimizing the distances between
  * lookers and their respective class rooms.
- * <p>
+ *
  * It utilizes the Dijkstra shortest path algorithm implemented in the library
  * jGraphT.
- * <p>
- * SimpleWeightedGraph
  *
- * @author Willi
+ * SimpleWeightedGraph
  */
 public class MoveClassDialog extends javax.swing.JDialog {
     private final DataManager dataManager;
     private Map<String, String> classToClassRoomNodeId;
     private Set<String> lockerIdWithoutHeights;
 
-    /**
-     * Creates new form MoveClassDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public MoveClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, false);
         initComponents();
@@ -63,7 +54,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
      * Finds all classes that have a classroom. All other classes (the ones that
      * are only assigned to pupils and don't have a room) don't have to
      * be listed because the algorithm can't be used on them anyway.
-     * <p>
+     *
      * Requires a classroom to be unique! (test to be implemented)
      */
     private void findClassesAndClassRooms() {

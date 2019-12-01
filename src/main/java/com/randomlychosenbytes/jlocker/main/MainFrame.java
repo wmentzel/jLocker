@@ -18,9 +18,7 @@ import java.util.List;
 
 /**
  * This is the main windows of the application. It is displayed right after
- * the login-dialog/create new user dialog.
- *
- * @author Willi
+ * the login-dialog/create new user dialog.i
  */
 public class MainFrame extends javax.swing.JFrame {
     private SearchFrame searchFrame;
@@ -33,9 +31,6 @@ public class MainFrame extends javax.swing.JFrame {
      */
     DataManager dataManager = DataManager.getInstance();
 
-    /**
-     * Creates new form MainFrame
-     */
     public MainFrame() {
         initComponents();
 
@@ -275,11 +270,6 @@ public class MainFrame extends javax.swing.JFrame {
         remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
     }
 
-    /**
-     * Sets a status message at the bottom for a certain period of time.
-     *
-     * @param message Message to be displayed
-     */
     public void setStatusMessage(String message) {
         if (timer.isRunning()) {
             timer.restart();
@@ -302,9 +292,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     /**
      * Initializes a combo box with a given list of entities.
-     *
-     * @param obj
-     * @param combobox
      */
     private void initializeComboBox(Object obj, JComboBox combobox) {
         // cast here to avoid it during method call
@@ -1301,9 +1288,6 @@ public class MainFrame extends javax.swing.JFrame {
         dialog.setVisible(true);
     }//GEN-LAST:event_moveLockerMenuItemActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

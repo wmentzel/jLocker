@@ -10,22 +10,9 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * A simple dialog to rename a (school) class.
- * TODO rewrite
- *
- * @author Willi
- */
 public class RenameClassDialog extends javax.swing.JDialog {
     DataManager dataManager;
 
-    /**
-     * Creates new form ChangeClassDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public RenameClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();

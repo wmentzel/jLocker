@@ -6,9 +6,6 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * @author Willi
- */
 public class EditCodesDialog extends javax.swing.JDialog {
     private final JTextField codeTextFields[] = new JTextField[5];
     private int iCurCodeIndex;

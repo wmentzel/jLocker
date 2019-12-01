@@ -7,20 +7,10 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-/**
- * @author Willi
- */
 public class LogInDialog extends javax.swing.JDialog {
     File resPath = null;
     private final DataManager dataManager;
 
-    /**
-     * Creates new form LogInDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
-     */
     public LogInDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
