@@ -1,5 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
+import com.randomlychosenbytes.jlocker.manager.DataManager;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,14 +77,12 @@ public class AboutBox extends javax.swing.JDialog {
         versionLabel = new javax.swing.JLabel();
         vendorLabel = new javax.swing.JLabel();
         technologyLabel = new javax.swing.JLabel();
-        ideLabel = new javax.swing.JLabel();
         emailAddressLabel = new javax.swing.JLabel();
         thanks2Label = new javax.swing.JLabel();
         centerPanel = new javax.swing.JPanel();
         appVersionLabel = new javax.swing.JLabel();
         appVendorLabel = new javax.swing.JLabel();
         appTechnologyLabel = new javax.swing.JLabel();
-        appIdeLabel = new javax.swing.JLabel();
         appEmailAddressLabel = new javax.swing.JLabel();
         appThanks2Label = new javax.swing.JLabel();
         closeButton = new javax.swing.JButton();
@@ -111,9 +111,6 @@ public class AboutBox extends javax.swing.JDialog {
         technologyLabel.setToolTipText("");
         westPanel.add(technologyLabel);
 
-        ideLabel.setText("Entwickelt mit:");
-        westPanel.add(ideLabel);
-
         emailAddressLabel.setText("E-Mail-Adresse:");
         westPanel.add(emailAddressLabel);
 
@@ -126,17 +123,15 @@ public class AboutBox extends javax.swing.JDialog {
 
         centerPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 5));
 
-        appVersionLabel.setText("1.5");
+        appVersionLabel.setText(DataManager.getInstance().getAppVersion());
         centerPanel.add(appVersionLabel);
 
         appVendorLabel.setText("Willi Mentzel");
         centerPanel.add(appVendorLabel);
 
-        appTechnologyLabel.setText("Java / JRE 7 Update 3");
+        String version = System.getProperty("java.version");
+        appTechnologyLabel.setText("Java " + version + "");
         centerPanel.add(appTechnologyLabel);
-
-        appIdeLabel.setText("Netbeans 8.0");
-        centerPanel.add(appIdeLabel);
 
         appEmailAddressLabel.setText("willi.mentzel@gmail.com");
         centerPanel.add(appEmailAddressLabel);
@@ -170,7 +165,6 @@ public class AboutBox extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel appEmailAddressLabel;
-    private javax.swing.JLabel appIdeLabel;
     private javax.swing.JLabel appTechnologyLabel;
     private javax.swing.JLabel appThanks2Label;
     private javax.swing.JLabel appVendorLabel;
@@ -179,7 +173,6 @@ public class AboutBox extends javax.swing.JDialog {
     private javax.swing.JButton closeButton;
     private javax.swing.JPanel dataPanel;
     private javax.swing.JLabel emailAddressLabel;
-    private javax.swing.JLabel ideLabel;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JLabel technologyLabel;
     private javax.swing.JLabel thanks2Label;

@@ -60,8 +60,7 @@ public class DataManager {
     private int currentLockerIndex;
     private int currentUserIndex;
 
-    private final String appVersion;
-    private final String appTitle;
+    private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
     /**
      * Initializes the class on the first call
@@ -79,11 +78,6 @@ public class DataManager {
         buildings = new LinkedList<>();
 
         determineAppDir();
-
-        // Determine app version and name from resources
-        ResourceBundle bundle = java.util.ResourceBundle.getBundle("App");
-        appTitle = bundle.getString("Application.title");
-        appVersion = bundle.getString("Application.version");
     }
 
     /* *************************************************************************
@@ -305,31 +299,25 @@ public class DataManager {
         }
     }
 
-
     public MainFrame getMainFrame() {
         return mainFrame;
     }
 
-
     public String getAppTitle() {
-        return appTitle;
+        return bundle.getString("Application.title");
     }
-
 
     public String getAppVersion() {
-        return appVersion;
+        return bundle.getString("Application.version");
     }
-
 
     public TreeMap getSettings() {
         return settings;
     }
 
-
     public File getHomePath() {
         return sHomeDir;
     }
-
 
     public File getRessourceFilePath() {
         return ressourceFilePath;
