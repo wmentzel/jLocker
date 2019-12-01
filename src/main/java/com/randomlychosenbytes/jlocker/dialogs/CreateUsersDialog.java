@@ -350,7 +350,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     // Create initial data
                     //
 
-                    List tasks = dataManager.getTasks();
+                    List<Task> tasks = dataManager.getTasks();
 
                     if (tasks == null) {
                         dataManager.setTaskList(new LinkedList<Task>());

@@ -1203,7 +1203,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void addAmountButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addAmountButtonActionPerformed
     {//GEN-HEADEREND:event_addAmountButtonActionPerformed
         try {
-            int amount = new Integer(currentAmountTextField.getText());
+            int amount = Integer.parseInt(currentAmountTextField.getText());
 
             dataManager.getCurLocker().setPrevAmount(amount);
             int iNewFullAmount = dataManager.getCurLocker().getMoney() + amount;

@@ -161,7 +161,7 @@ public class DataManager {
      */
     private void saveData(File file) {
 
-        System.out.print("* saving " + file.getAbsolutePath() + "... ");
+        System.out.print("* saving " + file.getName() + "... ");
 
         try {
             byte[] b = SecurityManager.serialize(buildings);
