@@ -16,10 +16,6 @@ public class EditCodesDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form EditCodesDialog
-     *
-     * @param parent
-     * @param dataManager
-     * @param modal
      */
     public EditCodesDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
@@ -178,14 +174,14 @@ public class EditCodesDialog extends javax.swing.JDialog {
 
             if (code.length() == 6) {
                 try {
-                    new Integer(code);
+                    Integer.parseInt(code);
                     isValid = true;
                 } catch (NumberFormatException e) {
                 }
             }
 
-            if (isValid == false) {
-                JOptionPane.showMessageDialog(null, "Der " + new Integer(i).toString() + ". Code ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
+            if (!isValid) {
+                JOptionPane.showMessageDialog(null, "Der " + i + ". Code ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 

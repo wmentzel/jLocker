@@ -133,9 +133,7 @@ public class LockerCabinet extends javax.swing.JPanel {
         return 0;
     }
 
-    /**
-     * @return
-     */
+
     public List<Locker> getLockerList() {
         return lockers;
     }
@@ -212,7 +210,7 @@ public class LockerCabinet extends javax.swing.JPanel {
 
     private void remLockerLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_remLockerLabelMouseReleased
     {//GEN-HEADEREND:event_remLockerLabelMouseReleased
-        if (lockers.size() > 0) {
+        if (!lockers.isEmpty()) {
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie dieses Schließfach wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (answer == JOptionPane.YES_OPTION) {

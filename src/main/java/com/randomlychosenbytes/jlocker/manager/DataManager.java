@@ -305,44 +305,32 @@ public class DataManager {
         }
     }
 
-    /**
-     * @return
-     */
+
     public MainFrame getMainFrame() {
         return mainFrame;
     }
 
-    /**
-     * @return
-     */
+
     public String getAppTitle() {
         return appTitle;
     }
 
-    /**
-     * @return
-     */
+
     public String getAppVersion() {
         return appVersion;
     }
 
-    /**
-     * @return
-     */
+
     public TreeMap getSettings() {
         return settings;
     }
 
-    /**
-     * @return
-     */
+
     public File getHomePath() {
         return sHomeDir;
     }
 
-    /**
-     * @return
-     */
+
     public File getRessourceFilePath() {
         return ressourceFilePath;
     }
@@ -357,156 +345,112 @@ public class DataManager {
         return getLockerByID(id) == null;
     }
 
-    /**
-     * @return
-     */
+
     public SealedObject getSealedBuildingsObject() {
         return sealedBuildingsObject;
     }
 
-    /**
-     * @return
-     */
+
     public User getCurUser() {
         return users.get(currentUserIndex);
     }
 
-    /**
-     * @return
-     */
+
     public List<User> getUserList() {
         return users;
     }
 
-    /**
-     * @return
-     */
+
     public List<Building> getBuildingList() {
         return buildings;
     }
 
-    /**
-     * @return
-     */
+
     public int getCurBuildingIndex() {
         return currentBuildingIndex;
     }
 
-    /**
-     * @return
-     */
+
     public Building getCurBuilding() {
         return buildings.get(currentBuildingIndex);
     }
 
-    /**
-     * @return
-     */
+
     public List<Floor> getCurFloorList() {
         return getCurBuilding().getFloorList();
     }
 
-    /**
-     * @return
-     */
+
     public Floor getCurFloor() {
         return getCurFloorList().get(currentFloorIndex);
     }
 
-    /**
-     * @return
-     */
+
     public int getCurFloorIndex() {
         return currentFloorIndex;
     }
 
-    /**
-     * @return
-     */
+
     public List<Walk> getCurWalkList() {
         return getCurFloor().getWalkList();
     }
 
-    /**
-     * @return
-     */
+
     public Walk getCurWalk() {
         return getCurWalkList().get(currentWalkIndex);
     }
 
-    /**
-     * @return
-     */
+
     public int getCurWalkIndex() {
         return currentWalkIndex;
     }
 
-    /**
-     * @return
-     */
+
     public List<ManagementUnit> getCurManagmentUnitList() {
         return getCurWalk().getManagementUnitList();
     }
 
-    /**
-     * @return
-     */
+
     public ManagementUnit getCurManamentUnit() {
         return getCurManagmentUnitList().get(currentColumnIndex);
     }
 
-    /**
-     * @return
-     */
+
     public int getCurManagementUnitIndex() {
         return currentColumnIndex;
     }
 
-    /**
-     * @return
-     */
+
     public List<Locker> getCurLockerList() {
         return getCurManamentUnit().getLockerList();
     }
 
-    /**
-     * @return
-     */
+
     public Locker getCurLocker() {
         return getCurLockerList().get(currentLockerIndex);
     }
 
-    /**
-     * @return
-     */
+
     public int getCurLockerIndex() {
         return currentLockerIndex;
     }
 
-    /**
-     * @return
-     */
+
     public Room getCurRoom() {
         return getCurManamentUnit().getRoom();
     }
 
-    /**
-     * @return
-     */
+
     public LockerCabinet getCurLockerCabinet() {
         return getCurManamentUnit().getLockerCabinet();
     }
 
-    /**
-     * @return
-     */
+
     public boolean hasDataChanged() {
         return hasDataChanged;
     }
 
-    /**
-     * @return
-     */
+
     public List<Task> getTasks() {
         return tasks;
     }

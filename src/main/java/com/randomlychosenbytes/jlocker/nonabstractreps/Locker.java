@@ -65,21 +65,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
     private int iCurrentCodeIndex;
     private byte encCodes[][];
 
-    /**
-     * @param id
-     * @param sirname
-     * @param name
-     * @param size
-     * @param _class
-     * @param from
-     * @param until
-     * @param hascontract
-     * @param money
-     * @param currentcodeindex
-     * @param lock
-     * @param outoforder
-     * @param note
-     */
     public Locker(String id, String sirname, String name, int size,
                   String _class, String from, String until, boolean hascontract,
                   int money, int currentcodeindex, String lock,
@@ -130,10 +115,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
      * Getter
      **************************************************************************/
 
-    /**
-     * @param sukey
-     * @return
-     */
     public String[] getCodes(SecretKey sukey) {
         String[] decCodes = new String[5];
 
@@ -144,11 +125,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         return decCodes;
     }
 
-    /**
-     * @param i
-     * @param sukey
-     * @return
-     */
     private String getCode(int i, SecretKey sukey) {
         if (encCodes == null) {
             return "00-00-00";
@@ -169,42 +145,7 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-    /**
-     * @return
-     */
-    public long getDurationInMonths() {
-        if (sUntil.equals("") || sFrom.equals("") || isFree()) {
-            return 0;
-        }
 
-        int day = new Integer(sFrom.substring(0, 2));
-        int month = new Integer(sFrom.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
-        int year = new Integer(sFrom.substring(6, 10));
-
-        Calendar begin = new GregorianCalendar(year, month, day);
-        begin.setLenient(false);
-        begin.getTime();
-
-        day = new Integer(sUntil.substring(0, 2));
-        month = new Integer(sUntil.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
-        year = new Integer(sUntil.substring(6, 10));
-
-        Calendar end = new GregorianCalendar(year, month, day);
-        end.setLenient(false);
-        end.getTime();
-
-        long iDifferenceInMonths = Math.round(((double) end.getTimeInMillis() - begin.getTimeInMillis()) / 2592000000.0); // 2592000000.0 = 24 * 60 * 60 * 1000 * 30
-
-        if (iDifferenceInMonths < 0) {
-            return 0;
-        }
-
-        return iDifferenceInMonths;
-    }
-
-    /**
-     * @return
-     */
     public long getRemainingTimeInMonths() {
         if (sUntil.equals("") || sFrom.equals("") || isFree()) {
             return 0;
@@ -214,9 +155,9 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         today.setLenient(false);
         today.getTime();
 
-        int iDay = new Integer(sUntil.substring(0, 2));
-        int iMonth = new Integer(sUntil.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
-        int iYear = new Integer(sUntil.substring(6, 10));
+        int iDay = Integer.parseInt(sUntil.substring(0, 2));
+        int iMonth = Integer.parseInt(sUntil.substring(3, 5)) - 1;
+        int iYear = Integer.parseInt(sUntil.substring(6, 10));
 
         Calendar end = new GregorianCalendar(iYear, iMonth, iDay);
         end.setLenient(false);
@@ -231,10 +172,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         return iDifferenceInMonths;
     }
 
-    /**
-     * @param date
-     * @return
-     */
     public static boolean isDateValid(String date) {
         if (date.length() < 10) {
             return false;
@@ -242,9 +179,9 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
 
         try {
             // try to extract day, month and year
-            int iDay = new Integer(date.substring(0, 2));
-            int iMonth = new Integer(date.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
-            int iYear = new Integer(date.substring(6, 10));
+            int iDay = Integer.parseInt(date.substring(0, 2));
+            int iMonth = Integer.parseInt(date.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
+            int iYear = Integer.parseInt(date.substring(6, 10));
 
             Calendar c = new GregorianCalendar(iYear, iMonth, iDay);
 
@@ -257,130 +194,79 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-    /**
-     * @return
-     */
+
     public String getId() {
         return sID;
     }
 
-    /**
-     * @return
-     */
+
     public String getSurname() {
         return sSirName;
     }
 
-    /**
-     * @return
-     */
+
     public String getOwnerName() {
         return sName;
     }
 
-    /**
-     * @return
-     */
     public int getOwnerSize() {
         return iSize;
     }
 
-    /**
-     * @return
-     */
     public String getOwnerClass() {
         return sClass;
     }
 
-    /**
-     * @return
-     */
     public String getFromDate() {
         return sFrom;
     }
 
-    /**
-     * @return
-     */
     public String getUntilDate() {
         return sUntil;
     }
 
-    /**
-     * @return
-     */
     public boolean hasContract() {
         return hasContract;
     }
 
-    /**
-     * @return
-     */
     public int getMoney() {
         return iMoney;
     }
 
-    /**
-     * @return
-     */
     public int getPrevAmount() {
         return iPrevAmount;
     }
 
-    /**
-     * @return
-     */
+
     public int getCurrentCodeIndex() {
         return iCurrentCodeIndex;
     }
 
-    /**
-     * @return
-     */
+
     public boolean isOutOfOrder() {
         return isOutOfOrder;
     }
 
-    /**
-     * @return
-     */
     public String getLock() {
         return sLock;
     }
 
-    /**
-     * @return
-     */
     public String getNote() {
         return sNote;
     }
 
-    /**
-     * @return
-     */
     public boolean isFree() {
         return sName.equals("");
     }
 
-    /**
-     * @param sukey
-     * @return
-     */
     public String getCurrentCode(SecretKey sukey) {
         return getCode(iCurrentCodeIndex, sukey);
     }
 
-    /**
-     * @return
-     */
     public Boolean isSelected() {
         return isSelected;
     }
 
-    /**
-     * @return
-     * @throws java.lang.CloneNotSupportedException
-     */
     public Locker getCopy() throws CloneNotSupportedException {
         return (Locker) this.clone();
     }
@@ -389,9 +275,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
      * Setter
      **************************************************************************/
 
-    /**
-     *
-     */
     public void setAppropriateColor() {
         if (hasContract) {
             setColor(RENTED_COLOR);
@@ -412,10 +295,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-    /**
-     * @param codes
-     * @param sukey
-     */
     public void setCodes(String codes[], SecretKey sukey) {
         // codes is unencrypted... encrypting and saving in encCodes
 
@@ -444,9 +323,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-    /**
-     *
-     */
     public void empty() {
         sSirName = "";
         sName = "";
@@ -462,9 +338,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         setAppropriateColor();
     }
 
-    /**
-     * @param newdata
-     */
     public void setTo(Locker newdata) {
         sSirName = newdata.sSirName;
         sName = newdata.sName;
@@ -479,131 +352,77 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         setAppropriateColor();
     }
 
-    /**
-     * @param id
-     */
     public void setID(String id) {
         setText(sID = id);
     }
 
-    /**
-     * @param sirname
-     */
     public void setSirName(String sirname) {
         sSirName = sirname;
     }
 
-    /**
-     * @param name
-     */
     public void setOwnerName(String name) {
         sName = name;
     }
 
-    /**
-     * @param size
-     */
     public void setOwnerSize(int size) {
         iSize = size;
     }
 
-    /**
-     * @param _class
-     */
     public void setClass(String _class) {
         sClass = _class;
     }
 
-    /**
-     * @param fromdate
-     */
     public void setFromDate(String fromdate) {
         sFrom = fromdate;
     }
 
-    /**
-     * @param untildate
-     */
     public void setUntilDate(String untildate) {
         sUntil = untildate;
     }
 
-    /**
-     * @param hascontract
-     */
     public void setContract(boolean hascontract) {
         hasContract = hascontract;
     }
 
-    /**
-     * @param money
-     */
     public void setMoney(int money) {
         iMoney = money;
     }
 
-    /**
-     * @param amount
-     */
     public void setPrevAmount(int amount) {
         iPrevAmount = amount;
     }
 
-    /**
-     * @param index
-     */
     public void setCurrentCodeIndex(int index) {
         iCurrentCodeIndex = index;
     }
 
-    /**
-     *
-     */
     public void setNextCode() {
         iCurrentCodeIndex = (iCurrentCodeIndex + 1) % 5;
     }
 
-    /**
-     * @param outoforder
-     */
     public void setOutOfOrder(boolean outoforder) {
         isOutOfOrder = outoforder;
     }
 
-    /**
-     *
-     */
     public void setSelected() {
         isSelected = true;
         setColor(SELECTED_COLOR);
     }
 
-    /**
-     * @param lock
-     */
     public void setLock(String lock) {
         sLock = lock;
     }
 
-    /**
-     * @param note
-     */
     public void setNote(String note) {
         sNote = note;
     }
 
-    /**
-     *
-     */
     public final void setUpMouseListener() {
         if (this.getMouseListeners().length == 0) {
             addMouseListener(new MouseListener());
         }
     }
 
-    /**
-     * @param index
-     */
     public final void setColor(int index) {
         setBackground(BACKGROUND_COLORS[index]);
         setForeground(FOREGROUND_COLORS[index]);

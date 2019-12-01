@@ -249,16 +249,12 @@ public class ShortenClassRoomDistances {
         return status;
     }
 
-    /**
-     * @return
-     */
+
     public List<EntityCoordinates<Locker>> getEntityCoordinatesOfFreeLockers() {
         return freeLockersEntityCoordinatesList;
     }
 
-    /**
-     * @return
-     */
+
     public String getIdsOfUnreachableLockers() {
         String s = "";
 

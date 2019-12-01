@@ -55,9 +55,7 @@ public class Walk extends Entity {
      * Getter
      **************************************************************************/
 
-    /**
-     * @return
-     */
+
     public List<ManagementUnit> getManagementUnitList() {
         return mus;
     }

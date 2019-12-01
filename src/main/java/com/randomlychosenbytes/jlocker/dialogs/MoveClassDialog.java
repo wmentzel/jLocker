@@ -212,11 +212,11 @@ public class MoveClassDialog extends javax.swing.JDialog {
         String className = (String) classComboBox.getSelectedItem();
         String classRoomNodeId = classToClassRoomNodeId.get(className);
 
-        if (lockerIdWithoutHeights.size() > 0) {
-            String ids = "";
+        if (!lockerIdWithoutHeights.isEmpty()) {
+            StringBuilder ids = new StringBuilder();
 
             for (String id : lockerIdWithoutHeights) {
-                ids += id + "\n";
+                ids.append(id).append("\n");
             }
 
             JOptionPane.showMessageDialog(null, "Nicht alle Schüler der Klasse " + className + " haben eine gültige Größe!\n"
@@ -224,7 +224,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
             return;
         }
 
-        if (className.length() == 0) {
+        if (className.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Bitte geben Sie die Klasse ein!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }

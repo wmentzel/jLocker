@@ -47,9 +47,7 @@ public class Floor extends Entity {
         return true;
     }
 
-    /**
-     * @return
-     */
+
     public List<Walk> getWalkList() {
         return walks;
     }

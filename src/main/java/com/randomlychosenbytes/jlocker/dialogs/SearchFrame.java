@@ -345,7 +345,7 @@ public class SearchFrame extends javax.swing.JFrame {
         int size;
 
         try {
-            size = new Integer(sizeTextField.getText());
+            size = Integer.parseInt(sizeTextField.getText());
         } catch (NumberFormatException e) {
             size = -1;
         }
@@ -355,7 +355,7 @@ public class SearchFrame extends javax.swing.JFrame {
         int money;
 
         try {
-            money = new Integer(moneyTextField.getText());
+            money = Integer.parseInt(moneyTextField.getText());
         } catch (NumberFormatException e) {
             money = -1;
         }
@@ -363,7 +363,7 @@ public class SearchFrame extends javax.swing.JFrame {
         int remainingTimeInMonths;
 
         try {
-            remainingTimeInMonths = new Integer(durationTextField.getText());
+            remainingTimeInMonths = Integer.parseInt(durationTextField.getText());
         } catch (NumberFormatException e) {
             remainingTimeInMonths = -1;
         }
@@ -513,10 +513,10 @@ public class SearchFrame extends javax.swing.JFrame {
             tableDataArray[i] = ((List) tableData.get(i)).toArray();
         }
 
-        printResultsButton.setEnabled(foundLockers.size() > 0);
-        emptySelectedButton.setEnabled(foundLockers.size() > 0);
+        printResultsButton.setEnabled(!foundLockers.isEmpty());
+        emptySelectedButton.setEnabled(!foundLockers.isEmpty());
 
-        if (foundLockers.size() > 0) {
+        if (!foundLockers.isEmpty()) {
             table = new JTable();
             table.setAutoCreateRowSorter(true);
 

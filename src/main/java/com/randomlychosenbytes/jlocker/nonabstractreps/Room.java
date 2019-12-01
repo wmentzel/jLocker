@@ -115,16 +115,12 @@ public class Room extends javax.swing.JPanel {
         return sClass;
     }
 
-    /**
-     * @return
-     */
+
     public String getRoomName() {
         return sName;
     }
 
-    /**
-     * @return
-     */
+
     public String getClassName() {
         return sClass;
     }

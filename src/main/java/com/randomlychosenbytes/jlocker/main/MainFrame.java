@@ -144,7 +144,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             for (Locker locker : lockers) {
                 // always set a standard locker as selected
-                if (mu.getLockerList().size() > 0 && !firstLockerFound) {
+                if (!mu.getLockerList().isEmpty() && !firstLockerFound) {
                     mu.getLockerList().get(0).setSelected();
                     dataManager.setCurrentMUnitIndex(i);
                     dataManager.setCurrentLockerIndex(0);
@@ -167,7 +167,7 @@ public class MainFrame extends javax.swing.JFrame {
         //
         // Initialize all childs of userDataPanel
         //
-        if (dataManager.getCurLockerList().size() > 0) {
+        if (!dataManager.getCurLockerList().isEmpty()) {
             containerPanel.setVisible(true);
 
             Locker locker = dataManager.getCurLocker();
@@ -236,7 +236,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         if (!sizeString.isEmpty()) {
             try {
-                size = new Integer(sizeString);
+                size = Integer.parseInt(sizeString);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Die eigegebene Größe ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -1203,7 +1203,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void addAmountButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addAmountButtonActionPerformed
     {//GEN-HEADEREND:event_addAmountButtonActionPerformed
         try {
-            int amount = Integer.parseInt(currentAmountTextField.getText());
+            int amount = new Integer(currentAmountTextField.getText());
 
             dataManager.getCurLocker().setPrevAmount(amount);
             int iNewFullAmount = dataManager.getCurLocker().getMoney() + amount;
@@ -1245,12 +1245,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void loadMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_loadMenuItemActionPerformed
     {//GEN-HEADEREND:event_loadMenuItemActionPerformed
-        String decUserPW = dataManager.getCurUser().getUserPW();
-
         dataManager.loadDefaultFile();
         dataManager.initBuildingObject();
-
-        dataManager.getCurUser().isPasswordCorrect(decUserPW);
     }//GEN-LAST:event_loadMenuItemActionPerformed
 
     private void exitMenuActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitMenuActionPerformed

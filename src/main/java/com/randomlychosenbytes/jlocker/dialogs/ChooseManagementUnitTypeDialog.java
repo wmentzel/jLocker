@@ -44,9 +44,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         }
     }
 
-    /**
-     * @return
-     */
+
     public int getChosenType() {
         return chosenType;
     }
