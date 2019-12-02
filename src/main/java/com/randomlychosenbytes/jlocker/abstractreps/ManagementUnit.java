@@ -289,11 +289,7 @@ public class ManagementUnit extends javax.swing.JPanel {
 
         int index = mus.indexOf(this);
 
-        if (index == 0) {
-            mus.add(0, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
-        } else {
-            mus.add(index, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
-        }
+        mus.add(index, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
 
         DataManager.getInstance().setCurrentMUnitIndex(index);
         DataManager.getInstance().setCurrentLockerIndex(0);
