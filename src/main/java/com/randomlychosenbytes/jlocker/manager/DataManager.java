@@ -29,42 +29,56 @@ public class DataManager {
      */
     MainFrame mainFrame;
 
-    final public static boolean ERROR = true;
-
-    private boolean hasDataChanged;
+    private boolean hasDataChanged = false;
 
     private File resourceFile;
     private File backupDirectory;
 
-    private List<Building> buildings;
+    private List<Building> buildings = new LinkedList<>();
     private List<User> users;
     private List<Task> tasks;
     private TreeMap settings;
 
     private SealedObject sealedBuildingsObject;
 
-    private int currentBuildingIndex;
-    private int currentFloorIndex;
-    private int currentWalkIndex;
-    private int currentColumnIndex;
-    private int currentLockerIndex;
-    private int currentUserIndex;
+    private int currentBuildingIndex = 0;
+    private int currentFloorIndex = 0;
+    private int currentWalkIndex = 0;
+    private int currentColumnIndex = 0;
+    private int currentLockerIndex = 0;
+    private int currentUserIndex = 0;
 
     private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
     public DataManager() {
-        currentBuildingIndex = 0;
-        currentFloorIndex = 0;
-        currentWalkIndex = 0;
-        currentColumnIndex = 0;
-        currentLockerIndex = 0;
-        currentUserIndex = 0;
 
-        hasDataChanged = false;
+        URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
+        File sHomeDir = new File(url.getFile());
 
-        buildings = new LinkedList<>();
+        if (!sHomeDir.isDirectory()) {
+            sHomeDir = sHomeDir.getParentFile();
+        }
 
-        determineAppDir();
+        resourceFile = new File(sHomeDir, "jlocker.dat");
+        backupDirectory = new File(sHomeDir, "Backup");
+
+        System.out.println("* program directory is: \"" + sHomeDir + "\"");
+
+        //---
+
+        settings = new TreeMap();
+        settings.put("LockerOverviewFontSize", 20);
+        settings.put("NumOfBackups", 10);
+
+        List<Integer> iMinSizes = new LinkedList<>();
+
+        iMinSizes.add(0); // size for bottom locker
+        iMinSizes.add(0);
+        iMinSizes.add(140);
+        iMinSizes.add(150);
+        iMinSizes.add(175); // size for top locker
+
+        settings.put("LockerMinSizes", iMinSizes);
     }
 
     /* *************************************************************************
@@ -187,26 +201,6 @@ public class DataManager {
             mainFrame.setStatusMessage("Laden fehlgeschlagen");
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * When there was no settings object loaded, it is created by this method
-     * with default values.
-     */
-    public void loadDefaultSettings() {
-        settings = new TreeMap();
-        settings.put("LockerOverviewFontSize", 20);
-        settings.put("NumOfBackups", 10);
-
-        List<Integer> iMinSizes = new LinkedList<>();
-
-        iMinSizes.add(0); // size for bottom locker
-        iMinSizes.add(0);
-        iMinSizes.add(140);
-        iMinSizes.add(150);
-        iMinSizes.add(175); // size for top locker
-
-        settings.put("LockerMinSizes", iMinSizes);
     }
     
     /* *************************************************************************
@@ -437,23 +431,5 @@ public class DataManager {
 
     public void setTaskList(List<Task> tasks) {
         this.tasks = tasks;
-    }
-    
-    /* *************************************************************************
-        Private Methods
-    ***************************************************************************/
-
-    private void determineAppDir() {
-        URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
-        File sHomeDir = new File(url.getFile());
-
-        if (!sHomeDir.isDirectory()) {
-            sHomeDir = sHomeDir.getParentFile();
-        }
-
-        resourceFile = new File(sHomeDir, "jlocker.dat");
-        backupDirectory = new File(sHomeDir, "Backup");
-
-        System.out.println("* program directory is: \"" + sHomeDir + "\"");
     }
 }

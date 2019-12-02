@@ -5,7 +5,6 @@ import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 
 import javax.swing.*;
 import java.awt.*;
@@ -1217,16 +1216,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveMenuItemActionPerformed
     {//GEN-HEADEREND:event_saveMenuItemActionPerformed
-        // if the tasks object has not been initialised, it is done now
-        if (dataManager.getTasks() == null) {
-            dataManager.setTaskList(new LinkedList<Task>());
-        }
-
-        // if the settings object has not been initialised, it is done now
-        if (dataManager.getSettings() == null) {
-            dataManager.loadDefaultSettings();
-        }
-
         dataManager.saveAndCreateBackup();
     }//GEN-LAST:event_saveMenuItemActionPerformed
 

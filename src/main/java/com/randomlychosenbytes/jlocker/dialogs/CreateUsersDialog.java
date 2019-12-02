@@ -339,17 +339,6 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     //
                     // Create initial data
                     //
-
-                    List<Task> tasks = dataManager.getTasks();
-
-                    if (tasks == null) {
-                        dataManager.setTaskList(new LinkedList<Task>());
-                    }
-
-                    if (dataManager.getSettings() == null) {
-                        dataManager.loadDefaultSettings();
-                    }
-
                     dataManager.getBuildingList().add(new Building("-", ""));
                     dataManager.getCurFloorList().add(new Floor("-"));
                     dataManager.getCurWalkList().add(new Walk("-"));
