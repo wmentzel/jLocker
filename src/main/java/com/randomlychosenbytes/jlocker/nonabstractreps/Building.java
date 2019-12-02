@@ -48,21 +48,6 @@ public class Building extends Entity {
         return notes;
     }
 
-    /**
-     * Determines whether or not the floor number is unique.
-     */
-    public boolean isFloorNameUnique(String name) {
-        int iSize = floors.size();
-
-        for (int i = 0; i < iSize; i++) {
-            if (((Floor) floors.get(i)).getName().equals(name)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public List<Floor> getFloorList() {
         return floors;
     }

@@ -33,17 +33,6 @@ public class Floor extends Entity {
      * Getter
      **************************************************************************/
 
-    public boolean isWalkNameUnique(String name) {
-        int iSize = walks.size();
-
-        for (int i = 0; i < iSize; i++) {
-            if (((Walk) walks.get(i)).getName().equals(name))
-                return false;
-        }
-
-        return true;
-    }
-
     public List<Walk> getWalkList() {
         return walks;
     }

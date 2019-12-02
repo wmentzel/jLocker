@@ -234,20 +234,6 @@ public class DataManager {
     }
 
     /**
-     * Determines whether the given name is already assigned to a building.
-     */
-    public boolean isBuildingNameUnique(String name) {
-        int iSize = buildings.size();
-
-        for (int i = 0; i < iSize; i++) {
-            if (((Building) buildings.get(i)).getName().equals(name))
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Moves a student from one locker to another.
      */
     public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) throws CloneNotSupportedException {
