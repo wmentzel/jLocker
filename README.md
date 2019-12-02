@@ -20,9 +20,11 @@ __Ease of Use:__ jLocker uses a hierarchy of buildings, floors, walks and managm
 __Data Is Yours:__ jLocker works completely offline and only saves data locally on your PC
 
 __Platform Independent:__ jLocker can run on any operating system (any version of Windows, Mac OS or Linux) for which there is a Java Virtual Machine
-Scalability: the application can be used in any resolution from 800×600 up
+
+__Scalability__: the application can be used in any resolution from 800×600 up
 
 __Search:__ you can search for any criteria of a locker within jLocker (pupils name, height…)
-Free: jLocker is open source and can be used by anyone for free (JAR file will be deployed soon)
+
+__Free:__ jLocker is open source and can be used by anyone for free
 
 __Backups:__ You can specify the number of data states that should be preserved to recover data that was deleted unintentionally.
