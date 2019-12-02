@@ -26,9 +26,7 @@ public class LogInDialog extends javax.swing.JDialog {
         // set title from resources
         setTitle(dataManager.getAppTitle() + " " + dataManager.getAppVersion() + " - Anmeldung");
 
-        //
         // Default closing operation
-        //
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent winEvt) {
@@ -36,12 +34,8 @@ public class LogInDialog extends javax.swing.JDialog {
             }
         });
 
-        //
         // Check if backup directory exists. If not, create it.
-        //
-        String sBackupDir = dataManager.getHomePath() + "Backup/";
-        File fBackupDir = new File(sBackupDir);
-        loadBackupButton.setEnabled(fBackupDir.exists());
+        loadBackupButton.setEnabled(DataManager.getInstance().getBackupDirectory().exists());
     }
 
     /**
@@ -164,16 +158,12 @@ public class LogInDialog extends javax.swing.JDialog {
 
     private void loadBackupButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_loadBackupButtonActionPerformed
     {//GEN-HEADEREND:event_loadBackupButtonActionPerformed
-        final JFileChooser fc = new JFileChooser(new File(dataManager.getHomePath() + "Backup/"));
+        final JFileChooser fc = new JFileChooser(DataManager.getInstance().getBackupDirectory());
 
         FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {
-                String path = pathname.toString();
-                int dotindex = path.lastIndexOf('.');
-                String ext = path.substring(dotindex);
-
-                return ext.equals(".dat");
+                return pathname.getName().endsWith(".dat");
             }
 
             @Override

@@ -85,7 +85,7 @@ public class MainFrame extends javax.swing.JFrame {
         //
         // Show CreateUserDialog if there are none
         //
-        File newResFile = dataManager.getRessourceFilePath();
+        File newResFile = dataManager.getRessourceFile();
 
         if (!newResFile.exists()) {
             CreateUsersDialog dialog = new CreateUsersDialog(this, dataManager, true);

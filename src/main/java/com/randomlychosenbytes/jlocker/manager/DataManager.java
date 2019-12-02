@@ -33,8 +33,8 @@ public class DataManager {
 
     private boolean hasDataChanged;
 
-    private File ressourceFilePath;
-    private File sHomeDir;
+    private File resourceFile;
+    private File backupDirectory;
 
     private List<Building> buildings;
     private List<User> users;
@@ -76,12 +76,10 @@ public class DataManager {
      */
     public void saveAndCreateBackup() {
 
-        saveData(ressourceFilePath); // save to file jlocker.dat
+        saveData(resourceFile); // save to file jlocker.dat
 
         // Check if backup directory exists. If not, create it.
-        File backupDirectoryFile = new File(sHomeDir, "Backup");
-
-        if (!backupDirectoryFile.exists() && !backupDirectoryFile.mkdir()) {
+        if (!backupDirectory.exists() && !backupDirectory.mkdir()) {
             System.out.println("Backup failed!");
         }
 
@@ -92,7 +90,7 @@ public class DataManager {
         today.setLenient(false);
         today.getTime();
 
-        File backupFile = new File(backupDirectoryFile, String.format("jlocker-%04d-%02d-%02d.dat",
+        File backupFile = new File(backupDirectory, String.format("jlocker-%04d-%02d-%02d.dat",
                 today.get(Calendar.YEAR),
                 today.get(Calendar.MONTH),
                 today.get(Calendar.DAY_OF_MONTH)));
@@ -105,10 +103,7 @@ public class DataManager {
         //
         // Just keep a certain number of last saved building files
         //
-
-        File filesHomeDir = new File(sHomeDir + "Backup");
-
-        if (filesHomeDir.exists()) // if there are not backups yet, we dont have to delete any files
+        if (backupDirectory.exists()) // if there are not backups yet, we dont have to delete any files
         {
             // This filter only returns files (and not directories)
             FileFilter fileFilter = new FileFilter() {
@@ -118,7 +113,7 @@ public class DataManager {
                 }
             };
 
-            File[] files = filesHomeDir.listFiles(fileFilter);
+            File[] files = backupDirectory.listFiles(fileFilter);
 
             Integer iNumBackups = (Integer) settings.get("NumOfBackups");
 
@@ -163,7 +158,7 @@ public class DataManager {
     }
 
     public void loadDefaultFile() {
-        loadFromCustomFile(ressourceFilePath);
+        loadFromCustomFile(resourceFile);
     }
 
     /**
@@ -291,12 +286,12 @@ public class DataManager {
         return settings;
     }
 
-    public File getHomePath() {
-        return sHomeDir;
+    public File getRessourceFile() {
+        return resourceFile;
     }
 
-    public File getRessourceFilePath() {
-        return ressourceFilePath;
+    public File getBackupDirectory() {
+        return backupDirectory;
     }
 
     public boolean isLockerIdUnique(String id) {
@@ -450,13 +445,14 @@ public class DataManager {
 
     private void determineAppDir() {
         URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
-        sHomeDir = new File(url.getFile());
+        File sHomeDir = new File(url.getFile());
 
         if (!sHomeDir.isDirectory()) {
             sHomeDir = sHomeDir.getParentFile();
         }
 
-        ressourceFilePath = new File(sHomeDir, "jlocker.dat");
+        resourceFile = new File(sHomeDir, "jlocker.dat");
+        backupDirectory = new File(sHomeDir, "Backup");
 
         System.out.println("* program directory is: \"" + sHomeDir + "\"");
     }
