@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
@@ -8,13 +9,9 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LockerCabinet extends javax.swing.JPanel {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = 3694059109999196202L;
+public class LockerCabinet extends JPanel {
+
+    @Expose
     private List<Locker> lockers;
 
     public LockerCabinet() {

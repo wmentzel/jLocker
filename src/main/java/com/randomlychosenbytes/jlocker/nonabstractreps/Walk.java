@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
@@ -7,13 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Walk extends Entity {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -4848128937225865954L;
 
+    @Expose
     private List<ManagementUnit> mus;
 
     public Walk(String name) {

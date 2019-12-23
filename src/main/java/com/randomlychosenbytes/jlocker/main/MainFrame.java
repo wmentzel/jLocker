@@ -300,7 +300,7 @@ public class MainFrame extends javax.swing.JFrame {
         List<String> entityNames = new LinkedList<>();
 
         for (Object entity : entityList) {
-            entityNames.add(((Entity) entity).getSName());
+            entityNames.add(((Entity) entity).getName());
         }
 
         combobox.setModel(new DefaultComboBoxModel(entityNames.toArray()));

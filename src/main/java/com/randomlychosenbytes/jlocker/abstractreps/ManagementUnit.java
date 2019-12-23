@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.abstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
@@ -10,21 +11,21 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 import javax.swing.*;
 import java.util.List;
 
-public class ManagementUnit extends javax.swing.JPanel {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -8054374141198601700L;
+public class ManagementUnit extends JPanel {
 
+    @Expose
     private LockerCabinet cabinet;
+
+    @Expose
     private Room room;
+
+    @Expose
     private Staircase staircase;
 
     /**
      * Can either be 0 (ROOM), 1 (LOCKERCOLUMN) or 2 (STAIRCASE)
      */
+    @Expose
     public int mType;
 
     public static final int ROOM = 0;

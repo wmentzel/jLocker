@@ -1,5 +1,7 @@
 package com.randomlychosenbytes.jlocker.manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
@@ -148,8 +150,9 @@ public class DataManager {
         System.out.print("* saving " + file.getName() + "... ");
 
         try {
-            byte[] b = SecurityManager.serialize(buildings);
-            sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
+
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            sealedBuildingsObject = SecurityManager.encryptObject(gson.toJson(buildings), users.get(0).getUserMasterKey());
 
             try (
                     FileOutputStream fos = new FileOutputStream(file);
@@ -370,9 +373,13 @@ public class DataManager {
         Setter
     ***************************************************************************/
     public void initBuildingObject() {
-        this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                getSealedBuildingsObject(), getUserList().get(0).getUserMasterKey()
-        );
+        try {
+            this.buildings = SecurityManager.unsealAndDeserializeBuildings(
+                    getSealedBuildingsObject(), getUserList().get(0).getUserMasterKey()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMainFrame(MainFrame mainFrame) {

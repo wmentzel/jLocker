@@ -5,6 +5,7 @@ import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.Serializable;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -14,13 +15,15 @@ import java.security.spec.InvalidKeySpecException;
  * a restricted user and a super user. The super user can do everything the
  * restricted user can, plus he can view/edit the locker codes.
  */
-public class User extends Entity {
+public class User implements Serializable {
     /**
      * If the object is manipulated another serialVersionUID will be assigned
      * by the compiler, even for minor changes. To avoid that it is set
      * by the programmer.
      */
     private static final long serialVersionUID = -6899339135756518502L;
+
+    private String sName;
 
     private String sHash;
     private boolean isSuperUser;
@@ -129,7 +132,15 @@ public class User extends Entity {
 
         return null;
     }
-    
+
+    public void setName(String newname) {
+        sName = newname;
+    }
+
+    public String getName() {
+        return sName;
+    }
+
     /* *************************************************************************
         Getter
     ***************************************************************************/

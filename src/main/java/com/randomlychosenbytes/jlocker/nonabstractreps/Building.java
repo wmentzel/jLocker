@@ -1,17 +1,16 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Building extends Entity {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -8221591221999653683L;
 
+    @Expose
     private String notes;
+
+    @Expose
     private List<Floor> floors;
 
     public Building(String name, String notes) {

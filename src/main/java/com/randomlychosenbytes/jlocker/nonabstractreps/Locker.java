@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
 import javax.crypto.*;
@@ -12,13 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Locker extends JLabel implements java.io.Serializable, Cloneable {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = 7707447616883782260L;
+public class Locker extends JLabel implements Cloneable {
 
     private static final Color[] BACKGROUND_COLORS = new Color[]
             {
@@ -47,28 +42,60 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
     public static final int NOCONTRACT_COLOR = 4;
     public static final int ONEMONTHREMAINING_COLOR = 5;
 
+    @Expose
     private String sID;
+
+    @Expose
     private String sSirName;
+
+    @Expose
     private String sName;
+
+    @Expose
     private int iSize;
+
+    @Expose
     private String sClass;
+
+    @Expose
     private String sFrom;
+
+    @Expose
     private String sUntil;
+
+    @Expose
     private boolean hasContract;
+
+    @Expose
     private int iMoney;
+
+    @Expose
     private int iPrevAmount;
+
+    @Expose
     private boolean isOutOfOrder;
+
+    @Expose
     private String sLock;
+
+    @Expose
     private String sNote;
+
+    @Expose
     private Boolean isSelected;
 
+    @Expose
     private int iCurrentCodeIndex;
+
+    @Expose
     private byte encCodes[][];
 
-    public Locker(String id, String sirname, String name, int size,
-                  String _class, String from, String until, boolean hascontract,
-                  int money, int currentcodeindex, String lock,
-                  boolean outoforder, String note) {
+    public Locker(
+            String id, String sirname, String name, int size,
+            String _class, String from, String until, boolean hascontract,
+            int money, int currentcodeindex, String lock,
+            boolean outoforder, String note
+    ) {
         sID = id;
         sSirName = sirname;
         sName = name;
