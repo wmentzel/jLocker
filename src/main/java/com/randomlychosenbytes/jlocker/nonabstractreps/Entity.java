@@ -4,9 +4,6 @@ import com.google.gson.annotations.Expose;
 
 public class Entity {
 
-    public Entity() {
-    }
-
     @Expose
     protected String sName;
 

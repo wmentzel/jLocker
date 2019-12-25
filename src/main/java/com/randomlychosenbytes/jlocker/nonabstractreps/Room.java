@@ -13,16 +13,8 @@ public class Room extends javax.swing.JPanel {
 
     public Room(String name, String classname) {
         initComponents();
-
         setCaption(name, classname);
     }
-
-    public Room() {
-    }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
 
     public final void setCaption(String name, String classname) {
         sName = name;
@@ -60,10 +52,6 @@ public class Room extends javax.swing.JPanel {
             });
         }
     }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
 
     public String getSName() {
         return sName;

@@ -38,9 +38,6 @@ public class ManagementUnit extends JPanel {
         setAs(kind);
     }
 
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
     public int getType() {
         return mType;
     }
@@ -60,10 +57,6 @@ public class ManagementUnit extends JPanel {
     public Staircase getStaircase() {
         return staircase;
     }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
 
     public final void setAs(int kind) {
         centerPanel.removeAll(); // remove previous child

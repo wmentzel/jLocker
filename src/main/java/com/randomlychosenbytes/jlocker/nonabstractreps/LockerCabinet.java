@@ -16,15 +16,9 @@ public class LockerCabinet extends JPanel {
 
     public LockerCabinet() {
         initComponents();
-
         lockers = new LinkedList<>();
-
         updateCabinet(0);
     }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
 
     public void setLockers(List<Locker> lockers) {
         this.lockers = lockers;
@@ -97,10 +91,6 @@ public class LockerCabinet extends JPanel {
             locker.setUpMouseListener();
         }
     }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
 
     public int getLockerRowByID(String id) {
         for (int l = 0; l < lockers.size(); l++) {

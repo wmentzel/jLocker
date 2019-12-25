@@ -112,8 +112,7 @@ public class User implements Serializable {
         return null;
     }
 
-    private SecretKey DecryptKeyWithString(byte[] enc_key) // Key is saved as string
-    {
+    private SecretKey DecryptKeyWithString(byte[] enc_key) { // Key is saved as string
         try {
             Cipher dcipher = Cipher.getInstance("DES");
 
@@ -140,11 +139,6 @@ public class User implements Serializable {
     public String getName() {
         return sName;
     }
-
-    /* *************************************************************************
-        Getter
-    ***************************************************************************/
-
 
     public String getUserPW() {
         return decUserPW;
@@ -174,9 +168,6 @@ public class User implements Serializable {
         return sHash;
     }
 
-    /* *************************************************************************
-        Setter
-    ***************************************************************************/
     public void setCurrentUserPW(String pw) {
         decUserPW = pw;
     }

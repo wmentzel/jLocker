@@ -25,12 +25,6 @@ public class Building extends Entity {
         floors = new LinkedList<>();
     }
 
-    public Building() {
-    }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
     public void setNotes(String notes) {
         this.notes = notes;
     }
@@ -38,10 +32,6 @@ public class Building extends Entity {
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
     }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
 
     public String getNotes() {
         return notes;

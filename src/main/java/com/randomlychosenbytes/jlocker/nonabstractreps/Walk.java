@@ -17,13 +17,6 @@ public class Walk extends Entity {
         mus = new LinkedList<>();
     }
 
-    public Walk() {
-    }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-
     public void setMus(List<ManagementUnit> mus) {
         this.mus = mus;
     }
@@ -41,10 +34,6 @@ public class Walk extends Entity {
             }
         }
     }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
 
     public List<ManagementUnit> getManagementUnitList() {
         return mus;

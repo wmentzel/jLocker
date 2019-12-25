@@ -12,12 +12,11 @@ public class Task implements java.io.Serializable {
     private static final long serialVersionUID = -8372739826135250943L;
 
     private String sDescription;
-    private boolean isDone;
+    private boolean isDone = false;
     private String sDate;
 
     public Task(String description) {
         sDescription = description;
-        isDone = false;
 
         Calendar today = new GregorianCalendar();
 
@@ -26,12 +25,6 @@ public class Task implements java.io.Serializable {
                 today.get(Calendar.YEAR));
     }
 
-    public Task() {
-    }
-
-    /* *************************************************************************
-        Getter
-    ***************************************************************************/
     public String getSDate() {
         return sDate;
     }
@@ -44,9 +37,6 @@ public class Task implements java.io.Serializable {
         return isDone;
     }
 
-    /* *************************************************************************
-        Setter
-    ***************************************************************************/
     public void setSDate(String sDate) {
         this.sDate = sDate;
     }

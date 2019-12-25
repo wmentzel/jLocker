@@ -12,9 +12,6 @@ public class Staircase extends javax.swing.JPanel {
         initComponents();
     }
 
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
     public void setEntityName(String n) {
         sName = n;
         captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + sName + "</div></div></html>");
@@ -34,10 +31,6 @@ public class Staircase extends javax.swing.JPanel {
             });
         }
     }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
 
     public String getSName() {
         return sName;

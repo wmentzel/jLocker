@@ -205,10 +205,6 @@ public class DataManager {
             ex.printStackTrace();
         }
     }
-    
-    /* *************************************************************************
-        Getter
-    ***************************************************************************/
 
     public Locker getLockerByID(String id) {
         for (Building building : buildings) {
@@ -369,9 +365,6 @@ public class DataManager {
         return tasks;
     }
 
-    /* *************************************************************************
-        Setter
-    ***************************************************************************/
     public void initBuildingObject() {
         try {
             this.buildings = SecurityManager.unsealAndDeserializeBuildings(

@@ -138,10 +138,6 @@ public class Locker extends JLabel implements Cloneable {
     public Locker() {
     }
 
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-
     public String[] getCodes(SecretKey sukey) {
         String[] decCodes = new String[5];
 
@@ -297,10 +293,6 @@ public class Locker extends JLabel implements Cloneable {
     public Locker getCopy() throws CloneNotSupportedException {
         return (Locker) this.clone();
     }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
 
     public void setAppropriateColor() {
         if (hasContract) {
