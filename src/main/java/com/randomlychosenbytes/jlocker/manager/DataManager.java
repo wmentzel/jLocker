@@ -11,6 +11,9 @@ import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
 
 /**
  * DataManager is a singleton class. There can only be one instance of this
@@ -247,6 +250,59 @@ public class DataManager {
             destLocker.setCodes(sourceLocker.getCodes(key), key);
             sourceLocker.setCodes(destCopy.getCodes(key), key);
         }
+    }
+
+    public void updateAllCabinets() {
+        List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+
+        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
+
+        mus.stream()
+                .map(ManagementUnit::getLockerCabinet)
+                .forEach(c -> c.updateCabinet(maxRows));
+    }
+
+
+    public List<ManagementUnit> reinstantiateManagementUnits(List<ManagementUnit> managementUnits) {
+        return managementUnits.stream().map(mu -> {
+
+            ManagementUnit newMu = new ManagementUnit(mu.mType);
+
+            switch (mu.mType) {
+                case ROOM: {
+                    newMu.getRoom().setClassName(mu.getRoom().getClassName());
+                    newMu.getRoom().setRoomName(mu.getRoom().getRoomName());
+                    break;
+                }
+                case LOCKERCOLUMN: {
+                    List<Locker> newLockers = mu.getLockerList().stream().map(l -> {
+                        return new Locker(
+                                l.getId(),
+                                l.getSurname(),
+                                l.getOwnerName(),
+                                l.getOwnerSize(),
+                                l.getOwnerClass(),
+                                l.getUntilDate(),
+                                l.getFromDate(),
+                                l.hasContract(),
+                                l.getMoney(),
+                                l.getCurrentCodeIndex(),
+                                l.getLock(),
+                                l.isOutOfOrder(),
+                                l.getNote()
+                        );
+                    }).collect(Collectors.toList());
+                    newMu.getLockerCabinet().setLockers(newLockers);
+                    break;
+                }
+                case STAIRCASE: {
+                    newMu.getStaircase().setName(mu.getStaircase().getEntityName());
+                    break;
+                }
+            }
+
+            return newMu;
+        }).collect(Collectors.toList());
     }
 
     public MainFrame getMainFrame() {

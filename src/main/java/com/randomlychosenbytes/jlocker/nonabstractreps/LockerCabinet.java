@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
 import javax.swing.*;
@@ -17,6 +16,7 @@ public class LockerCabinet extends JPanel {
     public LockerCabinet() {
         initComponents();
         lockers = new LinkedList<>();
+        cabinetPanel.setLayout(new GridLayout(0, 1, 0, 10));
         updateCabinet(0);
     }
 
@@ -24,39 +24,22 @@ public class LockerCabinet extends JPanel {
         this.lockers = lockers;
     }
 
-    public void addLocker(Locker locker, boolean first) {
-        if (first) {
-            lockers.add(0, locker);
+    public void addLocker(Locker locker) {
 
-            int rows = 0;
+        lockers.add(0, locker);
 
-            List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
-
-            for (ManagementUnit mu : mus) {
-                int size = mu.getLockerCabinet().getLockerList().size();
-
-                if (size > rows) {
-                    rows = size;
-                }
-            }
-
-            for (ManagementUnit mu : mus) {
-                mu.getLockerCabinet().updateCabinet(rows);
-            }
-        } else {
-            lockers.add(locker);
-            cabinetPanel.add(locker);
-        }
+        DataManager.getInstance().updateAllCabinets();
 
         remLockerLabel.setEnabled(true);
     }
 
-    private void updateCabinet(int rows) {
-        cabinetPanel.removeAll();
-        cabinetPanel.setLayout(new GridLayout(0, 1, 0, 10));
 
-        if (rows > lockers.size()) {
-            for (int i = 0; i < rows - lockers.size(); i++) {
+    public void updateCabinet(int numRows) {
+
+        cabinetPanel.removeAll();
+
+        if (numRows > lockers.size()) {
+            for (int i = 0; i < numRows - lockers.size(); i++) {
                 cabinetPanel.add(new JLabel());
             }
         }
@@ -99,10 +82,6 @@ public class LockerCabinet extends JPanel {
         }
 
         return 0;
-    }
-
-    public List<Locker> getLockerList() {
-        return lockers;
     }
 
     public List<Locker> getLockers() {
@@ -167,7 +146,7 @@ public class LockerCabinet extends JPanel {
 
     private void addLockerLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addLockerLabelMouseReleased
     {//GEN-HEADEREND:event_addLockerLabelMouseReleased
-        addLocker(new Locker("", "", "", 0, "", "", "", false, 0, 0, "", false, ""), true);
+        addLocker(new Locker("", "", "", 0, "", "", "", false, 0, 0, "", false, ""));
     }//GEN-LAST:event_addLockerLabelMouseReleased
 
     private void remLockerLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_remLockerLabelMouseReleased
@@ -177,20 +156,7 @@ public class LockerCabinet extends JPanel {
 
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.remove(0); // remove first
-
-                int rows = 0;
-
-                List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
-
-                for (ManagementUnit mu : mus) {
-                    int size = mu.getLockerCabinet().getLockerList().size();
-                    if (size > rows)
-                        rows = size;
-                }
-
-                for (ManagementUnit mu : mus) {
-                    mu.getLockerCabinet().updateCabinet(rows);
-                }
+                DataManager.getInstance().updateAllCabinets();
             }
         }
     }//GEN-LAST:event_remLockerLabelMouseReleased

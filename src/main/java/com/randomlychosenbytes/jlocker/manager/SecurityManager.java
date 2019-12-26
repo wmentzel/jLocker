@@ -3,11 +3,7 @@ package com.randomlychosenbytes.jlocker.manager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 import javax.crypto.Cipher;
 import javax.crypto.SealedObject;
@@ -17,9 +13,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
 
 /**
  * The SecurityManager class handles everything regarding encryption and
@@ -63,62 +56,7 @@ final public class SecurityManager {
         String json = decryptObject(sealedBuildingsObject, key);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        List<Building> buildings = gson.fromJson(json, new TypeToken<List<Building>>() {
+        return gson.fromJson(json, new TypeToken<List<Building>>() {
         }.getType());
-
-        return buildings.stream().map(b -> {
-            List<Floor> floors = b.getFloors().stream().map(f -> {
-                List<Walk> walks = f.getWalks().stream().map(w -> {
-
-                    List<ManagementUnit> mus = w.getManagementUnitList().stream().map(mu -> {
-
-                        ManagementUnit newMu = new ManagementUnit(mu.mType);
-
-                        switch (mu.mType) {
-                            case ROOM: {
-                                newMu.getRoom().setClassName(mu.getRoom().getClassName());
-                                newMu.getRoom().setRoomName(mu.getRoom().getRoomName());
-                                break;
-                            }
-                            case LOCKERCOLUMN: {
-                                List<Locker> newLockers = mu.getLockerList().stream().map(l -> {
-                                    return new Locker(
-                                            l.getId(),
-                                            l.getSurname(),
-                                            l.getOwnerName(),
-                                            l.getOwnerSize(),
-                                            l.getOwnerClass(),
-                                            l.getUntilDate(),
-                                            l.getFromDate(),
-                                            l.hasContract(),
-                                            l.getMoney(),
-                                            l.getCurrentCodeIndex(),
-                                            l.getLock(),
-                                            l.isOutOfOrder(),
-                                            l.getNote()
-                                    );
-                                }).collect(Collectors.toList());
-                                newMu.getLockerCabinet().setLockers(newLockers);
-                                break;
-                            }
-                            case STAIRCASE: {
-                                newMu.getStaircase().setName(mu.getStaircase().getEntityName());
-                                break;
-                            }
-                        }
-
-                        return newMu;
-                    }).collect(Collectors.toList());
-
-                    w.setMus(mus);
-                    return w;
-                }).collect(Collectors.toList());
-
-                f.setWalks(walks);
-                return f;
-            }).collect(Collectors.toList());
-            b.setFloors(floors);
-            return b;
-        }).collect(Collectors.toList());
     }
 }

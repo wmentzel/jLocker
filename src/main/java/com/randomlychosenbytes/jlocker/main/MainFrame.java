@@ -113,7 +113,9 @@ public class MainFrame extends javax.swing.JFrame {
         // Remove old panels
         lockerOverviewPanel.removeAll();
 
-        List<ManagementUnit> mus = dataManager.getCurManagmentUnitList();
+        List<ManagementUnit> mus = dataManager.reinstantiateManagementUnits(dataManager.getCurManagmentUnitList());
+
+        dataManager.getCurWalk().setMus(mus);
 
         final int numMUnits = mus.size();
         boolean firstLockerFound = false;
@@ -121,20 +123,11 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i = numMUnits - 1; i >= 0; i--) {
             ManagementUnit mu = mus.get(i);
 
-            //
-            // mouse listeners get unattached during serialization, so they have to be set up again
-            //
             mu.setUpMouseListeners();
 
-            //
-            // add management units to gui
-            //
             lockerOverviewPanel.add(mu);
 
-            //
-            // set appropriate colors
-            //
-            List<Locker> lockers = mu.getLockerCabinet().getLockerList();
+            List<Locker> lockers = mu.getLockerCabinet().getLockers();
 
             for (Locker locker : lockers) {
                 // always set a standard locker as selected
@@ -148,6 +141,15 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         }  // for
+
+
+        //List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+
+        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
+
+        mus.stream()
+                .map(ManagementUnit::getLockerCabinet)
+                .forEach(c -> c.updateCabinet(maxRows));
 
         showLockerInformation();
         lockerOverviewPanel.updateUI();

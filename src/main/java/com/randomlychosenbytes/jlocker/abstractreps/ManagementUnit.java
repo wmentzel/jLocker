@@ -47,7 +47,7 @@ public class ManagementUnit extends JPanel {
     }
 
     public List<Locker> getLockerList() {
-        return cabinet.getLockerList();
+        return cabinet.getLockers();
     }
 
     public Room getRoom() {

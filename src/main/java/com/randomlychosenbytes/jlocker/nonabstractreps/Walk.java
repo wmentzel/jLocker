@@ -25,9 +25,9 @@ public class Walk extends Entity {
         for (int m = 0; m < mus.size(); m++) {
             List<Locker> lockers = mus.get(m).getLockerList();
 
-            int l;
+            int l = lockers.indexOf(locker);
 
-            if ((l = lockers.indexOf(locker)) != -1) {
+            if (l != -1) {
                 DataManager dm = DataManager.getInstance();
                 dm.setCurrentLockerIndex(l);
                 dm.setCurrentMUnitIndex(m);

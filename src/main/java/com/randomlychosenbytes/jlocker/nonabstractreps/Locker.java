@@ -82,10 +82,9 @@ public class Locker extends JLabel implements Cloneable {
     private String sNote;
 
     @Expose
-    private Boolean isSelected;
-
-    @Expose
     private int iCurrentCodeIndex;
+
+    private Boolean isSelected = false;
 
     @Expose
     private byte encCodes[][];
