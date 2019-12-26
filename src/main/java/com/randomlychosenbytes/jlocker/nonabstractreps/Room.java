@@ -3,7 +3,9 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
-public class Room extends javax.swing.JPanel {
+import javax.swing.*;
+
+public class Room extends JPanel {
 
     @Expose
     private String sClass;
