@@ -78,18 +78,20 @@ public class User implements Serializable {
     }
 
     public boolean isPasswordCorrect(String pw) {
-        if (new SecurityManager().getHash(pw.getBytes()).equals(sHash)) {
-            decUserPW = pw;
 
-            // decrypt master keys
-            decUserMasterKey = DecryptKeyWithString(encUserMasterKey);
-
-            if (isSuperUser)
-                decSuperUMasterKey = DecryptKeyWithString(encSuperUMasterKey);
-
-            return true;
-        } else
+        if (!SecurityManager.getHash(pw.getBytes()).equals(sHash)) {
             return false;
+        }
+        decUserPW = pw;
+
+        // decrypt master keys
+        decUserMasterKey = decryptKeyWithString(encUserMasterKey);
+
+        if (isSuperUser) {
+            decSuperUMasterKey = decryptKeyWithString(encSuperUMasterKey);
+        }
+
+        return true;
     }
 
     private byte[] EncryptKeyWithString(SecretKey key) {
@@ -112,7 +114,7 @@ public class User implements Serializable {
         return null;
     }
 
-    private SecretKey DecryptKeyWithString(byte[] enc_key) { // Key is saved as string
+    private SecretKey decryptKeyWithString(byte[] enc_key) { // Key is saved as string
         try {
             Cipher dcipher = Cipher.getInstance("DES");
 

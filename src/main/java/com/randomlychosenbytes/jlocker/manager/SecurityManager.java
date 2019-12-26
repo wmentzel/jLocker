@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
  * The SecurityManager class handles everything regarding encryption and
  * decryption.
  */
-public class SecurityManager {
+final public class SecurityManager {
     /**
      * Retuns a MD5 hash to a given array of bytes.
      */
-    public String getHash(byte[] pw) {
+    public static String getHash(byte[] pw) {
         try {
             MessageDigest m = MessageDigest.getInstance("MD5");
             m.update(pw, 0, pw.length);
