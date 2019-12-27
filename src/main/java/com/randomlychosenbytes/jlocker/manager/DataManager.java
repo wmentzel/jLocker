@@ -43,7 +43,7 @@ public class DataManager {
     private List<Task> tasks;
     private Settings settings;
 
-    private byte[] sealedBuildingsObject;
+    private byte[] encryptedBuildingsBytes;
 
     private int currentBuildingIndex = 0;
     private int currentFloorIndex = 0;
@@ -63,7 +63,7 @@ public class DataManager {
             sHomeDir = sHomeDir.getParentFile();
         }
 
-        resourceFile = new File(sHomeDir, "jlocker.dat");
+        resourceFile = new File(sHomeDir, "jlocker.json");
         backupDirectory = new File(sHomeDir, "Backup");
 
         System.out.println("* program directory is: \"" + sHomeDir + "\"");
@@ -140,12 +140,12 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            sealedBuildingsObject = SecurityManager.encrypt(gson.toJson(buildings), users.get(0).getUserMasterKey());
+            encryptedBuildingsBytes = SecurityManager.encrypt(gson.toJson(buildings), users.get(0).getUserMasterKey());
 
             try (Writer writer = new FileWriter(file)) {
 
                 gson.toJson(new JsonRoot(
-                        sealedBuildingsObject,
+                        SecurityManager.bytesToBase64String(encryptedBuildingsBytes),
                         settings,
                         tasks,
                         users
@@ -182,7 +182,7 @@ public class DataManager {
             JsonRoot root = gson.fromJson(reader, JsonRoot.class);
 
             users = root.users;
-            sealedBuildingsObject = root.encryptedBuildings;
+            encryptedBuildingsBytes = SecurityManager.base64StringToBytes(root.encryptedBuildingsBase64);
             tasks = root.tasks;
             settings = root.settings;
 
@@ -319,8 +319,8 @@ public class DataManager {
         return getLockerByID(id) == null;
     }
 
-    public byte[] getSealedBuildingsObject() {
-        return sealedBuildingsObject;
+    public byte[] getEncryptedBuildingsBytes() {
+        return encryptedBuildingsBytes;
     }
 
     public User getCurUser() {
@@ -410,7 +410,7 @@ public class DataManager {
     public void initBuildingObject() {
         try {
             this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                    getSealedBuildingsObject(), getUserList().get(0).getUserMasterKey()
+                    getEncryptedBuildingsBytes(), getUserList().get(0).getUserMasterKey()
             );
         } catch (Exception e) {
             e.printStackTrace();

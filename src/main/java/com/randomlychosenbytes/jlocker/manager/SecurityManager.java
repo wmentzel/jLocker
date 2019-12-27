@@ -6,12 +6,11 @@ import com.google.gson.reflect.TypeToken;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
 
 import javax.crypto.Cipher;
-import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -35,16 +34,12 @@ final public class SecurityManager {
         return "";
     }
 
-    public static SealedObject encryptObject(Serializable s, SecretKey key) throws Exception {
-        Cipher ecipher = Cipher.getInstance("DES");
-        ecipher.init(Cipher.ENCRYPT_MODE, key);
-        return new SealedObject(s, ecipher);
+    public static String bytesToBase64String(byte[] bytes) {
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
-    private static String decryptObject(SealedObject so, SecretKey key) throws Exception {
-        Cipher dcipher = Cipher.getInstance("DES");
-        dcipher.init(Cipher.DECRYPT_MODE, key);
-        return (String) so.getObject(dcipher);
+    public static byte[] base64StringToBytes(String str) {
+        return Base64.getDecoder().decode(str);
     }
 
     public static byte[] encrypt(String s, SecretKey key) throws Exception {
