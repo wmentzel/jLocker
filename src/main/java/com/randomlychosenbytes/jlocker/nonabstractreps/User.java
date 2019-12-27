@@ -1,34 +1,36 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.manager.SecurityManager;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.Serializable;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * Represents a User of the program. There are two different kinds a the moment
  * a restricted user and a super user. The super user can do everything the
  * restricted user can, plus he can view/edit the locker codes.
  */
-public class User implements Serializable {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -6899339135756518502L;
+public class User {
 
+    @Expose
     private String sName;
 
+    @Expose
     private String sHash;
+
+    @Expose
     private boolean isSuperUser;
 
+    @Expose
     private byte[] encUserMasterKey;
+
+    @Expose
     private byte[] encSuperUMasterKey;
 
     // transient variables don't get serialized!
@@ -43,10 +45,10 @@ public class User implements Serializable {
         sName = name;
         decUserPW = password;
         isSuperUser = false;
-        sHash = new SecurityManager().getHash(password.getBytes()); // MD5 hash
+        sHash = SecurityManager.getHash(password.getBytes()); // MD5 hash
 
         decUserMasterKey = ukey;
-        encUserMasterKey = EncryptKeyWithString(decUserMasterKey);
+        encUserMasterKey = encryptKeyWithString(decUserMasterKey);
 
         decSuperUMasterKey = null;
         encSuperUMasterKey = null;
@@ -56,22 +58,22 @@ public class User implements Serializable {
         sName = name;
         decUserPW = password;
         isSuperUser = true;
-        sHash = new SecurityManager().getHash(password.getBytes()); // MD5 hash
+        sHash = SecurityManager.getHash(password.getBytes()); // MD5 hash
 
         //
         // Generate master key(s)
         //
 
         try {
-            // everyone has at least this passwort.
+            // everyone has at least this password.
             // it's used to encrypt/decrypt the buildings object
             decUserMasterKey = KeyGenerator.getInstance("DES").generateKey();
-            encUserMasterKey = EncryptKeyWithString(decUserMasterKey);
+            encUserMasterKey = encryptKeyWithString(decUserMasterKey);
 
             // only super users have this variables initialized
             // this key is used to encrypt/decrypt the locker codes
             decSuperUMasterKey = KeyGenerator.getInstance("DES").generateKey();
-            encSuperUMasterKey = EncryptKeyWithString(decSuperUMasterKey);
+            encSuperUMasterKey = encryptKeyWithString(decSuperUMasterKey);
         } catch (NoSuchAlgorithmException ex) {
             System.out.println("*** Executing User Constructor... failed");
         }
@@ -94,20 +96,17 @@ public class User implements Serializable {
         return true;
     }
 
-    private byte[] EncryptKeyWithString(SecretKey key) {
+    private byte[] encryptKeyWithString(SecretKey key) {
         try {
             Cipher ecipher = Cipher.getInstance("DES");
 
             DESKeySpec desKeySpec = new DESKeySpec(decUserPW.getBytes());
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-
             ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
-            byte[] bytes = ecipher.doFinal(key.getEncoded());
-
-            return bytes;
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException e) {
+            return ecipher.doFinal(key.getEncoded());
+        } catch (Exception e) {
             System.err.println("* User.EncryptKeyWithString()... failed");
         }
 
@@ -121,13 +120,10 @@ public class User implements Serializable {
             DESKeySpec desKeySpec = new DESKeySpec(decUserPW.getBytes());
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-
             dcipher.init(Cipher.DECRYPT_MODE, secretKey);
 
-            byte[] bytes = dcipher.doFinal(enc_key);
-
-            return new SecretKeySpec(bytes, "DES");
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidKeySpecException | IllegalBlockSizeException | BadPaddingException e) {
+            return new SecretKeySpec(dcipher.doFinal(enc_key), "DES");
+        } catch (Exception e) {
             System.err.println("* User.DecryptKeyWithString()... failed");
         }
 

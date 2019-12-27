@@ -6,7 +6,6 @@ import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
-import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.URL;
@@ -42,9 +41,9 @@ public class DataManager {
     private List<Building> buildings = new LinkedList<>();
     private List<User> users;
     private List<Task> tasks;
-    private TreeMap settings;
+    private TreeMap<String, Object> settings;
 
-    private SealedObject sealedBuildingsObject;
+    private byte[] sealedBuildingsObject;
 
     private int currentBuildingIndex = 0;
     private int currentFloorIndex = 0;
@@ -71,7 +70,7 @@ public class DataManager {
 
         //---
 
-        settings = new TreeMap();
+        settings = new TreeMap<>();
         settings.put("LockerOverviewFontSize", 20);
         settings.put("NumOfBackups", 10);
 
@@ -155,17 +154,16 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            sealedBuildingsObject = SecurityManager.encryptObject(gson.toJson(buildings), users.get(0).getUserMasterKey());
+            sealedBuildingsObject = SecurityManager.encrypt(gson.toJson(buildings), users.get(0).getUserMasterKey());
 
-            try (
-                    FileOutputStream fos = new FileOutputStream(file);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos)
-            ) {
+            try (Writer writer = new FileWriter(file)) {
 
-                oos.writeObject(users);
-                oos.writeObject(sealedBuildingsObject);
-                oos.writeObject(tasks);
-                oos.writeObject(settings);
+                gson.toJson(new JsonRoot(
+                        sealedBuildingsObject,
+                        settings,
+                        tasks,
+                        users
+                ), writer);
 
                 System.out.println("successful");
                 mainFrame.setStatusMessage("Speichern erfolgreich");
@@ -191,14 +189,16 @@ public class DataManager {
 
         System.out.print("* reading " + file.getName() + "... ");
 
-        try (
-                FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis)
-        ) {
-            users = (List<User>) ois.readObject();
-            sealedBuildingsObject = (SealedObject) ois.readObject();
-            tasks = (LinkedList<Task>) ois.readObject();
-            settings = (TreeMap) ois.readObject();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        try (Reader reader = new FileReader(file)) {
+
+            JsonRoot root = gson.fromJson(reader, JsonRoot.class);
+
+            users = root.users;
+            sealedBuildingsObject = root.encryptedBuildings;
+            tasks = root.tasks;
+            settings = root.settings;
 
             System.out.println("successful");
             mainFrame.setStatusMessage("Laden erfolgreich");
@@ -333,7 +333,7 @@ public class DataManager {
         return getLockerByID(id) == null;
     }
 
-    public SealedObject getSealedBuildingsObject() {
+    public byte[] getSealedBuildingsObject() {
         return sealedBuildingsObject;
     }
 

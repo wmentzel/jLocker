@@ -1,18 +1,19 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Task implements java.io.Serializable {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -8372739826135250943L;
+public class Task {
 
+    @Expose
     private String sDescription;
+
+    @Expose
     private boolean isDone = false;
+
+    @Expose
     private String sDate;
 
     public Task(String description) {

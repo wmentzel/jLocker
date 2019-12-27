@@ -47,13 +47,25 @@ final public class SecurityManager {
         return (String) so.getObject(dcipher);
     }
 
+    public static byte[] encrypt(String s, SecretKey key) throws Exception {
+        Cipher ecipher = Cipher.getInstance("DES");
+        ecipher.init(Cipher.ENCRYPT_MODE, key);
+        return ecipher.doFinal(s.getBytes("UTF8"));
+    }
+
+    private static String decrypt(byte[] bytes, SecretKey key) throws Exception {
+        Cipher dcipher = Cipher.getInstance("DES");
+        dcipher.init(Cipher.DECRYPT_MODE, key);
+        return new String(dcipher.doFinal(bytes), "UTF8");
+    }
+
     /**
      * Unseals the buildings object. This can't be done in the
      * loadFromCustomFile method, because the data is loaded before the password
      * was entered.
      */
-    public static List<Building> unsealAndDeserializeBuildings(SealedObject sealedBuildingsObject, SecretKey key) throws Exception {
-        String json = decryptObject(sealedBuildingsObject, key);
+    public static List<Building> unsealAndDeserializeBuildings(byte[] sealedBuildingsObject, SecretKey key) throws Exception {
+        String json = decrypt(sealedBuildingsObject, key);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         return gson.fromJson(json, new TypeToken<List<Building>>() {
