@@ -149,7 +149,7 @@ public class ShortenClassRoomDistances {
      */
     public final String execute() {
         String statusMessage = "";
-        List<Integer> minSizes = (List<Integer>) dataManager.getSettings().get("LockerMinSizes");
+        List<Integer> minSizes = dataManager.getSettings().lockerMinSizes;
 
         statusMessage += "Es gibt " + classLockerToDistancePairList.size() + " Schließfächer der Klasse " + className + "\n";
         statusMessage += "Es wurden " + freeLockerToDistancePairList.size() + " freie Schließfächer gefunden!\n\n";

@@ -19,7 +19,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         // focus in the middle
         setLocationRelativeTo(null);
 
-        int numBackups = (Integer) dataManager.getSettings().get("NumOfBackups");
+        int numBackups = (Integer) dataManager.getSettings().numOfBackups;
         numBackupsSlider.setValue(numBackups);
         numBackupsTextField.setText(Integer.toString(numBackups));
 
@@ -29,7 +29,7 @@ public class SettingsDialog extends javax.swing.JDialog {
     public final void updateLockerMinSizesTextField() {
         String text = "";
 
-        List<Integer> minSizes = (List<Integer>) dataManager.getSettings().get("LockerMinSizes");
+        List<Integer> minSizes = (List<Integer>) dataManager.getSettings().lockerMinSizes;
 
         for (int i = 0; i < minSizes.size(); i++) {
             if (i != 0) {
@@ -136,7 +136,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        dataManager.getSettings().put("NumOfBackups", numBackupsSlider.getValue());
+        dataManager.getSettings().numOfBackups = numBackupsSlider.getValue();
 
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed

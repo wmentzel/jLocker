@@ -3,11 +3,10 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.google.gson.annotations.Expose;
 
 import java.util.List;
-import java.util.TreeMap;
 
 public class JsonRoot {
 
-    public JsonRoot(byte[] encryptedBuildings, TreeMap<String, Object> settings, List<Task> tasks, List<User> users) {
+    public JsonRoot(byte[] encryptedBuildings, Settings settings, List<Task> tasks, List<User> users) {
         this.encryptedBuildings = encryptedBuildings;
         this.settings = settings;
         this.tasks = tasks;
@@ -18,11 +17,14 @@ public class JsonRoot {
     public byte[] encryptedBuildings;
 
     @Expose
-    public TreeMap<String, Object> settings;
+    public Settings settings;
 
     @Expose
     public List<Task> tasks;
 
     @Expose
     public List<User> users;
+
+    @Expose
+    public Integer test = 1;
 }

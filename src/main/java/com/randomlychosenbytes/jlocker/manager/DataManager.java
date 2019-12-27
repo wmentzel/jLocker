@@ -41,7 +41,7 @@ public class DataManager {
     private List<Building> buildings = new LinkedList<>();
     private List<User> users;
     private List<Task> tasks;
-    private TreeMap<String, Object> settings;
+    private Settings settings;
 
     private byte[] sealedBuildingsObject;
 
@@ -70,19 +70,7 @@ public class DataManager {
 
         //---
 
-        settings = new TreeMap<>();
-        settings.put("LockerOverviewFontSize", 20);
-        settings.put("NumOfBackups", 10);
-
-        List<Integer> iMinSizes = new LinkedList<>();
-
-        iMinSizes.add(0); // size for bottom locker
-        iMinSizes.add(0);
-        iMinSizes.add(140);
-        iMinSizes.add(150);
-        iMinSizes.add(175); // size for top locker
-
-        settings.put("LockerMinSizes", iMinSizes);
+        settings = new Settings();
     }
 
     /* *************************************************************************
@@ -133,9 +121,7 @@ public class DataManager {
 
             File[] files = backupDirectory.listFiles(fileFilter);
 
-            Integer iNumBackups = (Integer) settings.get("NumOfBackups");
-
-            for (int i = 0; i < files.length - iNumBackups; i++) {
+            for (int i = 0; i < files.length - settings.numOfBackups; i++) {
                 System.out.print("* delete backup file: \"" + files[i].getName() + "\"...");
 
                 if (files[i].delete()) {
@@ -317,7 +303,7 @@ public class DataManager {
         return bundle.getString("Application.version");
     }
 
-    public TreeMap getSettings() {
+    public Settings getSettings() {
         return settings;
     }
 
