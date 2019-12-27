@@ -24,7 +24,4 @@ public class JsonRoot {
 
     @Expose
     public List<User> users;
-
-    @Expose
-    public Integer test = 1;
 }
