@@ -7,6 +7,9 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -65,5 +68,39 @@ final public class SecurityManager {
 
         return gson.fromJson(json, new TypeToken<List<Building>>() {
         }.getType());
+    }
+
+    public static byte[] encryptKeyWithString(SecretKey key, String pw) {
+        try {
+            Cipher ecipher = Cipher.getInstance("DES");
+
+            DESKeySpec desKeySpec = new DESKeySpec(pw.getBytes());
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+            ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
+
+            return ecipher.doFinal(key.getEncoded());
+        } catch (Exception e) {
+            System.err.println("* User.EncryptKeyWithString()... failed");
+        }
+
+        return null;
+    }
+
+    public static SecretKey decryptKeyWithString(byte[] enc_key, String pw) { // Key is saved as string
+        try {
+            Cipher dcipher = Cipher.getInstance("DES");
+
+            DESKeySpec desKeySpec = new DESKeySpec(pw.getBytes());
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+            dcipher.init(Cipher.DECRYPT_MODE, secretKey);
+
+            return new SecretKeySpec(dcipher.doFinal(enc_key), "DES");
+        } catch (Exception e) {
+            System.err.println("* User.DecryptKeyWithString()... failed");
+        }
+
+        return null;
     }
 }

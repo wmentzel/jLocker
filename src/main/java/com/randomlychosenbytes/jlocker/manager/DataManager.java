@@ -39,7 +39,7 @@ public class DataManager {
     private File backupDirectory;
 
     private List<Building> buildings = new LinkedList<>();
-    private List<User> users;
+    private List<User> users = new LinkedList<>();
     private List<Task> tasks;
     private Settings settings;
 
@@ -181,7 +181,19 @@ public class DataManager {
 
             JsonRoot root = gson.fromJson(reader, JsonRoot.class);
 
+            String superUserPw = null;
+            String userPw = null;
+
+            if (!getUserList().isEmpty()) {
+                superUserPw = users.get(0).getDecUserPW();
+                userPw = users.get(1).getDecUserPW();
+            }
+
             users = root.users;
+
+            users.get(0).setDecUserPW(superUserPw);
+            users.get(1).setDecUserPW(userPw);
+
             encryptedBuildingsBytes = SecurityManager.base64StringToBytes(root.encryptedBuildingsBase64);
             tasks = root.tasks;
             settings = root.settings;
