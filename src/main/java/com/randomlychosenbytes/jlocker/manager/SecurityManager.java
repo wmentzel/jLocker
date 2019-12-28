@@ -51,7 +51,7 @@ final public class SecurityManager {
         return ecipher.doFinal(s.getBytes("UTF8"));
     }
 
-    private static String decrypt(byte[] bytes, SecretKey key) throws Exception {
+    public static String decrypt(byte[] bytes, SecretKey key) throws Exception {
         Cipher dcipher = Cipher.getInstance("DES");
         dcipher.init(Cipher.DECRYPT_MODE, key);
         return new String(dcipher.doFinal(bytes), "UTF8");
