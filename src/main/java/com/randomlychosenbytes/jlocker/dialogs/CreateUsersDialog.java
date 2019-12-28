@@ -308,8 +308,15 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     return;
                 }
 
-                // Reencrypt all codes
-                if (!isFirstRun) {
+                if (isFirstRun) {
+                    //
+                    // Create initial data
+                    //
+                    dataManager.getBuildingList().add(new Building("-", ""));
+                    dataManager.getCurFloorList().add(new Floor("-"));
+                    dataManager.getCurWalkList().add(new Walk("-"));
+                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+                } else {
                     List<Building> buildings = dataManager.getBuildingList();
 
                     for (Building building : buildings) {
@@ -324,25 +331,12 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                                             codes[i] = codes[i].replace("-", "");
                                         }
 
-                                        locker.setCodes(codes, newUsers.get(0).getSuperUMasterKey());
+                                        locker.setCodes(codes, dataManager.getSuperUser().getSuperUMasterKey());
                                     }
                                 }
                             }
                         }
                     }
-                }
-
-                // apply changes
-                dataManager.setUserList(newUsers);
-
-                if (isFirstRun) {
-                    //
-                    // Create initial data
-                    //
-                    dataManager.getBuildingList().add(new Building("-", ""));
-                    dataManager.getCurFloorList().add(new Floor("-"));
-                    dataManager.getCurWalkList().add(new Walk("-"));
-                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
                 }
 
                 dataManager.saveAndCreateBackup();
