@@ -70,7 +70,7 @@ final public class SecurityManager {
         }.getType());
     }
 
-    public static byte[] encryptKeyWithString(SecretKey key, String pw) {
+    public static String encryptKeyWithString(SecretKey key, String pw) {
         try {
             Cipher ecipher = Cipher.getInstance("DES");
 
@@ -79,7 +79,7 @@ final public class SecurityManager {
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
             ecipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
-            return ecipher.doFinal(key.getEncoded());
+            return bytesToBase64String(ecipher.doFinal(key.getEncoded()));
         } catch (Exception e) {
             System.err.println("* User.EncryptKeyWithString()... failed");
         }
@@ -87,7 +87,7 @@ final public class SecurityManager {
         return null;
     }
 
-    public static SecretKey decryptKeyWithString(byte[] enc_key, String pw) { // Key is saved as string
+    public static SecretKey decryptKeyWithString(String encKeyBase64, String pw) { // Key is saved as string
         try {
             Cipher dcipher = Cipher.getInstance("DES");
 
@@ -96,7 +96,7 @@ final public class SecurityManager {
             SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
             dcipher.init(Cipher.DECRYPT_MODE, secretKey);
 
-            return new SecretKeySpec(dcipher.doFinal(enc_key), "DES");
+            return new SecretKeySpec(dcipher.doFinal(base64StringToBytes(encKeyBase64)), "DES");
         } catch (Exception e) {
             System.err.println("* User.DecryptKeyWithString()... failed");
         }

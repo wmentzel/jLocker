@@ -26,10 +26,10 @@ public class User {
     private boolean isSuperUser;
 
     @Expose
-    private byte[] encUserMasterKey;
+    private String encUserMasterKeyBase64;
 
     @Expose
-    private byte[] encSuperUMasterKey;
+    private String encSuperUMasterKeyBase64;
 
     public String getDecUserPW() {
         return decUserPW;
@@ -47,8 +47,8 @@ public class User {
         isSuperUser = false;
         sHash = SecurityManager.getHash(password.getBytes()); // MD5 hash
 
-        encUserMasterKey = SecurityManager.encryptKeyWithString(ukey, password);
-        encSuperUMasterKey = null;
+        encUserMasterKeyBase64 = SecurityManager.encryptKeyWithString(ukey, password);
+        encSuperUMasterKeyBase64 = null;
     }
 
     public User(String name, String password) {
@@ -64,11 +64,11 @@ public class User {
         try {
             // everyone has at least this password.
             // it's used to encrypt/decrypt the buildings object
-            encUserMasterKey = encryptKeyWithString(KeyGenerator.getInstance("DES").generateKey(), decUserPW);
+            encUserMasterKeyBase64 = encryptKeyWithString(KeyGenerator.getInstance("DES").generateKey(), decUserPW);
 
             // only super users have this variables initialized
             // this key is used to encrypt/decrypt the locker codes
-            encSuperUMasterKey = encryptKeyWithString(KeyGenerator.getInstance("DES").generateKey(), decUserPW);
+            encSuperUMasterKeyBase64 = encryptKeyWithString(KeyGenerator.getInstance("DES").generateKey(), decUserPW);
         } catch (NoSuchAlgorithmException ex) {
             System.out.println("*** Executing User Constructor... failed");
         }
@@ -94,11 +94,11 @@ public class User {
     }
 
     public SecretKey getUserMasterKey() {
-        return SecurityManager.decryptKeyWithString(encUserMasterKey, decUserPW);
+        return SecurityManager.decryptKeyWithString(encUserMasterKeyBase64, decUserPW);
     }
 
     public SecretKey getSuperUMasterKey() {
-        return SecurityManager.decryptKeyWithString(encSuperUMasterKey, decUserPW);
+        return SecurityManager.decryptKeyWithString(encSuperUMasterKeyBase64, decUserPW);
     }
 
     public boolean isSuperUser() {
