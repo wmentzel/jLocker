@@ -5,6 +5,7 @@ import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
+import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         setComboBoxes2CurIndizes();
 
         // If the super user is logged in, he is allowed to change to passwords.
-        changeUserPWMenuItem.setEnabled(dataManager.getCurUser().isSuperUser());
+        changeUserPWMenuItem.setEnabled(dataManager.getCurUser() instanceof SuperUser);
     }
 
     /**
@@ -188,8 +189,8 @@ public class MainFrame extends javax.swing.JFrame {
             remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
 
             // Combobox initialization
-            if (dataManager.getCurUser().isSuperUser()) {
-                codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
+            if (dataManager.getCurUser() instanceof SuperUser) {
+                codeTextField.setText(locker.getCurrentCode(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }
@@ -267,8 +268,8 @@ public class MainFrame extends javax.swing.JFrame {
             locker.setUntilDate(until);
         }
 
-        Long months = locker.getRemainingTimeInMonths();
-        remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
+        long months = locker.getRemainingTimeInMonths();
+        remainingTimeInMonthsTextField.setText(Long.toString(months) + " " + (months == 1 ? "Monat" : "Monate"));
     }
 
     public void setStatusMessage(String message) {
@@ -1083,7 +1084,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
     {//GEN-HEADEREND:event_codeTextFieldMouseClicked
-        if (dataManager.getCurUser().isSuperUser()) {
+        if (dataManager.getCurUser() instanceof SuperUser) {
             EditCodesDialog dialog = new EditCodesDialog(this, dataManager, true);
             dialog.setVisible(true);
         }
@@ -1112,8 +1113,8 @@ public class MainFrame extends javax.swing.JFrame {
             locker.empty();
 
             // Combobox initialization
-            if (dataManager.getCurUser().isSuperUser()) {
-                codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
+            if (dataManager.getCurUser() instanceof SuperUser) {
+                codeTextField.setText(locker.getCurrentCode(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }

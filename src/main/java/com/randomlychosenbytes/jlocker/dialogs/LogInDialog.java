@@ -144,7 +144,7 @@ public class LogInDialog extends javax.swing.JDialog {
         //
         String password = String.valueOf(passwordTextField.getPassword());
 
-        dataManager.setCurrentUserIndex(chooseUserComboBox.getSelectedIndex());
+        dataManager.setCurrentUser(chooseUserComboBox.getSelectedIndex() == 0 ? dataManager.getSuperUser() : dataManager.getRestrictedUser());
 
         if (!dataManager.getCurUser().isPasswordCorrect(password)) {
             JOptionPane.showMessageDialog(this, "Das Passwort ist falsch!", "Fehler", JOptionPane.OK_OPTION);

@@ -39,7 +39,10 @@ public class DataManager {
     private File backupDirectory;
 
     private List<Building> buildings = new LinkedList<>();
-    private List<User> users = new LinkedList<>();
+
+    private RestrictedUser restrictedUser;
+    private SuperUser superUser;
+
     private List<Task> tasks;
     private Settings settings;
 
@@ -50,7 +53,7 @@ public class DataManager {
     private int currentWalkIndex = 0;
     private int currentColumnIndex = 0;
     private int currentLockerIndex = 0;
-    private int currentUserIndex = 0;
+    private User currentUser;
 
     private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
@@ -140,7 +143,7 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBytes = SecurityManager.encrypt(gson.toJson(buildings), users.get(0).getUserMasterKey());
+            encryptedBuildingsBytes = SecurityManager.encrypt(gson.toJson(buildings), superUser.getUserMasterKey());
 
             try (Writer writer = new FileWriter(file)) {
 
@@ -148,7 +151,8 @@ public class DataManager {
                         SecurityManager.bytesToBase64String(encryptedBuildingsBytes),
                         settings,
                         tasks,
-                        users
+                        superUser,
+                        restrictedUser
                 ), writer);
 
                 System.out.println("successful");
@@ -184,15 +188,16 @@ public class DataManager {
             String superUserPw = null;
             String userPw = null;
 
-            if (!getUserList().isEmpty()) {
-                superUserPw = users.get(0).getDecUserPW();
-                userPw = users.get(1).getDecUserPW();
+            if (superUser != null && restrictedUser != null) {
+                superUserPw = superUser.getDecUserPW();
+                userPw = restrictedUser.getDecUserPW();
             }
 
-            users = root.users;
+            superUser = root.superUser;
+            restrictedUser = root.restrictedUser;
 
-            users.get(0).setDecUserPW(superUserPw);
-            users.get(1).setDecUserPW(userPw);
+            superUser.setDecUserPW(superUserPw);
+            restrictedUser.setDecUserPW(userPw);
 
             encryptedBuildingsBytes = SecurityManager.base64StringToBytes(root.encryptedBuildingsBase64);
             tasks = root.tasks;
@@ -243,7 +248,7 @@ public class DataManager {
         sourceLocker.setTo(destCopy);
 
         if (withCodes) {
-            SecretKey key = getCurUser().getSuperUMasterKey();
+            SecretKey key = ((SuperUser) getCurUser()).getSuperUMasterKey();
 
             destLocker.setCodes(sourceLocker.getCodes(key), key);
             sourceLocker.setCodes(destCopy.getCodes(key), key);
@@ -336,11 +341,15 @@ public class DataManager {
     }
 
     public User getCurUser() {
-        return users.get(currentUserIndex);
+        return currentUser;
     }
 
-    public List<User> getUserList() {
-        return users;
+    public User getRestrictedUser() {
+        return restrictedUser;
+    }
+
+    public User getSuperUser() {
+        return superUser;
     }
 
     public List<Building> getBuildingList() {
@@ -422,7 +431,7 @@ public class DataManager {
     public void initBuildingObject() {
         try {
             this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                    getEncryptedBuildingsBytes(), getUserList().get(0).getUserMasterKey()
+                    getEncryptedBuildingsBytes(), superUser.getSuperUMasterKey()
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -433,8 +442,12 @@ public class DataManager {
         this.mainFrame = mainFrame;
     }
 
-    public void setUserList(List<User> users) {
-        this.users = users;
+    public void setRestrictedUser(RestrictedUser restrictedUser) {
+        this.restrictedUser = restrictedUser;
+    }
+
+    public void setSuperUser(SuperUser superUser) {
+        this.superUser = superUser;
     }
 
     public void setDataChanged(boolean changed) {
@@ -461,8 +474,8 @@ public class DataManager {
         currentLockerIndex = index;
     }
 
-    public void setCurrentUserIndex(int index) {
-        currentUserIndex = index;
+    public void setCurrentUser(User user) {
+        currentUser = user;
     }
 
     public void addTask(String description) {
