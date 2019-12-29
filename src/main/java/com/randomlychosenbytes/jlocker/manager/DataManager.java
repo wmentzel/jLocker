@@ -46,7 +46,7 @@ public class DataManager {
     private List<Task> tasks;
     private Settings settings;
 
-    private byte[] encryptedBuildingsBytes;
+    private String encryptedBuildingsBase64;
 
     private int currentBuildingIndex = 0;
     private int currentFloorIndex = 0;
@@ -143,12 +143,12 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBytes = SecurityManager.encrypt(gson.toJson(buildings), superUser.getUserMasterKey());
+            encryptedBuildingsBase64 = SecurityManager.encrypt(gson.toJson(buildings), superUser.getUserMasterKey());
 
             try (Writer writer = new FileWriter(file)) {
 
                 gson.toJson(new JsonRoot(
-                        SecurityManager.bytesToBase64String(encryptedBuildingsBytes),
+                        encryptedBuildingsBase64,
                         settings,
                         tasks,
                         superUser,
@@ -185,21 +185,12 @@ public class DataManager {
 
             JsonRoot root = gson.fromJson(reader, JsonRoot.class);
 
-            String superUserPw = null;
-            String userPw = null;
-
-            if (superUser != null && restrictedUser != null) {
-                superUserPw = superUser.getDecUserPW();
-                userPw = restrictedUser.getDecUserPW();
+            if (superUser == null && restrictedUser == null) {
+                superUser = root.superUser;
+                restrictedUser = root.restrictedUser;
             }
 
-            superUser = root.superUser;
-            restrictedUser = root.restrictedUser;
-
-            superUser.setDecUserPW(superUserPw);
-            restrictedUser.setDecUserPW(userPw);
-
-            encryptedBuildingsBytes = SecurityManager.base64StringToBytes(root.encryptedBuildingsBase64);
+            encryptedBuildingsBase64 = root.encryptedBuildingsBase64;
             tasks = root.tasks;
             settings = root.settings;
 
@@ -336,8 +327,8 @@ public class DataManager {
         return getLockerByID(id) == null;
     }
 
-    public byte[] getEncryptedBuildingsBytes() {
-        return encryptedBuildingsBytes;
+    public String getEncryptedBuildingsBase64() {
+        return encryptedBuildingsBase64;
     }
 
     public User getCurUser() {
@@ -431,7 +422,7 @@ public class DataManager {
     public void initBuildingObject() {
         try {
             this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                    getEncryptedBuildingsBytes(), superUser.getSuperUMasterKey()
+                    getEncryptedBuildingsBase64(), superUser.getSuperUMasterKey()
             );
         } catch (Exception e) {
             e.printStackTrace();

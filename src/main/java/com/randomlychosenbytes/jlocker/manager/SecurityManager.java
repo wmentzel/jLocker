@@ -41,24 +41,24 @@ final public class SecurityManager {
         return "";
     }
 
-    public static String bytesToBase64String(byte[] bytes) {
+    private static String bytesToBase64String(byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static byte[] base64StringToBytes(String str) {
+    private static byte[] base64StringToBytes(String str) {
         return Base64.getDecoder().decode(str);
     }
 
-    public static byte[] encrypt(String s, SecretKey key) throws Exception {
+    public static String encrypt(String s, SecretKey key) throws Exception {
         Cipher ecipher = Cipher.getInstance(cryptoAlgorithmName);
         ecipher.init(Cipher.ENCRYPT_MODE, key);
-        return ecipher.doFinal(s.getBytes());
+        return bytesToBase64String(ecipher.doFinal(s.getBytes()));
     }
 
-    public static String decrypt(byte[] bytes, SecretKey key) throws Exception {
+    public static String decrypt(String base64, SecretKey key) throws Exception {
         Cipher dcipher = Cipher.getInstance(cryptoAlgorithmName);
         dcipher.init(Cipher.DECRYPT_MODE, key);
-        return new String(dcipher.doFinal(bytes));
+        return new String(dcipher.doFinal(base64StringToBytes(base64)));
     }
 
     /**
@@ -66,8 +66,8 @@ final public class SecurityManager {
      * loadFromCustomFile method, because the data is loaded before the password
      * was entered.
      */
-    public static List<Building> unsealAndDeserializeBuildings(byte[] sealedBuildingsObject, SecretKey key) throws Exception {
-        String json = decrypt(sealedBuildingsObject, key);
+    public static List<Building> unsealAndDeserializeBuildings(String encryptedBuildingsBase64, SecretKey key) throws Exception {
+        String json = decrypt(encryptedBuildingsBase64, key);
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         return gson.fromJson(json, new TypeToken<List<Building>>() {

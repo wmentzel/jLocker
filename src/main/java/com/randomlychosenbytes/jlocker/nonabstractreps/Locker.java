@@ -58,7 +58,7 @@ public class Locker extends JLabel implements Cloneable {
     private Boolean isSelected = false;
 
     @Expose
-    private byte encCodes[][];
+    private String encCodes[];
 
     public Locker(
             String id, String sirname, String name, int size,
@@ -196,14 +196,14 @@ public class Locker extends JLabel implements Cloneable {
         }
     }
 
-    public void setCodes(String codes[], SecretKey sukey) {
+    public void setCodes(String[] codes, SecretKey sukey) {
         // codes is unencrypted... encrypting and saving in encCodes
 
         // The Value of code[i] looks like "00-00-00"
         // it is saved without the "-", so we have
         // to remove them.
 
-        encCodes = new byte[5][];
+        encCodes = new String[5];
 
         for (int i = 0; i < 5; i++) {
             codes[i] = codes[i].replace("-", "");
