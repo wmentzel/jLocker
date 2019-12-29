@@ -468,7 +468,7 @@ public class SearchFrame extends javax.swing.JFrame {
                             rowData.add(locker.getLock());
 
                             if (dataManager.getCurUser() instanceof SuperUser) {
-                                String[] codearray = locker.getCodes(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey());
+                                String[] codearray = locker.getCodes(dataManager.getSuperUserMasterKey());
                                 StringBuilder codes = new StringBuilder();
 
                                 for (int i = 0; i < 5; i++) {

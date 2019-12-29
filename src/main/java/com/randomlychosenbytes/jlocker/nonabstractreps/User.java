@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
-import com.randomlychosenbytes.jlocker.manager.SecurityManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 
 import javax.crypto.SecretKey;
 
@@ -34,7 +34,7 @@ public abstract class User {
 
     public boolean isPasswordCorrect(String pw) {
 
-        if (!SecurityManager.getHash(pw.getBytes()).equals(sHash)) {
+        if (!Utils.getHash(pw).equals(sHash)) {
             return false;
         }
 
@@ -44,6 +44,6 @@ public abstract class User {
     }
 
     public SecretKey getUserMasterKey() {
-        return SecurityManager.decryptKeyWithString(encUserMasterKeyBase64, decUserPW);
+        return Utils.decryptKeyWithString(encUserMasterKeyBase64, decUserPW);
     }
 }

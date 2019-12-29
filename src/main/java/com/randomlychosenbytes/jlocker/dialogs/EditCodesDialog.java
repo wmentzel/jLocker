@@ -2,7 +2,6 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
         codeTextFields[3] = codeFourTextField;
         codeTextFields[4] = codeFiveTextField;
 
-        String codes[] = dataManager.getCurLocker().getCodes(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey());
+        String codes[] = dataManager.getCurLocker().getCodes(dataManager.getSuperUserMasterKey());
 
         for (int i = 0; i < 5; i++) {
             codeTextFields[i].setText(codes[i]);
@@ -186,7 +185,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
             codes[i] = code;
         }
 
-        dataManager.getCurLocker().setCodes(codes, ((SuperUser) dataManager.getCurUser()).getSuperUMasterKey());
+        dataManager.getCurLocker().setCodes(codes, dataManager.getSuperUserMasterKey());
 
         ((MainFrame) this.getParent()).showLockerInformation();
 

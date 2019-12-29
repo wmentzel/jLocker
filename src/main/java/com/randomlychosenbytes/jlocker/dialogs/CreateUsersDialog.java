@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.crypto.SecretKey;
@@ -9,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.generateAndEncryptKey;
 
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int iDisplayedCard;
@@ -277,7 +280,13 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (supassword.equals(suRepeatPasswordTextField.getText())) {
-                    dataManager.setSuperUser(new SuperUser(supassword));
+
+                    dataManager.setSuperUser(new SuperUser(
+                            supassword,
+                            Utils.getHash(supassword),
+                            generateAndEncryptKey(supassword),
+                            generateAndEncryptKey(supassword)
+                    ));
                     ukey = dataManager.getSuperUser().getUserMasterKey();
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -319,7 +328,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 } else {
                     List<Building> buildings = dataManager.getBuildingList();
 
-                    SecretKey masterKey = ((SuperUser) dataManager.getCurUser()).getSuperUMasterKey();
+                    SecretKey masterKey = dataManager.getSuperUserMasterKey();
                     for (Building building : buildings) {
                         for (int f = 0; f < building.getFloorList().size(); f++) {
                             for (int w = 0; w < building.getFloorList().get(f).getWalkList().size(); w++) {

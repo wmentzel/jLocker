@@ -190,7 +190,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             // Combobox initialization
             if (dataManager.getCurUser() instanceof SuperUser) {
-                codeTextField.setText(locker.getCurrentCode(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey()));
+                codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }
@@ -1114,7 +1114,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             // Combobox initialization
             if (dataManager.getCurUser() instanceof SuperUser) {
-                codeTextField.setText(locker.getCurrentCode(((SuperUser) dataManager.getCurUser()).getSuperUMasterKey()));
+                codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }

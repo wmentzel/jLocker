@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.SecurityManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 
 import javax.crypto.SecretKey;
 import javax.swing.*;
@@ -118,7 +118,7 @@ public class Locker extends JLabel implements Cloneable {
         }
 
         try {
-            String code = SecurityManager.decrypt(encCodes[i], sukey);
+            String code = Utils.decrypt(encCodes[i], sukey);
             return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.getCode: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
@@ -211,7 +211,7 @@ public class Locker extends JLabel implements Cloneable {
 
         try {
             for (int i = 0; i < 5; i++) {
-                encCodes[i] = SecurityManager.encrypt(codes[i], sukey);
+                encCodes[i] = Utils.encrypt(codes[i], sukey);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.setCodes: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);

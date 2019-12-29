@@ -143,7 +143,7 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBase64 = SecurityManager.encrypt(gson.toJson(buildings), currentUser.getUserMasterKey());
+            encryptedBuildingsBase64 = Utils.encrypt(gson.toJson(buildings), currentUser.getUserMasterKey());
 
             try (Writer writer = new FileWriter(file)) {
 
@@ -239,11 +239,19 @@ public class DataManager {
         sourceLocker.setTo(destCopy);
 
         if (withCodes) {
-            SecretKey key = ((SuperUser) getCurUser()).getSuperUMasterKey();
+            SecretKey key = getSuperUserMasterKey();
 
             destLocker.setCodes(sourceLocker.getCodes(key), key);
             sourceLocker.setCodes(destCopy.getCodes(key), key);
         }
+    }
+
+    public SecretKey getSuperUserMasterKey() {
+        // this line will only succeed if the current user is the super user
+        // accessing this as restricted user, would mean an error in the programm flow,
+        // which would cause a justified exception
+        SuperUser superUser = (SuperUser) getCurUser();
+        return superUser.getSuperUMasterKeyBase64();
     }
 
     public void updateAllCabinets() {
@@ -421,7 +429,7 @@ public class DataManager {
 
     public void initBuildingObject() {
         try {
-            this.buildings = SecurityManager.unsealAndDeserializeBuildings(
+            this.buildings = Utils.unsealAndDeserializeBuildings(
                     getEncryptedBuildingsBase64(), currentUser.getUserMasterKey()
             );
         } catch (Exception e) {
