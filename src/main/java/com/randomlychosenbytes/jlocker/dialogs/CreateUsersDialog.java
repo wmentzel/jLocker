@@ -304,6 +304,10 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     return;
                 }
 
+                if (dataManager.getCurrentUser() == null) {
+                    dataManager.setCurrentUser(dataManager.getSuperUser());
+                }
+
                 if (isFirstRun) {
                     //
                     // Create initial data

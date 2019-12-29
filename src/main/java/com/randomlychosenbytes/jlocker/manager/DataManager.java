@@ -143,7 +143,7 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBase64 = SecurityManager.encrypt(gson.toJson(buildings), superUser.getUserMasterKey());
+            encryptedBuildingsBase64 = SecurityManager.encrypt(gson.toJson(buildings), currentUser.getUserMasterKey());
 
             try (Writer writer = new FileWriter(file)) {
 
@@ -422,7 +422,7 @@ public class DataManager {
     public void initBuildingObject() {
         try {
             this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                    getEncryptedBuildingsBase64(), superUser.getSuperUMasterKey()
+                    getEncryptedBuildingsBase64(), currentUser.getUserMasterKey()
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -467,6 +467,10 @@ public class DataManager {
 
     public void setCurrentUser(User user) {
         currentUser = user;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     public void addTask(String description) {
