@@ -112,8 +112,8 @@ public class DataManager {
         //
         // Just keep a certain number of last saved building files
         //
-        if (backupDirectory.exists()) // if there are not backups yet, we dont have to delete any files
-        {
+        if (backupDirectory.exists()) { // if there are not backups yet, we dont have to delete any files
+
             // This filter only returns files (and not directories)
             FileFilter fileFilter = new FileFilter() {
                 @Override
@@ -136,7 +136,7 @@ public class DataManager {
         }
     }
 
-    private void saveData(File file) {
+    private void saveData(File file, Object... obj) {
 
         System.out.print("* saving " + file.getName() + "... ");
 
