@@ -11,7 +11,7 @@ public class Floor extends Entity {
     private List<Walk> walks;
 
     public Floor(String name) {
-        sName = name;
+        this.name = name;
         walks = new LinkedList<>();
     }
 

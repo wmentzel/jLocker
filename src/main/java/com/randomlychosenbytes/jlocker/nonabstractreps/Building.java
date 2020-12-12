@@ -14,13 +14,13 @@ public class Building extends Entity {
     private List<Floor> floors;
 
     public Building(String name, String notes) {
-        sName = name;
+        this.name = name;
         this.notes = notes;
         floors = new LinkedList<>();
     }
 
     public Building(String name) {
-        sName = name;
+        this.name = name;
         this.notes = "";
         floors = new LinkedList<>();
     }

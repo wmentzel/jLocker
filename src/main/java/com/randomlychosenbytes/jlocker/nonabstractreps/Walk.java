@@ -13,7 +13,7 @@ public class Walk extends Entity {
     private List<ManagementUnit> mus;
 
     public Walk(String name) {
-        sName = name;
+        this.name = name;
         mus = new LinkedList<>();
     }
 
