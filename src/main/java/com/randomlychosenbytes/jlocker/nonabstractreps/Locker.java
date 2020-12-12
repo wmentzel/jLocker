@@ -29,10 +29,10 @@ public class Locker extends JLabel implements Cloneable {
     private String schoolClassName;
 
     @Expose
-    private String rentedFromDate;
+    private String rentedFromDate; // TODO: use LocalDate
 
     @Expose
-    private String rentedUntilDate;
+    private String rentedUntilDate; // TODO: use LocalDate
 
     @Expose
     private boolean hasContract;
@@ -127,7 +127,6 @@ public class Locker extends JLabel implements Cloneable {
             return null;
         }
     }
-
 
     public long getRemainingTimeInMonths() {
         if (rentedUntilDate.equals("") || rentedFromDate.equals("") || isFree()) {
