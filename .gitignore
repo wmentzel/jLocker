@@ -1,3 +1,7 @@
-/target
+# Gradle
+/build
+.gradle
+
+# IntelliJ
 /.idea/
 /jLocker.iml
