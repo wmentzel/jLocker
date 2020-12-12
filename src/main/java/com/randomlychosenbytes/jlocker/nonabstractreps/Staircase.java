@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
 
 public class Staircase extends JPanel {
 
@@ -22,17 +21,6 @@ public class Staircase extends JPanel {
     public void setCaption(String name) {
         this.name = name;
         captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>");
-    }
-
-    public void setUpMouseListener() {
-        if (this.getMouseListeners().length == 0) {
-            captionLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    captionLabelMouseReleased(evt);
-                }
-            });
-        }
     }
 
     /**

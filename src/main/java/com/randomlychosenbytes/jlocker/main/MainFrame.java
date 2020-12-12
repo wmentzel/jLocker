@@ -124,8 +124,6 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i = numMUnits - 1; i >= 0; i--) {
             ManagementUnit mu = mus.get(i);
 
-            mu.setUpMouseListeners();
-
             lockerOverviewPanel.add(mu);
 
             List<Locker> lockers = mu.getLockerCabinet().getLockers();

@@ -33,18 +33,6 @@ public class Room extends JPanel {
         captionLabel.setText(caption);
     }
 
-    public void setUpMouseListener() {
-        if (this.getMouseListeners().length == 0) {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    captionLabelMouseReleased(evt);
-                }
-            });
-        }
-    }
-
-
     public String getRoomName() {
         return name;
     }

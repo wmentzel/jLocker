@@ -50,30 +50,6 @@ public class LockerCabinet extends JPanel {
         cabinetPanel.updateUI();
     }
 
-    public void setUpMouseListeners() {
-        if (addLockerLabel.getMouseListeners().length == 0) {
-            addLockerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    addLockerLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (remLockerLabel.getMouseListeners().length == 0) {
-            remLockerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    remLockerLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        for (Locker locker : lockers) {
-            locker.setUpMouseListener();
-        }
-    }
-
     public int getLockerRowByID(String id) {
         for (int l = 0; l < lockers.size(); l++) {
             if (lockers.get(l).getId().equals(id))

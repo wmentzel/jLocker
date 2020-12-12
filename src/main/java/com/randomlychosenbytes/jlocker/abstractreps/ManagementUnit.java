@@ -88,61 +88,6 @@ public class ManagementUnit extends JPanel {
         centerPanel.updateUI();
     }
 
-    /**
-     * After loading the Management Units from file all event listeners have
-     * to be added again.
-     */
-    public void setUpMouseListeners() {
-        if (addMUnitLeftLabel.getMouseListeners().length == 0) {
-            addMUnitLeftLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    addMUnitLeftLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (removeThisMUnitLabel.getMouseListeners().length == 0) {
-            removeThisMUnitLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    removeThisMUnitLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (transformLabel.getMouseListeners().length == 0) {
-            transformLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    transformLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (addMUnitRightLabel.getMouseListeners().length == 0) {
-            addMUnitRightLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    addMUnitRightLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (lockerCabinet != null) {
-            lockerCabinet.setUpMouseListeners();
-        }
-
-        if (room != null) {
-            room.setUpMouseListener();
-        }
-
-        if (staircase != null) {
-            staircase.setUpMouseListener();
-        }
-    }
-
-
     public static String getNameFromID(final int type) {
         switch (type) {
             case LOCKER_CABINET: {
