@@ -1,90 +1,44 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
-public class Room extends javax.swing.JPanel {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -859301949546702964L;
+import javax.swing.*;
 
-    private String sClass;
-    private String sName;
+public class Room extends JPanel {
+
+    @Expose
+    private String schoolClassName;
+
+    @Expose
+    private String name;
 
     public Room(String name, String classname) {
         initComponents();
-
         setCaption(name, classname);
     }
 
-    public Room() {
-    }
+    public final void setCaption(String name, String schoolClassName) {
+        this.name = name;
+        this.schoolClassName = schoolClassName;
 
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-
-    public final void setCaption(String name, String classname) {
-        sName = name;
-        sClass = classname;
-
-        String caption = "<html><div align=\"center\">" + sName;
+        String caption = "<html><div align=\"center\">" + this.name;
 
         // if there was a class name specified
-        if (!sClass.equals("")) {
-            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + sClass + "</div></div></html>";
+        if (!this.schoolClassName.isEmpty()) {
+            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + this.schoolClassName + "</div>";
         }
 
+        caption += "</div></html>";
         captionLabel.setText(caption);
     }
 
-    public void setRoomName(String newname) {
-        sName = newname;
-    }
-
-    public void setSName(String newname) {
-        sName = newname;
-    }
-
-    public void setSClass(String newname) {
-        sClass = newname;
-    }
-
-    public void setUpMouseListener() {
-        if (this.getMouseListeners().length == 0) {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    captionLabelMouseReleased(evt);
-                }
-            });
-        }
-    }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-
-    public String getSName() {
-        return sName;
-    }
-
-    public String getSClass() {
-        return sClass;
-    }
-
     public String getRoomName() {
-        return sName;
+        return name;
     }
 
-    public String getClassName() {
-        return sClass;
-    }
-
-    public void setClassName(String classname) {
-        sClass = classname;
+    public String getSchoolClassName() {
+        return schoolClassName;
     }
 
     /**

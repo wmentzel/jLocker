@@ -4,10 +4,7 @@ import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
+import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
 import java.awt.print.PrinterException;
@@ -46,7 +43,6 @@ public class SearchFrame extends javax.swing.JFrame {
         //
         // Initialize controls array
         //
-
         columnData.add("Schließfach-ID");
         columnData.add("Name");
         columnData.add("Vorname");
@@ -58,7 +54,6 @@ public class SearchFrame extends javax.swing.JFrame {
         columnData.add("von:");
         columnData.add("bis:");
         columnData.add("Schloss");
-
 
         dataTypes.add(java.lang.String.class);
         dataTypes.add(java.lang.String.class);
@@ -73,7 +68,7 @@ public class SearchFrame extends javax.swing.JFrame {
         dataTypes.add(java.lang.String.class);
 
 
-        if (dataManager.getCurUser().isSuperUser()) {
+        if (dataManager.getCurUser() instanceof SuperUser) {
             columnData.add("Codes");
             dataTypes.add(java.lang.String.class);
         }
@@ -358,17 +353,17 @@ public class SearchFrame extends javax.swing.JFrame {
         String untildate = untilDateTextField.getText();
         String lock = lockTextField.getText();
 
-        List tableData = new LinkedList();
+        List<List<Object>> tableData = new LinkedList<>();
 
         foundLockers = new LinkedList<>();
 
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> cols = walks.get(w).getManagementUnitList();
@@ -457,7 +452,7 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
                             }
 
-                            List rowData = new LinkedList();
+                            List<Object> rowData = new LinkedList<>();
                             rowData.add(locker.getId());
                             rowData.add(locker.getSurname());
                             rowData.add(locker.getOwnerName());
@@ -470,15 +465,15 @@ public class SearchFrame extends javax.swing.JFrame {
                             rowData.add(locker.getUntilDate());
                             rowData.add(locker.getLock());
 
-                            if (dataManager.getCurUser().isSuperUser()) {
-                                String codearray[] = locker.getCodes(dataManager.getCurUser().getSuperUMasterKey());
-                                String codes = "";
+                            if (dataManager.getCurUser() instanceof SuperUser) {
+                                String[] codearray = locker.getCodes(dataManager.getSuperUserMasterKey());
+                                StringBuilder codes = new StringBuilder();
 
                                 for (int i = 0; i < 5; i++) {
-                                    codes += codearray[i] + (i < 4 ? ", " : "");
+                                    codes.append(codearray[i]).append(i < 4 ? ", " : "");
                                 }
 
-                                rowData.add(codes);
+                                rowData.add(codes.toString());
                             }
 
                             tableData.add(rowData);

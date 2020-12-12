@@ -104,7 +104,7 @@ public class FloorDialog extends javax.swing.JDialog {
             dataManager.getCurWalkList().add(new Walk("-"));
             dataManager.setCurrentWalkIndex(0);
 
-            dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+            dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
             dataManager.setCurrentMUnitIndex(dataManager.getCurManagmentUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);

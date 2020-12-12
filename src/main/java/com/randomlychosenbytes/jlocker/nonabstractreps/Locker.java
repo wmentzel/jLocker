@@ -1,96 +1,94 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 
-import javax.crypto.*;
+import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Locker extends JLabel implements java.io.Serializable, Cloneable {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = 7707447616883782260L;
+public class Locker extends JLabel implements Cloneable {
 
-    private static final Color[] BACKGROUND_COLORS = new Color[]
-            {
-                    new Color(255, 0, 0),
-                    new Color(0, 102, 0),
-                    new Color(255, 255, 255),
-                    new Color(255, 255, 0),
-                    new Color(0, 0, 255),
-                    new Color(255, 153, 0)
-            };
+    @Expose
+    private String id;
 
-    private static final Color[] FOREGROUND_COLORS = new Color[]
-            {
-                    new Color(255, 255, 255),
-                    new Color(255, 255, 255),
-                    new Color(0, 0, 0),
-                    new Color(0, 0, 0),
-                    new Color(255, 255, 255),
-                    new Color(0, 0, 0)
-            };
+    @Expose
+    private String lastName;
 
-    public static final int OUTOFORDER_COLOR = 0;
-    public static final int RENTED_COLOR = 1;
-    public static final int FREE_COLOR = 2;
-    public static final int SELECTED_COLOR = 3;
-    public static final int NOCONTRACT_COLOR = 4;
-    public static final int ONEMONTHREMAINING_COLOR = 5;
+    @Expose
+    private String firstName;
 
-    private String sID;
-    private String sSirName;
-    private String sName;
-    private int iSize;
-    private String sClass;
-    private String sFrom;
-    private String sUntil;
+    @Expose
+    private int sizeInCm;
+
+    @Expose
+    private String schoolClassName;
+
+    @Expose
+    private String rentedFromDate; // TODO: use LocalDate
+
+    @Expose
+    private String rentedUntilDate; // TODO: use LocalDate
+
+    @Expose
     private boolean hasContract;
-    private int iMoney;
-    private int iPrevAmount;
+
+    @Expose
+    private int paidAmount;
+
+    @Expose
+    private int previoulyPaidAmount;
+
+    @Expose
     private boolean isOutOfOrder;
-    private String sLock;
-    private String sNote;
-    private Boolean isSelected;
 
-    private int iCurrentCodeIndex;
-    private byte encCodes[][];
+    @Expose
+    private String lockCode;
 
-    public Locker(String id, String sirname, String name, int size,
-                  String _class, String from, String until, boolean hascontract,
-                  int money, int currentcodeindex, String lock,
-                  boolean outoforder, String note) {
-        sID = id;
-        sSirName = sirname;
-        sName = name;
-        iSize = size;
-        sClass = _class;
-        sFrom = from;
-        sUntil = until;
-        hasContract = hascontract;
-        iMoney = money;
-        iPrevAmount = money;
-        isOutOfOrder = outoforder;
-        sLock = lock;
-        sNote = note;
-        isSelected = false;
+    @Expose
+    private String note;
 
-        iCurrentCodeIndex = currentcodeindex;
-        encCodes = null;
+    @Expose
+    private int currentCodeIndex;
+
+    @Expose
+    private String encryptedCodes[];
+
+    // transient
+    private Boolean isSelected = false;
+
+    public Locker(
+            String id, String firstName, String lastName, int sizeInCm,
+            String schoolClass, String rentedFrom, String rentedUntil, boolean hasContract,
+            int paidAmount, int currentCodeIndex, String lockCode,
+            boolean isOutOfOrder, String note
+    ) {
+        this.id = id;
+        this.lastName = firstName;
+        this.firstName = lastName;
+        this.sizeInCm = sizeInCm;
+        this.schoolClassName = schoolClass;
+        this.rentedFromDate = rentedFrom;
+        this.rentedUntilDate = rentedUntil;
+        this.hasContract = hasContract;
+        this.paidAmount = paidAmount;
+        this.previoulyPaidAmount = paidAmount;
+        this.isOutOfOrder = isOutOfOrder;
+        this.lockCode = lockCode;
+        this.note = note;
+        this.isSelected = false;
+
+        this.currentCodeIndex = currentCodeIndex;
+        this.encryptedCodes = null;
 
         // standard color
         setColor(FREE_COLOR);
 
-        setText(sID);
+        setText(this.id);
 
         // If true the component paints every pixel within its bounds.
         setOpaque(true);
@@ -105,16 +103,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         setUpMouseListener();
     }
 
-    /**
-     * XMLEncoder
-     */
-    public Locker() {
-    }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-
     public String[] getCodes(SecretKey sukey) {
         String[] decCodes = new String[5];
 
@@ -126,28 +114,22 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
     }
 
     private String getCode(int i, SecretKey sukey) {
-        if (encCodes == null) {
+        if (encryptedCodes == null) {
             return "00-00-00";
         }
 
         try {
-            Cipher dcipher = Cipher.getInstance("DES");
-            dcipher.init(Cipher.DECRYPT_MODE, sukey);
-
-            byte[] utf8 = dcipher.doFinal(encCodes[i]);
-            String code = new String(utf8, "UTF8");
-
+            String code = Utils.decrypt(encryptedCodes[i], sukey);
             return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.getCode: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
             return null;
         }
     }
 
-
     public long getRemainingTimeInMonths() {
-        if (sUntil.equals("") || sFrom.equals("") || isFree()) {
+        if (rentedUntilDate.equals("") || rentedFromDate.equals("") || isFree()) {
             return 0;
         }
 
@@ -155,9 +137,9 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         today.setLenient(false);
         today.getTime();
 
-        int iDay = Integer.parseInt(sUntil.substring(0, 2));
-        int iMonth = Integer.parseInt(sUntil.substring(3, 5)) - 1;
-        int iYear = Integer.parseInt(sUntil.substring(6, 10));
+        int iDay = Integer.parseInt(rentedUntilDate.substring(0, 2));
+        int iMonth = Integer.parseInt(rentedUntilDate.substring(3, 5)) - 1;
+        int iYear = Integer.parseInt(rentedUntilDate.substring(6, 10));
 
         Calendar end = new GregorianCalendar(iYear, iMonth, iDay);
         end.setLenient(false);
@@ -194,87 +176,6 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-
-    public String getId() {
-        return sID;
-    }
-
-
-    public String getSurname() {
-        return sSirName;
-    }
-
-
-    public String getOwnerName() {
-        return sName;
-    }
-
-    public int getOwnerSize() {
-        return iSize;
-    }
-
-    public String getOwnerClass() {
-        return sClass;
-    }
-
-    public String getFromDate() {
-        return sFrom;
-    }
-
-    public String getUntilDate() {
-        return sUntil;
-    }
-
-    public boolean hasContract() {
-        return hasContract;
-    }
-
-    public int getMoney() {
-        return iMoney;
-    }
-
-    public int getPrevAmount() {
-        return iPrevAmount;
-    }
-
-
-    public int getCurrentCodeIndex() {
-        return iCurrentCodeIndex;
-    }
-
-
-    public boolean isOutOfOrder() {
-        return isOutOfOrder;
-    }
-
-    public String getLock() {
-        return sLock;
-    }
-
-    public String getNote() {
-        return sNote;
-    }
-
-    public boolean isFree() {
-        return sName.equals("");
-    }
-
-    public String getCurrentCode(SecretKey sukey) {
-        return getCode(iCurrentCodeIndex, sukey);
-    }
-
-    public Boolean isSelected() {
-        return isSelected;
-    }
-
-    public Locker getCopy() throws CloneNotSupportedException {
-        return (Locker) this.clone();
-    }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-
     public void setAppropriateColor() {
         if (hasContract) {
             setColor(RENTED_COLOR);
@@ -295,89 +196,84 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         }
     }
 
-    public void setCodes(String codes[], SecretKey sukey) {
+    public void setCodes(String[] codes, SecretKey sukey) {
         // codes is unencrypted... encrypting and saving in encCodes
 
         // The Value of code[i] looks like "00-00-00"
         // it is saved without the "-", so we have
         // to remove them.
 
-        encCodes = new byte[5][];
+        encryptedCodes = new String[5];
 
         for (int i = 0; i < 5; i++) {
             codes[i] = codes[i].replace("-", "");
         }
 
         try {
-            Cipher ecipher = Cipher.getInstance("DES");
-
-            ecipher.init(Cipher.ENCRYPT_MODE, sukey);
-
             for (int i = 0; i < 5; i++) {
-                byte[] utf8 = codes[i].getBytes("UTF8");
-                encCodes[i] = ecipher.doFinal(utf8);
+                encryptedCodes[i] = Utils.encrypt(codes[i], sukey);
             }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.setCodes: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
     }
 
     public void empty() {
-        sSirName = "";
-        sName = "";
-        iSize = 0;
-        sClass = "";
-        sFrom = "";
-        sUntil = "";
+        lastName = "";
+        firstName = "";
+        sizeInCm = 0;
+        schoolClassName = "";
+        rentedFromDate = "";
+        rentedUntilDate = "";
         hasContract = false;
-        iMoney = 0;
-        iPrevAmount = 0;
-        iCurrentCodeIndex = (iCurrentCodeIndex + 1) % encCodes.length;
+        paidAmount = 0;
+        previoulyPaidAmount = 0;
+        currentCodeIndex = (currentCodeIndex + 1) % encryptedCodes.length;
 
         setAppropriateColor();
     }
 
     public void setTo(Locker newdata) {
-        sSirName = newdata.sSirName;
-        sName = newdata.sName;
-        iSize = newdata.iSize;
-        sClass = newdata.sClass;
-        sFrom = newdata.sFrom;
-        sUntil = newdata.sUntil;
+        lastName = newdata.lastName;
+        firstName = newdata.firstName;
+        sizeInCm = newdata.sizeInCm;
+        schoolClassName = newdata.schoolClassName;
+        rentedFromDate = newdata.rentedFromDate;
+        rentedUntilDate = newdata.rentedUntilDate;
         hasContract = newdata.hasContract;
-        iMoney = newdata.iMoney;
-        iPrevAmount = newdata.iPrevAmount;
+        paidAmount = newdata.paidAmount;
+        previoulyPaidAmount = newdata.previoulyPaidAmount;
 
         setAppropriateColor();
     }
 
     public void setID(String id) {
-        setText(sID = id);
+        setText(this.id = id);
     }
 
-    public void setSirName(String sirname) {
-        sSirName = sirname;
+    public void setLastName(String sirname) {
+        lastName = sirname;
     }
 
     public void setOwnerName(String name) {
-        sName = name;
+        firstName = name;
     }
 
     public void setOwnerSize(int size) {
-        iSize = size;
+        sizeInCm = size;
     }
 
     public void setClass(String _class) {
-        sClass = _class;
+        schoolClassName = _class;
     }
 
     public void setFromDate(String fromdate) {
-        sFrom = fromdate;
+        rentedFromDate = fromdate;
     }
 
     public void setUntilDate(String untildate) {
-        sUntil = untildate;
+        rentedUntilDate = untildate;
     }
 
     public void setContract(boolean hascontract) {
@@ -385,19 +281,19 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
     }
 
     public void setMoney(int money) {
-        iMoney = money;
+        paidAmount = money;
     }
 
     public void setPrevAmount(int amount) {
-        iPrevAmount = amount;
+        previoulyPaidAmount = amount;
     }
 
     public void setCurrentCodeIndex(int index) {
-        iCurrentCodeIndex = index;
+        currentCodeIndex = index;
     }
 
     public void setNextCode() {
-        iCurrentCodeIndex = (iCurrentCodeIndex + 1) % 5;
+        currentCodeIndex = (currentCodeIndex + 1) % 5;
     }
 
     public void setOutOfOrder(boolean outoforder) {
@@ -410,11 +306,11 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
     }
 
     public void setLock(String lock) {
-        sLock = lock;
+        lockCode = lock;
     }
 
     public void setNote(String note) {
-        sNote = note;
+        this.note = note;
     }
 
     public final void setUpMouseListener() {
@@ -427,6 +323,107 @@ public class Locker extends JLabel implements java.io.Serializable, Cloneable {
         setBackground(BACKGROUND_COLORS[index]);
         setForeground(FOREGROUND_COLORS[index]);
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getSurname() {
+        return lastName;
+    }
+
+    public String getOwnerName() {
+        return firstName;
+    }
+
+    public int getOwnerSize() {
+        return sizeInCm;
+    }
+
+    public String getOwnerClass() {
+        return schoolClassName;
+    }
+
+    public String getFromDate() {
+        return rentedFromDate;
+    }
+
+    public String getUntilDate() {
+        return rentedUntilDate;
+    }
+
+    public boolean hasContract() {
+        return hasContract;
+    }
+
+    public int getMoney() {
+        return paidAmount;
+    }
+
+    public int getPrevAmount() {
+        return previoulyPaidAmount;
+    }
+
+    public int getCurrentCodeIndex() {
+        return currentCodeIndex;
+    }
+
+    public boolean isOutOfOrder() {
+        return isOutOfOrder;
+    }
+
+    public String getLock() {
+        return lockCode;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public boolean isFree() {
+        return firstName.equals("");
+    }
+
+    public String getCurrentCode(SecretKey sukey) {
+        return getCode(currentCodeIndex, sukey);
+    }
+
+    public Boolean isSelected() {
+        return isSelected;
+    }
+
+    public Locker getCopy() throws CloneNotSupportedException {
+        return (Locker) this.clone();
+    }
+
+    public static final int OUTOFORDER_COLOR = 0;
+    public static final int RENTED_COLOR = 1;
+    public static final int FREE_COLOR = 2;
+    public static final int SELECTED_COLOR = 3;
+    public static final int NOCONTRACT_COLOR = 4;
+    public static final int ONEMONTHREMAINING_COLOR = 5;
+
+    // TODO: use enum
+    private static final Color[] BACKGROUND_COLORS = new Color[]
+            {
+                    new Color(255, 0, 0),
+                    new Color(0, 102, 0),
+                    new Color(255, 255, 255),
+                    new Color(255, 255, 0),
+                    new Color(0, 0, 255),
+                    new Color(255, 153, 0)
+            };
+
+    // TODO: use enum
+    private static final Color[] FOREGROUND_COLORS = new Color[]
+            {
+                    new Color(255, 255, 255),
+                    new Color(255, 255, 255),
+                    new Color(0, 0, 0),
+                    new Color(0, 0, 0),
+                    new Color(255, 255, 255),
+                    new Color(0, 0, 0)
+            };
 
     /**
      * TODO move to MainFrame

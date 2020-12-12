@@ -26,7 +26,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
 
         // Deactivate the radio button that represents the current type
         switch (munit.getType()) {
-            case ManagementUnit.LOCKERCOLUMN: {
+            case ManagementUnit.LOCKER_CABINET: {
                 lockerButton.setEnabled(false);
                 break;
             }
@@ -124,7 +124,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     {//GEN-HEADEREND:event_okButtonActionPerformed
 
         if (lockerButton.isSelected()) {
-            chosenType = ManagementUnit.LOCKERCOLUMN;
+            chosenType = ManagementUnit.LOCKER_CABINET;
         } else if (roomButton.isSelected()) {
             chosenType = ManagementUnit.ROOM;
         } else {

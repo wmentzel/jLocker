@@ -5,7 +5,7 @@ import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
+import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,7 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         setComboBoxes2CurIndizes();
 
         // If the super user is logged in, he is allowed to change to passwords.
-        changeUserPWMenuItem.setEnabled(dataManager.getCurUser().isSuperUser());
+        changeUserPWMenuItem.setEnabled(dataManager.getCurUser() instanceof SuperUser);
     }
 
     /**
@@ -114,7 +114,9 @@ public class MainFrame extends javax.swing.JFrame {
         // Remove old panels
         lockerOverviewPanel.removeAll();
 
-        List<ManagementUnit> mus = dataManager.getCurManagmentUnitList();
+        List<ManagementUnit> mus = dataManager.reinstantiateManagementUnits(dataManager.getCurManagmentUnitList());
+
+        dataManager.getCurWalk().setManagementUnits(mus);
 
         final int numMUnits = mus.size();
         boolean firstLockerFound = false;
@@ -122,20 +124,9 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i = numMUnits - 1; i >= 0; i--) {
             ManagementUnit mu = mus.get(i);
 
-            //
-            // mouse listeners get unattached during serialization, so they have to be set up again
-            //
-            mu.setUpMouseListeners();
-
-            //
-            // add management units to gui
-            //
             lockerOverviewPanel.add(mu);
 
-            //
-            // set appropriate colors
-            //
-            List<Locker> lockers = mu.getLockerCabinet().getLockerList();
+            List<Locker> lockers = mu.getLockerCabinet().getLockers();
 
             for (Locker locker : lockers) {
                 // always set a standard locker as selected
@@ -149,6 +140,15 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
         }  // for
+
+
+        //List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+
+        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
+
+        mus.stream()
+                .map(ManagementUnit::getLockerCabinet)
+                .forEach(c -> c.updateCabinet(maxRows));
 
         showLockerInformation();
         lockerOverviewPanel.updateUI();
@@ -187,8 +187,8 @@ public class MainFrame extends javax.swing.JFrame {
             remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
 
             // Combobox initialization
-            if (dataManager.getCurUser().isSuperUser()) {
-                codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
+            if (dataManager.getCurUser() instanceof SuperUser) {
+                codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }
@@ -207,7 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void setLockerInformation() {
         Locker locker = dataManager.getCurLocker();
 
-        locker.setSirName(surnameTextField.getText());
+        locker.setLastName(surnameTextField.getText());
         locker.setOwnerName(nameTextField.getText());
         locker.setClass(classTextField.getText());
         locker.setContract(hasContractCheckbox.isSelected());
@@ -266,8 +266,8 @@ public class MainFrame extends javax.swing.JFrame {
             locker.setUntilDate(until);
         }
 
-        Long months = locker.getRemainingTimeInMonths();
-        remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
+        long months = locker.getRemainingTimeInMonths();
+        remainingTimeInMonthsTextField.setText(Long.toString(months) + " " + (months == 1 ? "Monat" : "Monate"));
     }
 
     public void setStatusMessage(String message) {
@@ -301,7 +301,7 @@ public class MainFrame extends javax.swing.JFrame {
         List<String> entityNames = new LinkedList<>();
 
         for (Object entity : entityList) {
-            entityNames.add(((Entity) entity).getSName());
+            entityNames.add(((Entity) entity).getName());
         }
 
         combobox.setModel(new DefaultComboBoxModel(entityNames.toArray()));
@@ -1082,7 +1082,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
     {//GEN-HEADEREND:event_codeTextFieldMouseClicked
-        if (dataManager.getCurUser().isSuperUser()) {
+        if (dataManager.getCurUser() instanceof SuperUser) {
             EditCodesDialog dialog = new EditCodesDialog(this, dataManager, true);
             dialog.setVisible(true);
         }
@@ -1111,8 +1111,8 @@ public class MainFrame extends javax.swing.JFrame {
             locker.empty();
 
             // Combobox initialization
-            if (dataManager.getCurUser().isSuperUser()) {
-                codeTextField.setText(locker.getCurrentCode(dataManager.getCurUser().getSuperUMasterKey()));
+            if (dataManager.getCurUser() instanceof SuperUser) {
+                codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
             }
@@ -1217,16 +1217,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveMenuItemActionPerformed
     {//GEN-HEADEREND:event_saveMenuItemActionPerformed
-        // if the tasks object has not been initialised, it is done now
-        if (dataManager.getTasks() == null) {
-            dataManager.setTaskList(new LinkedList<Task>());
-        }
-
-        // if the settings object has not been initialised, it is done now
-        if (dataManager.getSettings() == null) {
-            dataManager.loadDefaultSettings();
-        }
-
         dataManager.saveAndCreateBackup();
     }//GEN-LAST:event_saveMenuItemActionPerformed
 

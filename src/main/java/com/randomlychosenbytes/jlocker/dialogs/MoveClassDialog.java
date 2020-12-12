@@ -62,10 +62,10 @@ public class MoveClassDialog extends javax.swing.JDialog {
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
@@ -74,7 +74,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
                         ManagementUnit munit = managementUnits.get(m);
 
                         if (munit.getType() == ManagementUnit.ROOM) {
-                            String className = munit.getRoom().getClassName();
+                            String className = munit.getRoom().getSchoolClassName();
 
                             if (!className.isEmpty()) {
                                 classToClassRoomNodeId.put(className, b + "-" + f + "-" + w + "-" + m);

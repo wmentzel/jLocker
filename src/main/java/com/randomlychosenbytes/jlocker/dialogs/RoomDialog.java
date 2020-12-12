@@ -20,7 +20,7 @@ public class RoomDialog extends javax.swing.JDialog {
         this.room = room;
 
         roomNameTextField.setText(room.getRoomName());
-        classNameTextField.setText(room.getClassName());
+        classNameTextField.setText(room.getSchoolClassName());
     }
 
     /**

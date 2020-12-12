@@ -2,19 +2,20 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
-import java.util.LinkedList;
 import java.util.List;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.generateAndEncryptKey;
 
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int iDisplayedCard;
     private final CardLayout cl;
-    private final List<User> newUsers;
     private boolean isFirstRun;
     private SecretKey ukey;
     private final DataManager dataManager;
@@ -43,8 +44,6 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                             }
                         }
                 );
-
-        newUsers = new LinkedList<>();
 
         cl = new CardLayout();
 
@@ -281,8 +280,14 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (supassword.equals(suRepeatPasswordTextField.getText())) {
-                    newUsers.add(new User("Superuser", supassword));
-                    ukey = newUsers.get(0).getUserMasterKey();
+
+                    dataManager.setSuperUser(new SuperUser(
+                            supassword,
+                            Utils.getHash(supassword),
+                            generateAndEncryptKey(supassword),
+                            generateAndEncryptKey(supassword)
+                    ));
+                    ukey = dataManager.getSuperUser().getUserMasterKey();
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -302,58 +307,46 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (password.equals(userRepeatPasswordTextField.getText()))
-                    newUsers.add(new User("LimitedUser", password, ukey));
+                    dataManager.setRestrictedUser(new RestrictedUser(password, ukey));
                 else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // Reencrypt all codes
-                if (!isFirstRun) {
-                    List<Building> buildings = dataManager.getBuildingList();
-
-                    for (Building building : buildings) {
-                        for (int f = 0; f < building.getFloorList().size(); f++) {
-                            for (int w = 0; w < building.getFloorList().get(f).getWalkList().size(); w++) {
-                                for (int c = 0; c < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().size(); c++) {
-                                    for (int l = 0; l < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
-                                        Locker locker = building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().get(l);
-                                        String[] codes = locker.getCodes(dataManager.getCurUser().getSuperUMasterKey());
-
-                                        for (int i = 0; i < 5; i++) {
-                                            codes[i] = codes[i].replace("-", "");
-                                        }
-
-                                        locker.setCodes(codes, newUsers.get(0).getSuperUMasterKey());
-                                    }
-                                }
-                            }
-                        }
-                    }
+                if (dataManager.getCurrentUser() == null) {
+                    dataManager.setCurrentUser(dataManager.getSuperUser());
                 }
-
-                // apply changes
-                dataManager.setUserList(newUsers);
 
                 if (isFirstRun) {
                     //
                     // Create initial data
                     //
-
-                    List<Task> tasks = dataManager.getTasks();
-
-                    if (tasks == null) {
-                        dataManager.setTaskList(new LinkedList<Task>());
-                    }
-
-                    if (dataManager.getSettings() == null) {
-                        dataManager.loadDefaultSettings();
-                    }
-
                     dataManager.getBuildingList().add(new Building("-", ""));
                     dataManager.getCurFloorList().add(new Floor("-"));
                     dataManager.getCurWalkList().add(new Walk("-"));
-                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+                } else {
+                    List<Building> buildings = dataManager.getBuildingList();
+
+                    SecretKey masterKey = dataManager.getSuperUserMasterKey();
+                    for (Building building : buildings) {
+                        for (int f = 0; f < building.getFloors().size(); f++) {
+                            for (int w = 0; w < building.getFloors().get(f).getWalks().size(); w++) {
+                                for (int c = 0; c < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().size(); c++) {
+                                    for (int l = 0; l < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
+                                        Locker locker = building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().get(l);
+                                        String[] codes = locker.getCodes(masterKey);
+
+                                        for (int i = 0; i < 5; i++) {
+                                            codes[i] = codes[i].replace("-", "");
+                                        }
+
+                                        locker.setCodes(codes, masterKey);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 dataManager.saveAndCreateBackup();

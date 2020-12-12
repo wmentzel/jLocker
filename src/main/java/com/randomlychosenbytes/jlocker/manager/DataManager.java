@@ -1,14 +1,18 @@
 package com.randomlychosenbytes.jlocker.manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
-import javax.crypto.SealedObject;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
 
 /**
  * DataManager is a singleton class. There can only be one instance of this
@@ -29,42 +33,47 @@ public class DataManager {
      */
     MainFrame mainFrame;
 
-    final public static boolean ERROR = true;
-
-    private boolean hasDataChanged;
+    private boolean hasDataChanged = false;
 
     private File resourceFile;
     private File backupDirectory;
 
-    private List<Building> buildings;
-    private List<User> users;
+    private List<Building> buildings = new LinkedList<>();
+
+    private RestrictedUser restrictedUser;
+    private SuperUser superUser;
+
     private List<Task> tasks;
-    private TreeMap settings;
+    private Settings settings;
 
-    private SealedObject sealedBuildingsObject;
+    private String encryptedBuildingsBase64;
 
-    private int currentBuildingIndex;
-    private int currentFloorIndex;
-    private int currentWalkIndex;
-    private int currentColumnIndex;
-    private int currentLockerIndex;
-    private int currentUserIndex;
+    private int currentBuildingIndex = 0;
+    private int currentFloorIndex = 0;
+    private int currentWalkIndex = 0;
+    private int currentColumnIndex = 0;
+    private int currentLockerIndex = 0;
+    private User currentUser;
 
     private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
     public DataManager() {
-        currentBuildingIndex = 0;
-        currentFloorIndex = 0;
-        currentWalkIndex = 0;
-        currentColumnIndex = 0;
-        currentLockerIndex = 0;
-        currentUserIndex = 0;
 
-        hasDataChanged = false;
+        URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
+        File sHomeDir = new File(url.getFile());
 
-        buildings = new LinkedList<>();
+        if (!sHomeDir.isDirectory()) {
+            sHomeDir = sHomeDir.getParentFile();
+        }
 
-        determineAppDir();
+        resourceFile = new File(sHomeDir, "jlocker.json");
+        backupDirectory = new File(sHomeDir, "Backup");
+
+        System.out.println("* program directory is: \"" + sHomeDir + "\"");
+
+        //---
+
+        settings = new Settings();
     }
 
     /* *************************************************************************
@@ -103,8 +112,8 @@ public class DataManager {
         //
         // Just keep a certain number of last saved building files
         //
-        if (backupDirectory.exists()) // if there are not backups yet, we dont have to delete any files
-        {
+        if (backupDirectory.exists()) { // if there are not backups yet, we dont have to delete any files
+
             // This filter only returns files (and not directories)
             FileFilter fileFilter = new FileFilter() {
                 @Override
@@ -115,9 +124,7 @@ public class DataManager {
 
             File[] files = backupDirectory.listFiles(fileFilter);
 
-            Integer iNumBackups = (Integer) settings.get("NumOfBackups");
-
-            for (int i = 0; i < files.length - iNumBackups; i++) {
+            for (int i = 0; i < files.length - settings.numOfBackups; i++) {
                 System.out.print("* delete backup file: \"" + files[i].getName() + "\"...");
 
                 if (files[i].delete()) {
@@ -129,23 +136,24 @@ public class DataManager {
         }
     }
 
-    private void saveData(File file) {
+    private void saveData(File file, Object... obj) {
 
         System.out.print("* saving " + file.getName() + "... ");
 
         try {
-            byte[] b = SecurityManager.serialize(buildings);
-            sealedBuildingsObject = SecurityManager.encryptObject(b, users.get(0).getUserMasterKey());
 
-            try (
-                    FileOutputStream fos = new FileOutputStream(file);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos)
-            ) {
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            encryptedBuildingsBase64 = Utils.encrypt(gson.toJson(buildings), currentUser.getUserMasterKey());
 
-                oos.writeObject(users);
-                oos.writeObject(sealedBuildingsObject);
-                oos.writeObject(tasks);
-                oos.writeObject(settings);
+            try (Writer writer = new FileWriter(file)) {
+
+                gson.toJson(new JsonRoot(
+                        encryptedBuildingsBase64,
+                        settings,
+                        tasks,
+                        superUser,
+                        restrictedUser
+                ), writer);
 
                 System.out.println("successful");
                 mainFrame.setStatusMessage("Speichern erfolgreich");
@@ -171,14 +179,20 @@ public class DataManager {
 
         System.out.print("* reading " + file.getName() + "... ");
 
-        try (
-                FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis)
-        ) {
-            users = (List<User>) ois.readObject();
-            sealedBuildingsObject = (SealedObject) ois.readObject();
-            tasks = (LinkedList<Task>) ois.readObject();
-            settings = (TreeMap) ois.readObject();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        try (Reader reader = new FileReader(file)) {
+
+            JsonRoot root = gson.fromJson(reader, JsonRoot.class);
+
+            if (superUser == null && restrictedUser == null) {
+                superUser = root.superUser;
+                restrictedUser = root.restrictedUser;
+            }
+
+            encryptedBuildingsBase64 = root.encryptedBuildingsBase64;
+            tasks = root.tasks;
+            settings = root.settings;
 
             System.out.println("successful");
             mainFrame.setStatusMessage("Laden erfolgreich");
@@ -189,36 +203,12 @@ public class DataManager {
         }
     }
 
-    /**
-     * When there was no settings object loaded, it is created by this method
-     * with default values.
-     */
-    public void loadDefaultSettings() {
-        settings = new TreeMap();
-        settings.put("LockerOverviewFontSize", 20);
-        settings.put("NumOfBackups", 10);
-
-        List<Integer> iMinSizes = new LinkedList<>();
-
-        iMinSizes.add(0); // size for bottom locker
-        iMinSizes.add(0);
-        iMinSizes.add(140);
-        iMinSizes.add(150);
-        iMinSizes.add(175); // size for top locker
-
-        settings.put("LockerMinSizes", iMinSizes);
-    }
-    
-    /* *************************************************************************
-        Getter
-    ***************************************************************************/
-
     public Locker getLockerByID(String id) {
         for (Building building : buildings) {
-            List<Floor> floors = building.getFloorList();
+            List<Floor> floors = building.getFloors();
 
             for (Floor floor : floors) {
-                List<Walk> walks = floor.getWalkList();
+                List<Walk> walks = floor.getWalks();
 
                 for (Walk walk : walks) {
                     List<ManagementUnit> mus = walk.getManagementUnitList();
@@ -240,20 +230,6 @@ public class DataManager {
     }
 
     /**
-     * Determines whether the given name is already assigned to a building.
-     */
-    public boolean isBuildingNameUnique(String name) {
-        int iSize = buildings.size();
-
-        for (int i = 0; i < iSize; i++) {
-            if (((Building) buildings.get(i)).getName().equals(name))
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Moves a student from one locker to another.
      */
     public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) throws CloneNotSupportedException {
@@ -263,11 +239,70 @@ public class DataManager {
         sourceLocker.setTo(destCopy);
 
         if (withCodes) {
-            SecretKey key = getCurUser().getSuperUMasterKey();
+            SecretKey key = getSuperUserMasterKey();
 
             destLocker.setCodes(sourceLocker.getCodes(key), key);
             sourceLocker.setCodes(destCopy.getCodes(key), key);
         }
+    }
+
+    public SecretKey getSuperUserMasterKey() {
+        // this line will only succeed if the current user is the super user
+        // accessing this as restricted user, would mean an error in the programm flow,
+        // which would cause a justified exception
+        SuperUser superUser = (SuperUser) getCurUser();
+        return superUser.getSuperUMasterKeyBase64();
+    }
+
+    public void updateAllCabinets() {
+        List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+
+        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
+
+        mus.stream()
+                .map(ManagementUnit::getLockerCabinet)
+                .forEach(c -> c.updateCabinet(maxRows));
+    }
+
+
+    public List<ManagementUnit> reinstantiateManagementUnits(List<ManagementUnit> managementUnits) {
+        return managementUnits.stream().map(mu -> {
+
+            ManagementUnit newMu = new ManagementUnit(mu.type);
+
+            switch (mu.type) {
+                case ROOM: {
+                    newMu.getRoom().setCaption(mu.getRoom().getRoomName(), mu.getRoom().getSchoolClassName());
+                    break;
+                }
+                case LOCKER_CABINET: {
+                    List<Locker> newLockers = mu.getLockerList().stream().map(l -> new Locker(
+                                    l.getId(),
+                                    l.getSurname(),
+                                    l.getOwnerName(),
+                                    l.getOwnerSize(),
+                                    l.getOwnerClass(),
+                                    l.getUntilDate(),
+                                    l.getFromDate(),
+                                    l.hasContract(),
+                                    l.getMoney(),
+                                    l.getCurrentCodeIndex(),
+                                    l.getLock(),
+                                    l.isOutOfOrder(),
+                                    l.getNote()
+                            )
+                    ).collect(Collectors.toList());
+                    newMu.getLockerCabinet().setLockers(newLockers);
+                    break;
+                }
+                case STAIRCASE: {
+                    newMu.getStaircase().setCaption(mu.getStaircase().getStaircaseName());
+                    break;
+                }
+            }
+
+            return newMu;
+        }).collect(Collectors.toList());
     }
 
     public MainFrame getMainFrame() {
@@ -282,7 +317,7 @@ public class DataManager {
         return bundle.getString("Application.version");
     }
 
-    public TreeMap getSettings() {
+    public Settings getSettings() {
         return settings;
     }
 
@@ -298,16 +333,20 @@ public class DataManager {
         return getLockerByID(id) == null;
     }
 
-    public SealedObject getSealedBuildingsObject() {
-        return sealedBuildingsObject;
+    public String getEncryptedBuildingsBase64() {
+        return encryptedBuildingsBase64;
     }
 
     public User getCurUser() {
-        return users.get(currentUserIndex);
+        return currentUser;
     }
 
-    public List<User> getUserList() {
-        return users;
+    public User getRestrictedUser() {
+        return restrictedUser;
+    }
+
+    public User getSuperUser() {
+        return superUser;
     }
 
     public List<Building> getBuildingList() {
@@ -323,7 +362,7 @@ public class DataManager {
     }
 
     public List<Floor> getCurFloorList() {
-        return getCurBuilding().getFloorList();
+        return getCurBuilding().getFloors();
     }
 
     public Floor getCurFloor() {
@@ -335,7 +374,7 @@ public class DataManager {
     }
 
     public List<Walk> getCurWalkList() {
-        return getCurFloor().getWalkList();
+        return getCurFloor().getWalks();
     }
 
     public Walk getCurWalk() {
@@ -386,21 +425,26 @@ public class DataManager {
         return tasks;
     }
 
-    /* *************************************************************************
-        Setter
-    ***************************************************************************/
     public void initBuildingObject() {
-        this.buildings = SecurityManager.unsealAndDeserializeBuildings(
-                getSealedBuildingsObject(), getUserList().get(0).getUserMasterKey()
-        );
+        try {
+            this.buildings = Utils.unsealAndDeserializeBuildings(
+                    getEncryptedBuildingsBase64(), currentUser.getUserMasterKey()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
     }
 
-    public void setUserList(List<User> users) {
-        this.users = users;
+    public void setRestrictedUser(RestrictedUser restrictedUser) {
+        this.restrictedUser = restrictedUser;
+    }
+
+    public void setSuperUser(SuperUser superUser) {
+        this.superUser = superUser;
     }
 
     public void setDataChanged(boolean changed) {
@@ -427,8 +471,12 @@ public class DataManager {
         currentLockerIndex = index;
     }
 
-    public void setCurrentUserIndex(int index) {
-        currentUserIndex = index;
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     public void addTask(String description) {
@@ -437,23 +485,5 @@ public class DataManager {
 
     public void setTaskList(List<Task> tasks) {
         this.tasks = tasks;
-    }
-    
-    /* *************************************************************************
-        Private Methods
-    ***************************************************************************/
-
-    private void determineAppDir() {
-        URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
-        File sHomeDir = new File(url.getFile());
-
-        if (!sHomeDir.isDirectory()) {
-            sHomeDir = sHomeDir.getParentFile();
-        }
-
-        resourceFile = new File(sHomeDir, "jlocker.dat");
-        backupDirectory = new File(sHomeDir, "Backup");
-
-        System.out.println("* program directory is: \"" + sHomeDir + "\"");
     }
 }

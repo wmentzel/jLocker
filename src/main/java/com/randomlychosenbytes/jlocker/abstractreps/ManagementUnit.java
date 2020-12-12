@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.abstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
@@ -10,25 +11,29 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 import javax.swing.*;
 import java.util.List;
 
-public class ManagementUnit extends javax.swing.JPanel {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -8054374141198601700L;
+public class ManagementUnit extends JPanel {
 
-    private LockerCabinet cabinet;
+    @Expose
+    private LockerCabinet lockerCabinet;
+
+    @Expose
     private Room room;
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    @Expose
     private Staircase staircase;
 
     /**
      * Can either be 0 (ROOM), 1 (LOCKERCOLUMN) or 2 (STAIRCASE)
      */
-    public int mType;
+    @Expose
+    public int type;
 
     public static final int ROOM = 0;
-    public static final int LOCKERCOLUMN = 1;
+    public static final int LOCKER_CABINET = 1;
     public static final int STAIRCASE = 2;
 
     public ManagementUnit(int kind) {
@@ -37,19 +42,16 @@ public class ManagementUnit extends javax.swing.JPanel {
         setAs(kind);
     }
 
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
     public int getType() {
-        return mType;
+        return type;
     }
 
     public LockerCabinet getLockerCabinet() {
-        return cabinet;
+        return lockerCabinet;
     }
 
     public List<Locker> getLockerList() {
-        return cabinet.getLockerList();
+        return lockerCabinet.getLockers();
     }
 
     public Room getRoom() {
@@ -60,15 +62,11 @@ public class ManagementUnit extends javax.swing.JPanel {
         return staircase;
     }
 
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-
     public final void setAs(int kind) {
         centerPanel.removeAll(); // remove previous child
-        mType = kind;
+        type = kind;
 
-        cabinet = new LockerCabinet();
+        lockerCabinet = new LockerCabinet();
         room = new Room("", "");
         staircase = new Staircase();
 
@@ -77,8 +75,8 @@ public class ManagementUnit extends javax.swing.JPanel {
                 centerPanel.add(room);
                 break;
             }
-            case LOCKERCOLUMN: {
-                centerPanel.add(cabinet);
+            case LOCKER_CABINET: {
+                centerPanel.add(lockerCabinet);
                 break;
             }
             case STAIRCASE: {
@@ -90,64 +88,9 @@ public class ManagementUnit extends javax.swing.JPanel {
         centerPanel.updateUI();
     }
 
-    /**
-     * After loading the Management Units from file all event listeners have
-     * to be added again.
-     */
-    public void setUpMouseListeners() {
-        if (addMUnitLeftLabel.getMouseListeners().length == 0) {
-            addMUnitLeftLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    addMUnitLeftLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (removeThisMUnitLabel.getMouseListeners().length == 0) {
-            removeThisMUnitLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    removeThisMUnitLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (transformLabel.getMouseListeners().length == 0) {
-            transformLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    transformLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (addMUnitRightLabel.getMouseListeners().length == 0) {
-            addMUnitRightLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    addMUnitRightLabelMouseReleased(evt);
-                }
-            });
-        }
-
-        if (cabinet != null) {
-            cabinet.setUpMouseListeners();
-        }
-
-        if (room != null) {
-            room.setUpMouseListener();
-        }
-
-        if (staircase != null) {
-            staircase.setUpMouseListener();
-        }
-    }
-
-
     public static String getNameFromID(final int type) {
         switch (type) {
-            case LOCKERCOLUMN: {
+            case LOCKER_CABINET: {
                 return "Schließfachschrank";
             }
             case ROOM: {
@@ -248,10 +191,10 @@ public class ManagementUnit extends javax.swing.JPanel {
         int iNewIndex;
 
         if (index == mus.size() - 1) {
-            mus.add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+            mus.add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
             iNewIndex = mus.size() - 1;
         } else {
-            mus.add(index + 1, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+            mus.add(index + 1, new ManagementUnit(ManagementUnit.LOCKER_CABINET));
             iNewIndex = index + 1;
         }
 
@@ -271,7 +214,7 @@ public class ManagementUnit extends javax.swing.JPanel {
     private void removeThisMUnitLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     {//GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
         if (DataManager.getInstance().getCurManagmentUnitList().size() > 1) {
-            String type = getNameFromID(mType);
+            String type = getNameFromID(this.type);
 
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen " + type + " wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -289,11 +232,7 @@ public class ManagementUnit extends javax.swing.JPanel {
 
         int index = mus.indexOf(this);
 
-        if (index == 0) {
-            mus.add(0, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
-        } else {
-            mus.add(index, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
-        }
+        mus.add(index, new ManagementUnit(ManagementUnit.LOCKER_CABINET));
 
         DataManager.getInstance().setCurrentMUnitIndex(index);
         DataManager.getInstance().setCurrentLockerIndex(0);

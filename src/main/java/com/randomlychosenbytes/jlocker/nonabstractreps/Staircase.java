@@ -1,54 +1,26 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
-public class Staircase extends javax.swing.JPanel {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = 0L;
+import javax.swing.*;
 
-    private String sName;
+public class Staircase extends JPanel {
+
+    @Expose
+    private String name;
 
     public Staircase() {
         initComponents();
     }
 
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-    public void setEntityName(String n) {
-        sName = n;
-        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + sName + "</div></div></html>");
+    public String getStaircaseName() {
+        return name;
     }
 
-    public void setSName(String n) {
-        sName = n;
-    }
-
-    public void setUpMouseListener() {
-        if (this.getMouseListeners().length == 0) {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseReleased(java.awt.event.MouseEvent evt) {
-                    captionLabelMouseReleased(evt);
-                }
-            });
-        }
-    }
-
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-
-    public String getSName() {
-        return sName;
-    }
-
-    public String getEntityName() {
-        return sName;
+    public void setCaption(String name) {
+        this.name = name;
+        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>");
     }
 
     /**

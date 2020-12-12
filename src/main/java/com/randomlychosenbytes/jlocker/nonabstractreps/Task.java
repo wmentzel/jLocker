@@ -1,58 +1,49 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Task implements java.io.Serializable {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -8372739826135250943L;
+public class Task {
 
-    private String sDescription;
-    private boolean isDone;
-    private String sDate;
+    @Expose
+    private String description;
+
+    @Expose
+    private boolean isDone = false;
+
+    @Expose
+    private String creationDate; // TODO: use LocalDate
 
     public Task(String description) {
-        sDescription = description;
-        isDone = false;
+        this.description = description;
 
         Calendar today = new GregorianCalendar();
 
-        sDate = String.format("%02d.%02d.%02d", today.get(Calendar.DATE),
+        creationDate = String.format("%02d.%02d.%02d", today.get(Calendar.DATE),
                 today.get(Calendar.MONTH) + 1,
                 today.get(Calendar.YEAR));
     }
 
-    public Task() {
-    }
-
-    /* *************************************************************************
-        Getter
-    ***************************************************************************/
     public String getSDate() {
-        return sDate;
+        return creationDate;
     }
 
     public String getSDescription() {
-        return sDescription;
+        return description;
     }
 
     public boolean isDone() {
         return isDone;
     }
 
-    /* *************************************************************************
-        Setter
-    ***************************************************************************/
     public void setSDate(String sDate) {
-        this.sDate = sDate;
+        this.creationDate = sDate;
     }
 
     public void setSDescription(String sDescription) {
-        this.sDescription = sDescription;
+        this.description = sDescription;
     }
 
     public void setDone(boolean isDone) {

@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
+import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
@@ -7,38 +8,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Walk extends Entity {
-    /**
-     * If the object is manipulated another serialVersionUID will be assigned
-     * by the compiler, even for minor changes. To avoid that it is set
-     * by the programmer.
-     */
-    private static final long serialVersionUID = -4848128937225865954L;
 
-    private List<ManagementUnit> mus;
+    @Expose
+    private List<ManagementUnit> managementUnits;
 
     public Walk(String name) {
-        sName = name;
-        mus = new LinkedList<>();
+        this.name = name;
+        managementUnits = new LinkedList<>();
     }
 
-    public Walk() {
-    }
-
-    /* *************************************************************************
-     * Setter
-     **************************************************************************/
-
-    public void setMus(List<ManagementUnit> mus) {
-        this.mus = mus;
+    public void setManagementUnits(List<ManagementUnit> managementUnits) {
+        this.managementUnits = managementUnits;
     }
 
     public void setCurLockerIndex(Locker locker) {
-        for (int m = 0; m < mus.size(); m++) {
-            List<Locker> lockers = mus.get(m).getLockerList();
+        for (int m = 0; m < managementUnits.size(); m++) {
+            List<Locker> lockers = managementUnits.get(m).getLockerList();
 
-            int l;
+            int l = lockers.indexOf(locker);
 
-            if ((l = lockers.indexOf(locker)) != -1) {
+            if (l != -1) {
                 DataManager dm = DataManager.getInstance();
                 dm.setCurrentLockerIndex(l);
                 dm.setCurrentMUnitIndex(m);
@@ -46,15 +35,11 @@ public class Walk extends Entity {
         }
     }
 
-    /* *************************************************************************
-     * Getter
-     **************************************************************************/
-
     public List<ManagementUnit> getManagementUnitList() {
-        return mus;
+        return managementUnits;
     }
 
-    public List<ManagementUnit> getMus() {
-        return mus;
+    public List<ManagementUnit> getManagementUnits() {
+        return managementUnits;
     }
 }
