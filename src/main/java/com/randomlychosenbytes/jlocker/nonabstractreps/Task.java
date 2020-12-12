@@ -14,7 +14,7 @@ public class Task {
     private boolean isDone = false;
 
     @Expose
-    private String creationDate;
+    private String creationDate; // TODO: use LocalDate
 
     public Task(String description) {
         this.description = description;

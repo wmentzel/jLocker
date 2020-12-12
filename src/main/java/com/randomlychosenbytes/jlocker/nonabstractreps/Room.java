@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Room extends JPanel {
 
     @Expose
-    private String schoolClass;
+    private String schoolClassName;
 
     @Expose
     private String name;
@@ -20,13 +20,13 @@ public class Room extends JPanel {
 
     public final void setCaption(String name, String classname) {
         this.name = name;
-        schoolClass = classname;
+        schoolClassName = classname;
 
         String caption = "<html><div align=\"center\">" + this.name;
 
         // if there was a class name specified
-        if (!schoolClass.equals("")) {
-            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + schoolClass + "</div></div></html>";
+        if (!schoolClassName.equals("")) {
+            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + schoolClassName + "</div></div></html>";
         }
 
         captionLabel.setText(caption);
@@ -41,7 +41,7 @@ public class Room extends JPanel {
     }
 
     public void setSClass(String newname) {
-        schoolClass = newname;
+        schoolClassName = newname;
     }
 
     public void setUpMouseListener() {
@@ -60,7 +60,7 @@ public class Room extends JPanel {
     }
 
     public String getSClass() {
-        return schoolClass;
+        return schoolClassName;
     }
 
     public String getRoomName() {
@@ -68,11 +68,11 @@ public class Room extends JPanel {
     }
 
     public String getClassName() {
-        return schoolClass;
+        return schoolClassName;
     }
 
     public void setClassName(String classname) {
-        schoolClass = classname;
+        schoolClassName = classname;
     }
 
     /**
