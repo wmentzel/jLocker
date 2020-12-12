@@ -22,3 +22,11 @@ dependencies {
 
     testCompile("junit", "junit", "4.12")
 }
+
+tasks {
+    withType<Jar> {
+        manifest {
+            attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.main.MainFrame"
+        }
+    }
+}
