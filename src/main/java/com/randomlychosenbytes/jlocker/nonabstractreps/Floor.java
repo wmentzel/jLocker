@@ -19,10 +19,6 @@ public class Floor extends Entity {
         this.walks = walks;
     }
 
-    public List<Walk> getWalkList() {
-        return walks;
-    }
-
     public List<Walk> getWalks() {
         return walks;
     }

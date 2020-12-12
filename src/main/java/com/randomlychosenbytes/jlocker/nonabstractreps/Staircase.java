@@ -6,19 +6,19 @@ import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 public class Staircase extends javax.swing.JPanel {
 
     @Expose
-    private String sName;
+    private String name;
 
     public Staircase() {
         initComponents();
     }
 
     public void setEntityName(String n) {
-        sName = n;
-        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + sName + "</div></div></html>");
+        name = n;
+        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + name + "</div></div></html>");
     }
 
     public void setSName(String n) {
-        sName = n;
+        name = n;
     }
 
     public void setUpMouseListener() {
@@ -33,11 +33,11 @@ public class Staircase extends javax.swing.JPanel {
     }
 
     public String getSName() {
-        return sName;
+        return name;
     }
 
     public String getEntityName() {
-        return sName;
+        return name;
     }
 
     /**

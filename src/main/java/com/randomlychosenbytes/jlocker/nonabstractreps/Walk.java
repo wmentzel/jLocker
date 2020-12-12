@@ -10,20 +10,20 @@ import java.util.List;
 public class Walk extends Entity {
 
     @Expose
-    private List<ManagementUnit> mus;
+    private List<ManagementUnit> managementUnits;
 
     public Walk(String name) {
         this.name = name;
-        mus = new LinkedList<>();
+        managementUnits = new LinkedList<>();
     }
 
-    public void setMus(List<ManagementUnit> mus) {
-        this.mus = mus;
+    public void setManagementUnits(List<ManagementUnit> managementUnits) {
+        this.managementUnits = managementUnits;
     }
 
     public void setCurLockerIndex(Locker locker) {
-        for (int m = 0; m < mus.size(); m++) {
-            List<Locker> lockers = mus.get(m).getLockerList();
+        for (int m = 0; m < managementUnits.size(); m++) {
+            List<Locker> lockers = managementUnits.get(m).getLockerList();
 
             int l = lockers.indexOf(locker);
 
@@ -36,10 +36,10 @@ public class Walk extends Entity {
     }
 
     public List<ManagementUnit> getManagementUnitList() {
-        return mus;
+        return managementUnits;
     }
 
-    public List<ManagementUnit> getMus() {
-        return mus;
+    public List<ManagementUnit> getManagementUnits() {
+        return managementUnits;
     }
 }

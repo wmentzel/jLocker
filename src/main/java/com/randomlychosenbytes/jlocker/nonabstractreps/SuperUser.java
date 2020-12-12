@@ -14,15 +14,16 @@ public class SuperUser extends User {
             String password,
             String hash,
             String encUserMasterKeyBase64,
-            String encSuperUMasterKeyBase64) {
+            String encSuperUMasterKeyBase64
+    ) {
         super(password);
 
-        this.sHash = hash;
+        this.passwordHash = hash;
         this.encSuperUMasterKeyBase64 = encSuperUMasterKeyBase64;
-        this.encUserMasterKeyBase64 = encUserMasterKeyBase64;
+        this.encryptedUserMasterKeyBase64 = encUserMasterKeyBase64;
     }
 
     public SecretKey getSuperUMasterKeyBase64() {
-        return Utils.decryptKeyWithString(encSuperUMasterKeyBase64, decUserPW);
+        return Utils.decryptKeyWithString(encSuperUMasterKeyBase64, decryptedUserPassword);
     }
 }

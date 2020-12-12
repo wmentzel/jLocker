@@ -26,13 +26,13 @@ public class Locker extends JLabel implements Cloneable {
     private int sizeInCm;
 
     @Expose
-    private String schoolClass;
+    private String schoolClassName;
 
     @Expose
-    private String rentedFrom;
+    private String rentedFromDate;
 
     @Expose
-    private String rentedUntil;
+    private String rentedUntilDate;
 
     @Expose
     private boolean hasContract;
@@ -71,9 +71,9 @@ public class Locker extends JLabel implements Cloneable {
         this.lastName = firstName;
         this.firstName = lastName;
         this.sizeInCm = sizeInCm;
-        this.schoolClass = schoolClass;
-        this.rentedFrom = rentedFrom;
-        this.rentedUntil = rentedUntil;
+        this.schoolClassName = schoolClass;
+        this.rentedFromDate = rentedFrom;
+        this.rentedUntilDate = rentedUntil;
         this.hasContract = hasContract;
         this.paidAmount = paidAmount;
         this.previoulyPaidAmount = paidAmount;
@@ -130,7 +130,7 @@ public class Locker extends JLabel implements Cloneable {
 
 
     public long getRemainingTimeInMonths() {
-        if (rentedUntil.equals("") || rentedFrom.equals("") || isFree()) {
+        if (rentedUntilDate.equals("") || rentedFromDate.equals("") || isFree()) {
             return 0;
         }
 
@@ -138,9 +138,9 @@ public class Locker extends JLabel implements Cloneable {
         today.setLenient(false);
         today.getTime();
 
-        int iDay = Integer.parseInt(rentedUntil.substring(0, 2));
-        int iMonth = Integer.parseInt(rentedUntil.substring(3, 5)) - 1;
-        int iYear = Integer.parseInt(rentedUntil.substring(6, 10));
+        int iDay = Integer.parseInt(rentedUntilDate.substring(0, 2));
+        int iMonth = Integer.parseInt(rentedUntilDate.substring(3, 5)) - 1;
+        int iYear = Integer.parseInt(rentedUntilDate.substring(6, 10));
 
         Calendar end = new GregorianCalendar(iYear, iMonth, iDay);
         end.setLenient(false);
@@ -224,9 +224,9 @@ public class Locker extends JLabel implements Cloneable {
         lastName = "";
         firstName = "";
         sizeInCm = 0;
-        schoolClass = "";
-        rentedFrom = "";
-        rentedUntil = "";
+        schoolClassName = "";
+        rentedFromDate = "";
+        rentedUntilDate = "";
         hasContract = false;
         paidAmount = 0;
         previoulyPaidAmount = 0;
@@ -239,9 +239,9 @@ public class Locker extends JLabel implements Cloneable {
         lastName = newdata.lastName;
         firstName = newdata.firstName;
         sizeInCm = newdata.sizeInCm;
-        schoolClass = newdata.schoolClass;
-        rentedFrom = newdata.rentedFrom;
-        rentedUntil = newdata.rentedUntil;
+        schoolClassName = newdata.schoolClassName;
+        rentedFromDate = newdata.rentedFromDate;
+        rentedUntilDate = newdata.rentedUntilDate;
         hasContract = newdata.hasContract;
         paidAmount = newdata.paidAmount;
         previoulyPaidAmount = newdata.previoulyPaidAmount;
@@ -266,15 +266,15 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public void setClass(String _class) {
-        schoolClass = _class;
+        schoolClassName = _class;
     }
 
     public void setFromDate(String fromdate) {
-        rentedFrom = fromdate;
+        rentedFromDate = fromdate;
     }
 
     public void setUntilDate(String untildate) {
-        rentedUntil = untildate;
+        rentedUntilDate = untildate;
     }
 
     public void setContract(boolean hascontract) {
@@ -342,15 +342,15 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public String getOwnerClass() {
-        return schoolClass;
+        return schoolClassName;
     }
 
     public String getFromDate() {
-        return rentedFrom;
+        return rentedFromDate;
     }
 
     public String getUntilDate() {
-        return rentedUntil;
+        return rentedUntilDate;
     }
 
     public boolean hasContract() {

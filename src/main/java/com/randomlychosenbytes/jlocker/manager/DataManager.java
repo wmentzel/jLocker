@@ -205,10 +205,10 @@ public class DataManager {
 
     public Locker getLockerByID(String id) {
         for (Building building : buildings) {
-            List<Floor> floors = building.getFloorList();
+            List<Floor> floors = building.getFloors();
 
             for (Floor floor : floors) {
-                List<Walk> walks = floor.getWalkList();
+                List<Walk> walks = floor.getWalks();
 
                 for (Walk walk : walks) {
                     List<ManagementUnit> mus = walk.getManagementUnitList();
@@ -364,7 +364,7 @@ public class DataManager {
     }
 
     public List<Floor> getCurFloorList() {
-        return getCurBuilding().getFloorList();
+        return getCurBuilding().getFloors();
     }
 
     public Floor getCurFloor() {
@@ -376,7 +376,7 @@ public class DataManager {
     }
 
     public List<Walk> getCurWalkList() {
-        return getCurFloor().getWalkList();
+        return getCurFloor().getWalks();
     }
 
     public Walk getCurWalk() {

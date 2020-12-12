@@ -330,11 +330,11 @@ public class CreateUsersDialog extends javax.swing.JDialog {
 
                     SecretKey masterKey = dataManager.getSuperUserMasterKey();
                     for (Building building : buildings) {
-                        for (int f = 0; f < building.getFloorList().size(); f++) {
-                            for (int w = 0; w < building.getFloorList().get(f).getWalkList().size(); w++) {
-                                for (int c = 0; c < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().size(); c++) {
-                                    for (int l = 0; l < building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
-                                        Locker locker = building.getFloorList().get(f).getWalkList().get(w).getManagementUnitList().get(c).getLockerList().get(l);
+                        for (int f = 0; f < building.getFloors().size(); f++) {
+                            for (int w = 0; w < building.getFloors().get(f).getWalks().size(); w++) {
+                                for (int c = 0; c < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().size(); c++) {
+                                    for (int l = 0; l < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
+                                        Locker locker = building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().get(l);
                                         String[] codes = locker.getCodes(masterKey);
 
                                         for (int i = 0; i < 5; i++) {

@@ -13,37 +13,37 @@ import javax.crypto.SecretKey;
 public abstract class User {
 
     @Expose
-    protected String sHash;
+    protected String passwordHash;
 
     @Expose
-    protected String encUserMasterKeyBase64;
+    protected String encryptedUserMasterKeyBase64;
 
-    public String getDecUserPW() {
-        return decUserPW;
+    public String getDecryptedUserPassword() {
+        return decryptedUserPassword;
     }
 
-    public void setDecUserPW(String decUserPW) {
-        this.decUserPW = decUserPW;
+    public void setDecryptedUserPassword(String decryptedUserPassword) {
+        this.decryptedUserPassword = decryptedUserPassword;
     }
 
-    transient protected String decUserPW;
+    transient protected String decryptedUserPassword;
 
     public User(String password) {
-        decUserPW = password;
+        decryptedUserPassword = password;
     }
 
     public boolean isPasswordCorrect(String pw) {
 
-        if (!Utils.getHash(pw).equals(sHash)) {
+        if (!Utils.getHash(pw).equals(passwordHash)) {
             return false;
         }
 
-        decUserPW = pw;
+        decryptedUserPassword = pw;
 
         return true;
     }
 
     public SecretKey getUserMasterKey() {
-        return Utils.decryptKeyWithString(encUserMasterKeyBase64, decUserPW);
+        return Utils.decryptKeyWithString(encryptedUserMasterKeyBase64, decryptedUserPassword);
     }
 }

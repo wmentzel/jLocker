@@ -362,10 +362,10 @@ public class SearchFrame extends javax.swing.JFrame {
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> cols = walks.get(w).getManagementUnitList();

@@ -254,10 +254,10 @@ public class ShortenClassRoomDistances {
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
@@ -311,15 +311,15 @@ public class ShortenClassRoomDistances {
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 // we start with w = 1 because we connect every walk with the 
                 // walks before
                 for (int w = 1; w < walks.size(); w++) {
-                    int lastMUnitIndex = walks.get(w - 1).getMus().size() - 1;
+                    int lastMUnitIndex = walks.get(w - 1).getManagementUnits().size() - 1;
 
                     DefaultWeightedEdge edge = managementUnitGraph.addEdge(createNodeId(b, f, w - 1, lastMUnitIndex), createNodeId(b, f, w, 0));
                     managementUnitGraph.setEdgeWeight(edge, walkToWalkEdgeWeight);
@@ -335,10 +335,10 @@ public class ShortenClassRoomDistances {
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
@@ -368,12 +368,12 @@ public class ShortenClassRoomDistances {
      */
     private List<String> findStaircasesOnFloor(int b, int f, String name) {
         List<Building> buildings = dataManager.getBuildingList();
-        List<Floor> floors = buildings.get(b).getFloorList();
+        List<Floor> floors = buildings.get(b).getFloors();
         List<String> entityIds = new LinkedList<>();
 
         // does the floor exist?
         if (floors.size() > f) {
-            List<Walk> walks = floors.get(f).getWalkList();
+            List<Walk> walks = floors.get(f).getWalks();
 
             for (int w = 0; w < walks.size(); w++) {
                 List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
@@ -401,10 +401,10 @@ public class ShortenClassRoomDistances {
 
         // start with b = 1 so we connect with previous buildings
         for (int b = 1; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloorList();
+            List<Floor> floors = buildings.get(b).getFloors();
 
             for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalkList();
+                List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
                     List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
@@ -438,10 +438,10 @@ public class ShortenClassRoomDistances {
         Building building = dataManager.getBuildingList().get(b);
         List<String> entityIds = new LinkedList<>();
 
-        List<Floor> floors = building.getFloorList();
+        List<Floor> floors = building.getFloors();
 
         for (int f = 0; f < floors.size(); f++) {
-            List<Walk> walks = floors.get(f).getWalkList();
+            List<Walk> walks = floors.get(f).getWalks();
 
             for (int w = 0; w < walks.size(); w++) {
                 List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();

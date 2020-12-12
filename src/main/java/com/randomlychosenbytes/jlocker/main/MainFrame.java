@@ -116,7 +116,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         List<ManagementUnit> mus = dataManager.reinstantiateManagementUnits(dataManager.getCurManagmentUnitList());
 
-        dataManager.getCurWalk().setMus(mus);
+        dataManager.getCurWalk().setManagementUnits(mus);
 
         final int numMUnits = mus.size();
         boolean firstLockerFound = false;

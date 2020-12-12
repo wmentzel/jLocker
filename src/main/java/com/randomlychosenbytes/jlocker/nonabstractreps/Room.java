@@ -8,10 +8,10 @@ import javax.swing.*;
 public class Room extends JPanel {
 
     @Expose
-    private String sClass;
+    private String schoolClass;
 
     @Expose
-    private String sName;
+    private String name;
 
     public Room(String name, String classname) {
         initComponents();
@@ -19,29 +19,29 @@ public class Room extends JPanel {
     }
 
     public final void setCaption(String name, String classname) {
-        sName = name;
-        sClass = classname;
+        this.name = name;
+        schoolClass = classname;
 
-        String caption = "<html><div align=\"center\">" + sName;
+        String caption = "<html><div align=\"center\">" + this.name;
 
         // if there was a class name specified
-        if (!sClass.equals("")) {
-            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + sClass + "</div></div></html>";
+        if (!schoolClass.equals("")) {
+            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + schoolClass + "</div></div></html>";
         }
 
         captionLabel.setText(caption);
     }
 
     public void setRoomName(String newname) {
-        sName = newname;
+        name = newname;
     }
 
     public void setSName(String newname) {
-        sName = newname;
+        name = newname;
     }
 
     public void setSClass(String newname) {
-        sClass = newname;
+        schoolClass = newname;
     }
 
     public void setUpMouseListener() {
@@ -56,23 +56,23 @@ public class Room extends JPanel {
     }
 
     public String getSName() {
-        return sName;
+        return name;
     }
 
     public String getSClass() {
-        return sClass;
+        return schoolClass;
     }
 
     public String getRoomName() {
-        return sName;
+        return name;
     }
 
     public String getClassName() {
-        return sClass;
+        return schoolClass;
     }
 
     public void setClassName(String classname) {
-        sClass = classname;
+        schoolClass = classname;
     }
 
     /**

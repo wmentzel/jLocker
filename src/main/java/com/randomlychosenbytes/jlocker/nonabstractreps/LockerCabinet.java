@@ -33,7 +33,6 @@ public class LockerCabinet extends JPanel {
         remLockerLabel.setEnabled(true);
     }
 
-
     public void updateCabinet(int numRows) {
 
         cabinetPanel.removeAll();

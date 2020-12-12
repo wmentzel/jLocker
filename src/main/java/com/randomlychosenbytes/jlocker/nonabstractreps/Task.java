@@ -8,30 +8,30 @@ import java.util.GregorianCalendar;
 public class Task {
 
     @Expose
-    private String sDescription;
+    private String description;
 
     @Expose
     private boolean isDone = false;
 
     @Expose
-    private String sDate;
+    private String creationDate;
 
     public Task(String description) {
-        sDescription = description;
+        this.description = description;
 
         Calendar today = new GregorianCalendar();
 
-        sDate = String.format("%02d.%02d.%02d", today.get(Calendar.DATE),
+        creationDate = String.format("%02d.%02d.%02d", today.get(Calendar.DATE),
                 today.get(Calendar.MONTH) + 1,
                 today.get(Calendar.YEAR));
     }
 
     public String getSDate() {
-        return sDate;
+        return creationDate;
     }
 
     public String getSDescription() {
-        return sDescription;
+        return description;
     }
 
     public boolean isDone() {
@@ -39,11 +39,11 @@ public class Task {
     }
 
     public void setSDate(String sDate) {
-        this.sDate = sDate;
+        this.creationDate = sDate;
     }
 
     public void setSDescription(String sDescription) {
-        this.sDescription = sDescription;
+        this.description = sDescription;
     }
 
     public void setDone(boolean isDone) {
