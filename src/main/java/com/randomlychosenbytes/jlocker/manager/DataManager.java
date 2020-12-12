@@ -268,9 +268,9 @@ public class DataManager {
     public List<ManagementUnit> reinstantiateManagementUnits(List<ManagementUnit> managementUnits) {
         return managementUnits.stream().map(mu -> {
 
-            ManagementUnit newMu = new ManagementUnit(mu.mType);
+            ManagementUnit newMu = new ManagementUnit(mu.type);
 
-            switch (mu.mType) {
+            switch (mu.type) {
                 case ROOM: {
                     newMu.getRoom().setClassName(mu.getRoom().getClassName());
                     newMu.getRoom().setRoomName(mu.getRoom().getRoomName());

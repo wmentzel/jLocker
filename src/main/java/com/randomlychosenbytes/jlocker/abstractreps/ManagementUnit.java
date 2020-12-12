@@ -14,7 +14,7 @@ import java.util.List;
 public class ManagementUnit extends JPanel {
 
     @Expose
-    private LockerCabinet cabinet;
+    private LockerCabinet lockerCabinet;
 
     @Expose
     private Room room;
@@ -26,7 +26,7 @@ public class ManagementUnit extends JPanel {
      * Can either be 0 (ROOM), 1 (LOCKERCOLUMN) or 2 (STAIRCASE)
      */
     @Expose
-    public int mType;
+    public int type;
 
     public static final int ROOM = 0;
     public static final int LOCKERCOLUMN = 1;
@@ -39,15 +39,15 @@ public class ManagementUnit extends JPanel {
     }
 
     public int getType() {
-        return mType;
+        return type;
     }
 
     public LockerCabinet getLockerCabinet() {
-        return cabinet;
+        return lockerCabinet;
     }
 
     public List<Locker> getLockerList() {
-        return cabinet.getLockers();
+        return lockerCabinet.getLockers();
     }
 
     public Room getRoom() {
@@ -60,9 +60,9 @@ public class ManagementUnit extends JPanel {
 
     public final void setAs(int kind) {
         centerPanel.removeAll(); // remove previous child
-        mType = kind;
+        type = kind;
 
-        cabinet = new LockerCabinet();
+        lockerCabinet = new LockerCabinet();
         room = new Room("", "");
         staircase = new Staircase();
 
@@ -72,7 +72,7 @@ public class ManagementUnit extends JPanel {
                 break;
             }
             case LOCKERCOLUMN: {
-                centerPanel.add(cabinet);
+                centerPanel.add(lockerCabinet);
                 break;
             }
             case STAIRCASE: {
@@ -125,8 +125,8 @@ public class ManagementUnit extends JPanel {
             });
         }
 
-        if (cabinet != null) {
-            cabinet.setUpMouseListeners();
+        if (lockerCabinet != null) {
+            lockerCabinet.setUpMouseListeners();
         }
 
         if (room != null) {
@@ -265,7 +265,7 @@ public class ManagementUnit extends JPanel {
     private void removeThisMUnitLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     {//GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
         if (DataManager.getInstance().getCurManagmentUnitList().size() > 1) {
-            String type = getNameFromID(mType);
+            String type = getNameFromID(this.type);
 
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen " + type + " wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
