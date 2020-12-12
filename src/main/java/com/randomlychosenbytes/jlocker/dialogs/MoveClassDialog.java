@@ -74,7 +74,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
                         ManagementUnit munit = managementUnits.get(m);
 
                         if (munit.getType() == ManagementUnit.ROOM) {
-                            String className = munit.getRoom().getClassName();
+                            String className = munit.getRoom().getSchoolClassName();
 
                             if (!className.isEmpty()) {
                                 classToClassRoomNodeId.put(className, b + "-" + f + "-" + w + "-" + m);

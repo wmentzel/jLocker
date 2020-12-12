@@ -17,7 +17,7 @@ public class StaircaseDialog extends javax.swing.JDialog {
 
         this.staircase = staircase;
 
-        staircaseNameTextBox.setText(staircase.getEntityName());
+        staircaseNameTextBox.setText(staircase.getStaircaseName());
     }
 
     /**
@@ -81,7 +81,7 @@ public class StaircaseDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        staircase.setEntityName(staircaseNameTextBox.getText());
+        staircase.setCaption(staircaseNameTextBox.getText());
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 

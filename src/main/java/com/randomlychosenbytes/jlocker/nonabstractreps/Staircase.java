@@ -3,7 +3,10 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
-public class Staircase extends javax.swing.JPanel {
+import javax.swing.*;
+import java.awt.event.MouseAdapter;
+
+public class Staircase extends JPanel {
 
     @Expose
     private String name;
@@ -12,32 +15,24 @@ public class Staircase extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setEntityName(String n) {
-        name = n;
-        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + name + "</div></div></html>");
+    public String getStaircaseName() {
+        return name;
     }
 
-    public void setSName(String n) {
-        name = n;
+    public void setCaption(String name) {
+        this.name = name;
+        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>");
     }
 
     public void setUpMouseListener() {
         if (this.getMouseListeners().length == 0) {
-            captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            captionLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(java.awt.event.MouseEvent evt) {
                     captionLabelMouseReleased(evt);
                 }
             });
         }
-    }
-
-    public String getSName() {
-        return name;
-    }
-
-    public String getEntityName() {
-        return name;
     }
 
     /**

@@ -19,6 +19,10 @@ public class ManagementUnit extends JPanel {
     @Expose
     private Room room;
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     @Expose
     private Staircase staircase;
 
@@ -29,7 +33,7 @@ public class ManagementUnit extends JPanel {
     public int type;
 
     public static final int ROOM = 0;
-    public static final int LOCKERCOLUMN = 1;
+    public static final int LOCKER_CABINET = 1;
     public static final int STAIRCASE = 2;
 
     public ManagementUnit(int kind) {
@@ -71,7 +75,7 @@ public class ManagementUnit extends JPanel {
                 centerPanel.add(room);
                 break;
             }
-            case LOCKERCOLUMN: {
+            case LOCKER_CABINET: {
                 centerPanel.add(lockerCabinet);
                 break;
             }
@@ -141,7 +145,7 @@ public class ManagementUnit extends JPanel {
 
     public static String getNameFromID(final int type) {
         switch (type) {
-            case LOCKERCOLUMN: {
+            case LOCKER_CABINET: {
                 return "Schließfachschrank";
             }
             case ROOM: {
@@ -242,10 +246,10 @@ public class ManagementUnit extends JPanel {
         int iNewIndex;
 
         if (index == mus.size() - 1) {
-            mus.add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+            mus.add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
             iNewIndex = mus.size() - 1;
         } else {
-            mus.add(index + 1, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+            mus.add(index + 1, new ManagementUnit(ManagementUnit.LOCKER_CABINET));
             iNewIndex = index + 1;
         }
 
@@ -283,7 +287,7 @@ public class ManagementUnit extends JPanel {
 
         int index = mus.indexOf(this);
 
-        mus.add(index, new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+        mus.add(index, new ManagementUnit(ManagementUnit.LOCKER_CABINET));
 
         DataManager.getInstance().setCurrentMUnitIndex(index);
         DataManager.getInstance().setCurrentLockerIndex(0);

@@ -280,7 +280,7 @@ public class ShortenClassRoomDistances {
                         // vertices have been connected, set prevMUnitID for next run
                         prevMUnitID = currentMUnitID;
 
-                        if (munit.getType() == ManagementUnit.LOCKERCOLUMN) {
+                        if (munit.getType() == ManagementUnit.LOCKER_CABINET) {
                             List<Locker> lockers = managementUnits.get(m).getLockerList();
 
                             // connect each locker with its ManagementUnit
@@ -350,7 +350,7 @@ public class ShortenClassRoomDistances {
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
                             String currentMUnitID = createNodeId(b, f, w, m);
 
-                            List<String> ids = findStaircasesOnFloor(b, f + 1, munit.getStaircase().getSName());
+                            List<String> ids = findStaircasesOnFloor(b, f + 1, munit.getStaircase().getStaircaseName());
 
                             for (String id : ids) {
                                 DefaultWeightedEdge edge = managementUnitGraph.addEdge(currentMUnitID, id);
@@ -382,7 +382,7 @@ public class ShortenClassRoomDistances {
                     ManagementUnit managementUnit = managementUnits.get(m);
 
                     if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.getStaircase().getSName().equals(name)) {
+                        if (managementUnit.getStaircase().getStaircaseName().equals(name)) {
                             entityIds.add(createNodeId(b, f, w, m));
                         }
                     }
@@ -414,7 +414,7 @@ public class ShortenClassRoomDistances {
 
                         // connect every managementUnit with the munits above that have the same name
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
-                            String staircaseName = munit.getStaircase().getSName();
+                            String staircaseName = munit.getStaircase().getStaircaseName();
 
                             List<String> staircaseIds = findStaircasesForBuilding(b - 1, staircaseName);
 
@@ -450,7 +450,7 @@ public class ShortenClassRoomDistances {
                     ManagementUnit managementUnit = managementUnits.get(m);
 
                     if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.getStaircase().getSName().equals(name)) {
+                        if (managementUnit.getStaircase().getStaircaseName().equals(name)) {
                             entityIds.add(createNodeId(b, f, w, m));
                         }
                     }

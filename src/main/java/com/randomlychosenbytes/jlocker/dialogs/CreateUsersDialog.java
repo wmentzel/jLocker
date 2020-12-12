@@ -324,7 +324,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     dataManager.getBuildingList().add(new Building("-", ""));
                     dataManager.getCurFloorList().add(new Floor("-"));
                     dataManager.getCurWalkList().add(new Walk("-"));
-                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKERCOLUMN));
+                    dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
                 } else {
                     List<Building> buildings = dataManager.getBuildingList();
 

@@ -272,33 +272,31 @@ public class DataManager {
 
             switch (mu.type) {
                 case ROOM: {
-                    newMu.getRoom().setClassName(mu.getRoom().getClassName());
-                    newMu.getRoom().setRoomName(mu.getRoom().getRoomName());
+                    newMu.getRoom().setCaption(mu.getRoom().getRoomName(), mu.getRoom().getSchoolClassName());
                     break;
                 }
-                case LOCKERCOLUMN: {
-                    List<Locker> newLockers = mu.getLockerList().stream().map(l -> {
-                        return new Locker(
-                                l.getId(),
-                                l.getSurname(),
-                                l.getOwnerName(),
-                                l.getOwnerSize(),
-                                l.getOwnerClass(),
-                                l.getUntilDate(),
-                                l.getFromDate(),
-                                l.hasContract(),
-                                l.getMoney(),
-                                l.getCurrentCodeIndex(),
-                                l.getLock(),
-                                l.isOutOfOrder(),
-                                l.getNote()
-                        );
-                    }).collect(Collectors.toList());
+                case LOCKER_CABINET: {
+                    List<Locker> newLockers = mu.getLockerList().stream().map(l -> new Locker(
+                                    l.getId(),
+                                    l.getSurname(),
+                                    l.getOwnerName(),
+                                    l.getOwnerSize(),
+                                    l.getOwnerClass(),
+                                    l.getUntilDate(),
+                                    l.getFromDate(),
+                                    l.hasContract(),
+                                    l.getMoney(),
+                                    l.getCurrentCodeIndex(),
+                                    l.getLock(),
+                                    l.isOutOfOrder(),
+                                    l.getNote()
+                            )
+                    ).collect(Collectors.toList());
                     newMu.getLockerCabinet().setLockers(newLockers);
                     break;
                 }
                 case STAIRCASE: {
-                    newMu.getStaircase().setName(mu.getStaircase().getEntityName());
+                    newMu.getStaircase().setCaption(mu.getStaircase().getStaircaseName());
                     break;
                 }
             }

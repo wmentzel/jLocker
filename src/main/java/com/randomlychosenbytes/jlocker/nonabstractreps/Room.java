@@ -18,30 +18,19 @@ public class Room extends JPanel {
         setCaption(name, classname);
     }
 
-    public final void setCaption(String name, String classname) {
+    public final void setCaption(String name, String schoolClassName) {
         this.name = name;
-        schoolClassName = classname;
+        this.schoolClassName = schoolClassName;
 
         String caption = "<html><div align=\"center\">" + this.name;
 
         // if there was a class name specified
-        if (!schoolClassName.equals("")) {
-            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + schoolClassName + "</div></div></html>";
+        if (!this.schoolClassName.isEmpty()) {
+            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + this.schoolClassName + "</div>";
         }
 
+        caption += "</div></html>";
         captionLabel.setText(caption);
-    }
-
-    public void setRoomName(String newname) {
-        name = newname;
-    }
-
-    public void setSName(String newname) {
-        name = newname;
-    }
-
-    public void setSClass(String newname) {
-        schoolClassName = newname;
     }
 
     public void setUpMouseListener() {
@@ -55,24 +44,13 @@ public class Room extends JPanel {
         }
     }
 
-    public String getSName() {
-        return name;
-    }
-
-    public String getSClass() {
-        return schoolClassName;
-    }
 
     public String getRoomName() {
         return name;
     }
 
-    public String getClassName() {
+    public String getSchoolClassName() {
         return schoolClassName;
-    }
-
-    public void setClassName(String classname) {
-        schoolClassName = classname;
     }
 
     /**
