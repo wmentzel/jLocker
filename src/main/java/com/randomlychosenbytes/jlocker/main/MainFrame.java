@@ -209,7 +209,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void setLockerInformation() {
         Locker locker = dataManager.getCurLocker();
 
-        locker.setSirName(surnameTextField.getText());
+        locker.setLastName(surnameTextField.getText());
         locker.setOwnerName(nameTextField.getText());
         locker.setClass(classTextField.getText());
         locker.setContract(hasContractCheckbox.isSelected());

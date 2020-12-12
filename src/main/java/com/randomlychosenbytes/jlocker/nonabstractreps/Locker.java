@@ -14,80 +14,81 @@ import java.util.GregorianCalendar;
 public class Locker extends JLabel implements Cloneable {
 
     @Expose
-    private String sID;
+    private String id;
 
     @Expose
-    private String sSirName;
+    private String lastName;
 
     @Expose
-    private String sName;
+    private String firstName;
 
     @Expose
-    private int iSize;
+    private int sizeInCm;
 
     @Expose
-    private String sClass;
+    private String schoolClass;
 
     @Expose
-    private String sFrom;
+    private String rentedFrom;
 
     @Expose
-    private String sUntil;
+    private String rentedUntil;
 
     @Expose
     private boolean hasContract;
 
     @Expose
-    private int iMoney;
+    private int paidAmount;
 
     @Expose
-    private int iPrevAmount;
+    private int previoulyPaidAmount;
 
     @Expose
     private boolean isOutOfOrder;
 
     @Expose
-    private String sLock;
+    private String lockCode;
 
     @Expose
-    private String sNote;
+    private String note;
 
     @Expose
-    private int iCurrentCodeIndex;
+    private int currentCodeIndex;
 
+    @Expose
+    private String encryptedCodes[];
+
+    // transient
     private Boolean isSelected = false;
 
-    @Expose
-    private String encCodes[];
-
     public Locker(
-            String id, String sirname, String name, int size,
-            String _class, String from, String until, boolean hascontract,
-            int money, int currentcodeindex, String lock,
-            boolean outoforder, String note
+            String id, String firstName, String lastName, int sizeInCm,
+            String schoolClass, String rentedFrom, String rentedUntil, boolean hasContract,
+            int paidAmount, int currentCodeIndex, String lockCode,
+            boolean isOutOfOrder, String note
     ) {
-        sID = id;
-        sSirName = sirname;
-        sName = name;
-        iSize = size;
-        sClass = _class;
-        sFrom = from;
-        sUntil = until;
-        hasContract = hascontract;
-        iMoney = money;
-        iPrevAmount = money;
-        isOutOfOrder = outoforder;
-        sLock = lock;
-        sNote = note;
-        isSelected = false;
+        this.id = id;
+        this.lastName = firstName;
+        this.firstName = lastName;
+        this.sizeInCm = sizeInCm;
+        this.schoolClass = schoolClass;
+        this.rentedFrom = rentedFrom;
+        this.rentedUntil = rentedUntil;
+        this.hasContract = hasContract;
+        this.paidAmount = paidAmount;
+        this.previoulyPaidAmount = paidAmount;
+        this.isOutOfOrder = isOutOfOrder;
+        this.lockCode = lockCode;
+        this.note = note;
+        this.isSelected = false;
 
-        iCurrentCodeIndex = currentcodeindex;
-        encCodes = null;
+        this.currentCodeIndex = currentCodeIndex;
+        this.encryptedCodes = null;
 
         // standard color
         setColor(FREE_COLOR);
 
-        setText(sID);
+        setText(this.id);
 
         // If true the component paints every pixel within its bounds.
         setOpaque(true);
@@ -113,12 +114,12 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     private String getCode(int i, SecretKey sukey) {
-        if (encCodes == null) {
+        if (encryptedCodes == null) {
             return "00-00-00";
         }
 
         try {
-            String code = Utils.decrypt(encCodes[i], sukey);
+            String code = Utils.decrypt(encryptedCodes[i], sukey);
             return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.getCode: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
@@ -129,7 +130,7 @@ public class Locker extends JLabel implements Cloneable {
 
 
     public long getRemainingTimeInMonths() {
-        if (sUntil.equals("") || sFrom.equals("") || isFree()) {
+        if (rentedUntil.equals("") || rentedFrom.equals("") || isFree()) {
             return 0;
         }
 
@@ -137,9 +138,9 @@ public class Locker extends JLabel implements Cloneable {
         today.setLenient(false);
         today.getTime();
 
-        int iDay = Integer.parseInt(sUntil.substring(0, 2));
-        int iMonth = Integer.parseInt(sUntil.substring(3, 5)) - 1;
-        int iYear = Integer.parseInt(sUntil.substring(6, 10));
+        int iDay = Integer.parseInt(rentedUntil.substring(0, 2));
+        int iMonth = Integer.parseInt(rentedUntil.substring(3, 5)) - 1;
+        int iYear = Integer.parseInt(rentedUntil.substring(6, 10));
 
         Calendar end = new GregorianCalendar(iYear, iMonth, iDay);
         end.setLenient(false);
@@ -203,7 +204,7 @@ public class Locker extends JLabel implements Cloneable {
         // it is saved without the "-", so we have
         // to remove them.
 
-        encCodes = new String[5];
+        encryptedCodes = new String[5];
 
         for (int i = 0; i < 5; i++) {
             codes[i] = codes[i].replace("-", "");
@@ -211,7 +212,7 @@ public class Locker extends JLabel implements Cloneable {
 
         try {
             for (int i = 0; i < 5; i++) {
-                encCodes[i] = Utils.encrypt(codes[i], sukey);
+                encryptedCodes[i] = Utils.encrypt(codes[i], sukey);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Locker.setCodes: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
@@ -220,60 +221,60 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public void empty() {
-        sSirName = "";
-        sName = "";
-        iSize = 0;
-        sClass = "";
-        sFrom = "";
-        sUntil = "";
+        lastName = "";
+        firstName = "";
+        sizeInCm = 0;
+        schoolClass = "";
+        rentedFrom = "";
+        rentedUntil = "";
         hasContract = false;
-        iMoney = 0;
-        iPrevAmount = 0;
-        iCurrentCodeIndex = (iCurrentCodeIndex + 1) % encCodes.length;
+        paidAmount = 0;
+        previoulyPaidAmount = 0;
+        currentCodeIndex = (currentCodeIndex + 1) % encryptedCodes.length;
 
         setAppropriateColor();
     }
 
     public void setTo(Locker newdata) {
-        sSirName = newdata.sSirName;
-        sName = newdata.sName;
-        iSize = newdata.iSize;
-        sClass = newdata.sClass;
-        sFrom = newdata.sFrom;
-        sUntil = newdata.sUntil;
+        lastName = newdata.lastName;
+        firstName = newdata.firstName;
+        sizeInCm = newdata.sizeInCm;
+        schoolClass = newdata.schoolClass;
+        rentedFrom = newdata.rentedFrom;
+        rentedUntil = newdata.rentedUntil;
         hasContract = newdata.hasContract;
-        iMoney = newdata.iMoney;
-        iPrevAmount = newdata.iPrevAmount;
+        paidAmount = newdata.paidAmount;
+        previoulyPaidAmount = newdata.previoulyPaidAmount;
 
         setAppropriateColor();
     }
 
     public void setID(String id) {
-        setText(sID = id);
+        setText(this.id = id);
     }
 
-    public void setSirName(String sirname) {
-        sSirName = sirname;
+    public void setLastName(String sirname) {
+        lastName = sirname;
     }
 
     public void setOwnerName(String name) {
-        sName = name;
+        firstName = name;
     }
 
     public void setOwnerSize(int size) {
-        iSize = size;
+        sizeInCm = size;
     }
 
     public void setClass(String _class) {
-        sClass = _class;
+        schoolClass = _class;
     }
 
     public void setFromDate(String fromdate) {
-        sFrom = fromdate;
+        rentedFrom = fromdate;
     }
 
     public void setUntilDate(String untildate) {
-        sUntil = untildate;
+        rentedUntil = untildate;
     }
 
     public void setContract(boolean hascontract) {
@@ -281,19 +282,19 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public void setMoney(int money) {
-        iMoney = money;
+        paidAmount = money;
     }
 
     public void setPrevAmount(int amount) {
-        iPrevAmount = amount;
+        previoulyPaidAmount = amount;
     }
 
     public void setCurrentCodeIndex(int index) {
-        iCurrentCodeIndex = index;
+        currentCodeIndex = index;
     }
 
     public void setNextCode() {
-        iCurrentCodeIndex = (iCurrentCodeIndex + 1) % 5;
+        currentCodeIndex = (currentCodeIndex + 1) % 5;
     }
 
     public void setOutOfOrder(boolean outoforder) {
@@ -306,11 +307,11 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public void setLock(String lock) {
-        sLock = lock;
+        lockCode = lock;
     }
 
     public void setNote(String note) {
-        sNote = note;
+        this.note = note;
     }
 
     public final void setUpMouseListener() {
@@ -325,31 +326,31 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public String getId() {
-        return sID;
+        return id;
     }
 
     public String getSurname() {
-        return sSirName;
+        return lastName;
     }
 
     public String getOwnerName() {
-        return sName;
+        return firstName;
     }
 
     public int getOwnerSize() {
-        return iSize;
+        return sizeInCm;
     }
 
     public String getOwnerClass() {
-        return sClass;
+        return schoolClass;
     }
 
     public String getFromDate() {
-        return sFrom;
+        return rentedFrom;
     }
 
     public String getUntilDate() {
-        return sUntil;
+        return rentedUntil;
     }
 
     public boolean hasContract() {
@@ -357,15 +358,15 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public int getMoney() {
-        return iMoney;
+        return paidAmount;
     }
 
     public int getPrevAmount() {
-        return iPrevAmount;
+        return previoulyPaidAmount;
     }
 
     public int getCurrentCodeIndex() {
-        return iCurrentCodeIndex;
+        return currentCodeIndex;
     }
 
     public boolean isOutOfOrder() {
@@ -373,19 +374,19 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public String getLock() {
-        return sLock;
+        return lockCode;
     }
 
     public String getNote() {
-        return sNote;
+        return note;
     }
 
     public boolean isFree() {
-        return sName.equals("");
+        return firstName.equals("");
     }
 
     public String getCurrentCode(SecretKey sukey) {
-        return getCode(iCurrentCodeIndex, sukey);
+        return getCode(currentCodeIndex, sukey);
     }
 
     public Boolean isSelected() {
