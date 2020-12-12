@@ -43,7 +43,6 @@ public class SearchFrame extends javax.swing.JFrame {
         //
         // Initialize controls array
         //
-
         columnData.add("Schließfach-ID");
         columnData.add("Name");
         columnData.add("Vorname");
@@ -55,7 +54,6 @@ public class SearchFrame extends javax.swing.JFrame {
         columnData.add("von:");
         columnData.add("bis:");
         columnData.add("Schloss");
-
 
         dataTypes.add(java.lang.String.class);
         dataTypes.add(java.lang.String.class);

@@ -43,8 +43,8 @@ public class ShortenClassRoomDistances {
     private final List<EntityCoordinates<Locker>> classLockersEntityCoordinatesList;
 
     private final String classRoomNodeId;
-    private final List<Pair> classLockerToDistancePairList;
-    private final List<Pair> freeLockerToDistancePairList;
+    private final List<Pair<EntityCoordinates<Locker>, Integer>> classLockerToDistancePairList;
+    private final List<Pair<EntityCoordinates<Locker>, Integer>> freeLockerToDistancePairList;
     private List<String> unreachableLockers;
 
     private final DataManager dataManager;
@@ -104,14 +104,14 @@ public class ShortenClassRoomDistances {
             int dist = getDistance(freeLockerECoord, classRoomNodeId);
 
             if (dist != -1) {
-                freeLockerToDistancePairList.add(new Pair(freeLockerECoord, dist));
+                freeLockerToDistancePairList.add(new Pair<>(freeLockerECoord, dist));
             } else {
                 // Create list that contains the ids of all lockers that cant 
                 // be reached from the classroom
                 unreachableLockers.add(freeLockerECoord.getEntity().getId());
             }
         }
-        Collections.sort(freeLockerToDistancePairList, new EntityDistanceComparator());
+        freeLockerToDistancePairList.sort(new EntityDistanceComparator());
 
         //
         // Sort class lockers, beginning with the one that is the farthest 
@@ -121,14 +121,14 @@ public class ShortenClassRoomDistances {
             int distance = getDistance(classLockerECoord, classRoomNodeId);
 
             if (distance != -1) {
-                classLockerToDistancePairList.add(new Pair(classLockerECoord, distance));
+                classLockerToDistancePairList.add(new Pair<>(classLockerECoord, distance));
             } else {
                 // Create a list that contains the ids of all lockers that can't
                 // be reached from the classroom
                 unreachableLockers.add(classLockerECoord.getEntity().getId());
             }
         }
-        Collections.sort(classLockerToDistancePairList, new EntityDistanceComparator());
+        classLockerToDistancePairList.sort(new EntityDistanceComparator());
         Collections.reverse(classLockerToDistancePairList);
 
         // Output how many lockers cant be reached
@@ -148,18 +148,18 @@ public class ShortenClassRoomDistances {
      * and returns a list of the moving operations.
      */
     public final String execute() {
-        String statusMessage = "";
+        StringBuilder statusMessage = new StringBuilder();
         List<Integer> minSizes = dataManager.getSettings().lockerMinSizes;
 
-        statusMessage += "Es gibt " + classLockerToDistancePairList.size() + " Schließfächer der Klasse " + className + "\n";
-        statusMessage += "Es wurden " + freeLockerToDistancePairList.size() + " freie Schließfächer gefunden!\n\n";
-        statusMessage += "Es wurden " + minSizes.size() + " Minmalgrößen (cm) angelegt!\n";
+        statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size()).append(" Schließfächer der Klasse ").append(className).append("\n");
+        statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size()).append(" freie Schließfächer gefunden!\n\n");
+        statusMessage.append("Es wurden ").append(minSizes.size()).append(" Minmalgrößen (cm) angelegt!\n");
 
         for (int size : minSizes) {
-            statusMessage += size + " ";
+            statusMessage.append(size).append(" ");
         }
 
-        statusMessage += "\n\n";
+        statusMessage.append("\n\n");
 
         for (Pair<EntityCoordinates<Locker>, Integer> classLockerToDistancePair : classLockerToDistancePairList) {
             // search until you find a free locker that is nearer and suits the pupils size
@@ -181,13 +181,13 @@ public class ShortenClassRoomDistances {
                         int lockerMinSize = minSizes.get(Math.abs(index - (minSizes.size() - 1)));
 
                         if (srcLocker.getOwnerSize() >= lockerMinSize) {
-                            statusMessage += srcLocker.getId() + " -> " + destLocker.getId() + "\n";
-                            statusMessage += "Besitzergröße: " + classLockerToDistancePair.getX().getEntity().getOwnerSize() + " cm\n";
-                            statusMessage += "Minimalgröße: " + lockerMinSize + "\n";
+                            statusMessage.append(srcLocker.getId()).append(" -> ").append(destLocker.getId()).append("\n");
+                            statusMessage.append("Besitzergröße: ").append(classLockerToDistancePair.getX().getEntity().getOwnerSize()).append(" cm\n");
+                            statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n");
 
                             float distanceReduction = (1.0f - freeLockerToDistancePair.getY() / ((float) classLockerToDistancePair.getY())) * 100;
                             DecimalFormat df = new DecimalFormat("##.#");
-                            statusMessage += "Entfernung verkürzt um: " + df.format(distanceReduction) + "%\n\n";
+                            statusMessage.append("Entfernung verkürzt um: ").append(df.format(distanceReduction)).append("%\n\n");
 
                             try {
                                 dataManager.moveLockers(srcLocker, destLocker, false);
@@ -213,7 +213,7 @@ public class ShortenClassRoomDistances {
             }
         }
 
-        return statusMessage;
+        return statusMessage.toString();
     }
 
     public SimpleWeightedGraph<String, DefaultWeightedEdge> getWeightedGraph() {
@@ -229,21 +229,21 @@ public class ShortenClassRoomDistances {
     }
 
     public String getIdsOfUnreachableLockers() {
-        String s = "";
+        StringBuilder s = new StringBuilder();
 
         for (int i = 0; i < unreachableLockers.size(); i++) {
             if (i != 0) {
-                s += ", ";
+                s.append(", ");
             }
 
             if (i % 15 == 0) {
-                s += "\n";
+                s.append("\n");
             }
 
-            s += unreachableLockers.get(i);
+            s.append(unreachableLockers.get(i));
         }
 
-        return s;
+        return s.toString();
     }
 
     /**
@@ -295,13 +295,13 @@ public class ShortenClassRoomDistances {
 
                                 // fill locker in the list containing all
                                 // locker coordinates
-                                allLockersEntityCoordinatesList.add(new EntityCoordinates(locker, b, f, w, m, l));
+                                allLockersEntityCoordinatesList.add(new EntityCoordinates<>(locker, b, f, w, m, l));
                             }
                         }
-                    } // end of for(int c = 0; c < managementUnits.size(); c++)
-                }  // for (int w = 0; w < walks.size(); w++)
-            } // end of for(int f = 0; f < floors.size(); f++)
-        } // end of for(int b = 0; b < buildings.size(); b++)
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -486,7 +486,7 @@ public class ShortenClassRoomDistances {
      * Compares the Y value of a pair containing an EntityCoordintes object
      * and distance as integer
      */
-    private class EntityDistanceComparator implements Comparator<Pair> {
+    private static class EntityDistanceComparator implements Comparator<Pair<EntityCoordinates<Locker>, Integer>> {
         @Override
         public int compare(Pair p1, Pair p2) {
             int dist1 = ((Integer) p1.getY());
