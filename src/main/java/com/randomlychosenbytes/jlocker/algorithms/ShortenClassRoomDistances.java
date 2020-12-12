@@ -17,9 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ShortenClassRoomDistances {
-    /* *************************************************************************
-        Status codes
-    **************************************************************************/
+    //
+    // Status codes
+    //
     public static final int CLASS_HAS_NO_ROOM = 0;
     public static final int NO_EMPTY_LOCKERS_AVAILABLE = 1;
     public static final int CLASS_HAS_NO_PUPILS = 2;
@@ -27,9 +27,9 @@ public class ShortenClassRoomDistances {
     public static final int NO_MINIMUM_SIZE_DEFINED_FOR_ROW = 4;
     public static final int SUCCESS = 5;
 
-    /* *************************************************************************
-        Calibration for the algorithm: edge weights
-     **************************************************************************/
+    //
+    // Calibration for the algorithm: edge weights
+    //
     private final float buildingToBuildingEdgeWeight = 100.0f;
     private final float walkToWalkEdgeWeight = 5.0f;
     private final float floorToFloorEdgeWeight = 20.0f;
