@@ -2,9 +2,9 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
-import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -14,7 +14,6 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     private int displayedCardIndex;
     private final CardLayout cl;
     private boolean isFirstRun;
-    private SecretKey userKey;
     private final DataManager dataManager;
 
     public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
@@ -278,7 +277,9 @@ public class CreateUsersDialog extends javax.swing.JDialog {
 
                 if (superUserPassword.equals(superUserRepeatPasswordTextField.getText())) {
                     dataManager.setSuperUser(new SuperUser(superUserPassword));
-                    userKey = dataManager.getSuperUser().getUserMasterKey();
+
+                    dataManager.setUserMasterKey(Utils.decryptKeyWithString((dataManager.getCurrentUser()).getEncryptedUserMasterKeyBase64(), superUserPassword));
+                    dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncSuperUMasterKeyBase64(), superUserPassword));
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -298,7 +299,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (password.equals(userRepeatPasswordTextField.getText()))
-                    dataManager.setRestrictedUser(new RestrictedUser(password, userKey));
+                    dataManager.setRestrictedUser(new RestrictedUser(password, dataManager.getUserMasterKey()));
                 else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -319,20 +320,19 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 } else {
                     List<Building> buildings = dataManager.getBuildingList();
 
-                    SecretKey masterKey = dataManager.getSuperUserMasterKey();
                     for (Building building : buildings) {
                         for (int f = 0; f < building.getFloors().size(); f++) {
                             for (int w = 0; w < building.getFloors().get(f).getWalks().size(); w++) {
                                 for (int c = 0; c < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().size(); c++) {
                                     for (int l = 0; l < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
                                         Locker locker = building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().get(l);
-                                        String[] codes = locker.getCodes(masterKey);
+                                        String[] codes = locker.getCodes(dataManager.getSuperUserMasterKey());
 
                                         for (int i = 0; i < 5; i++) {
                                             codes[i] = codes[i].replace("-", "");
                                         }
 
-                                        locker.setCodes(codes, masterKey);
+                                        locker.setCodes(codes, dataManager.getSuperUserMasterKey());
                                     }
                                 }
                             }

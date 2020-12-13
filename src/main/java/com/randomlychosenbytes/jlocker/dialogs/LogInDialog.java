@@ -1,6 +1,8 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.manager.Utils;
+import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -144,9 +146,18 @@ public class LogInDialog extends javax.swing.JDialog {
         //
         String password = String.valueOf(passwordTextField.getPassword());
 
-        dataManager.setCurrentUser(chooseUserComboBox.getSelectedIndex() == 0 ? dataManager.getSuperUser() : dataManager.getRestrictedUser());
+        boolean isSuperUser = chooseUserComboBox.getSelectedIndex() == 0;
 
-        if (!dataManager.getCurUser().isPasswordCorrect(password)) {
+        dataManager.setCurrentUser(isSuperUser ? dataManager.getSuperUser() : dataManager.getRestrictedUser());
+
+        if (dataManager.getCurUser().isPasswordCorrect(password)) {
+            if (isSuperUser) {
+                dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncSuperUMasterKeyBase64(), password));
+                dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
+            } else {
+                dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
+            }
+        } else {
             JOptionPane.showMessageDialog(this, "Das Passwort ist falsch!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }

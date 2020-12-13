@@ -56,6 +56,25 @@ public class DataManager {
     private int currentLockerIndex = 0;
     private User currentUser;
 
+    private SecretKey userMasterKey;
+    private SecretKey superUserMasterKey;
+
+    public SecretKey getUserMasterKey() {
+        return userMasterKey;
+    }
+
+    public void setUserMasterKey(SecretKey userMasterKey) {
+        this.userMasterKey = userMasterKey;
+    }
+
+    public SecretKey getSuperUserMasterKey() {
+        return superUserMasterKey;
+    }
+
+    public void setSuperUserMasterKey(SecretKey superUserMasterKey) {
+        this.superUserMasterKey = superUserMasterKey;
+    }
+
     private ResourceBundle bundle = ResourceBundle.getBundle("App");
 
     public DataManager() {
@@ -136,7 +155,7 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBase64 = Utils.encrypt(gson.toJson(buildings), currentUser.getUserMasterKey());
+            encryptedBuildingsBase64 = Utils.encrypt(gson.toJson(buildings), userMasterKey);
 
             try (Writer writer = new FileWriter(file)) {
 
@@ -232,19 +251,9 @@ public class DataManager {
         sourceLocker.setTo(destCopy);
 
         if (withCodes) {
-            SecretKey key = getSuperUserMasterKey();
-
-            destLocker.setCodes(sourceLocker.getCodes(key), key);
-            sourceLocker.setCodes(destCopy.getCodes(key), key);
+            destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey);
+            sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey);
         }
-    }
-
-    public SecretKey getSuperUserMasterKey() {
-        // this line will only succeed if the current user is the super user
-        // accessing this as restricted user, would mean an error in the programm flow,
-        // which would cause a justified exception
-        SuperUser superUser = (SuperUser) getCurUser();
-        return superUser.getSuperUMasterKeyBase64();
     }
 
     public void updateAllCabinets() {
@@ -421,7 +430,7 @@ public class DataManager {
     public void initBuildingObject() {
         try {
             this.buildings = Utils.unsealAndDeserializeBuildings(
-                    getEncryptedBuildingsBase64(), currentUser.getUserMasterKey()
+                    getEncryptedBuildingsBase64(), userMasterKey
             );
         } catch (Exception e) {
             e.printStackTrace();

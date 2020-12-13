@@ -1,15 +1,12 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
-import com.randomlychosenbytes.jlocker.manager.Utils;
-
 import javax.crypto.SecretKey;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.encryptKeyWithString;
 
 public class RestrictedUser extends User {
 
     public RestrictedUser(String password, SecretKey key) {
-        super(password);
-
-        passwordHash = Utils.getHash(password); // MD5 hash
-        encryptedUserMasterKeyBase64 = Utils.encryptKeyWithString(key, password);
+        super(password, encryptKeyWithString(key, password));
     }
 }
