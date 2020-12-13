@@ -211,7 +211,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
             }
 
             JOptionPane.showMessageDialog(null, "Nicht alle Schüler der Klasse " + className + " haben eine gültige Größe!\n"
-                    + "Es handelt sich um folgende Schließfächer: " + ids, "Fehler", JOptionPane.OK_OPTION);
+                    + "IDs der betroffenen Schließfächer: " + ids, "Fehler", JOptionPane.OK_OPTION);
             return;
         }
 
