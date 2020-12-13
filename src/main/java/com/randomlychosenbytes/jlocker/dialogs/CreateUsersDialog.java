@@ -324,11 +324,18 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     List<Building> buildings = dataManager.getBuildingList();
 
                     for (Building building : buildings) {
-                        for (int f = 0; f < building.getFloors().size(); f++) {
-                            for (int w = 0; w < building.getFloors().get(f).getWalks().size(); w++) {
-                                for (int c = 0; c < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().size(); c++) {
-                                    for (int l = 0; l < building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().size(); l++) {
-                                        Locker locker = building.getFloors().get(f).getWalks().get(w).getManagementUnitList().get(c).getLockerList().get(l);
+                        List<Floor> floors = building.getFloors();
+
+                        for (Floor floor : floors) {
+                            List<Walk> walks = floor.getWalks();
+
+                            for (Walk walk : walks) {
+                                List<ManagementUnit> mus = walk.getManagementUnitList();
+
+                                for (ManagementUnit mu : mus) {
+                                    List<Locker> lockers = mu.getLockerList();
+
+                                    for (Locker locker : lockers) {
                                         String[] codes = locker.getCodes(dataManager.getSuperUserMasterKey());
 
                                         for (int i = 0; i < 5; i++) {

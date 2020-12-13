@@ -150,12 +150,13 @@ public class LogInDialog extends javax.swing.JDialog {
         String password = String.valueOf(passwordTextField.getPassword());
 
         if (dataManager.getCurrentUser().isPasswordCorrect(password)) {
+
+            dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
+
             if (isSuperUser) {
                 dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncryptedSuperUMasterKeyBase64(), password));
-                dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
-            } else {
-                dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
             }
+
         } else {
             JOptionPane.showMessageDialog(this, "Das Passwort ist falsch!", "Fehler", JOptionPane.OK_OPTION);
             return;

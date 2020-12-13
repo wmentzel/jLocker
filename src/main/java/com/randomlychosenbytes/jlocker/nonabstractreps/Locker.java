@@ -122,13 +122,25 @@ public class Locker extends JLabel implements Cloneable {
             return "00-00-00";
         }
 
-        try {
-            String code = Utils.decrypt(encryptedCodes[i], sukey);
-            return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Locker.getCode: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-            return null;
+        String code = Utils.decrypt(encryptedCodes[i], sukey);
+        return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
+    }
+
+    public void setCodes(String[] codes, SecretKey sukey) {
+        // codes is unencrypted... encrypting and saving in encCodes
+
+        // The Value of code[i] looks like "00-00-00"
+        // it is saved without the "-", so we have
+        // to remove them.
+
+        encryptedCodes = new String[5];
+
+        for (int i = 0; i < 5; i++) {
+            codes[i] = codes[i].replace("-", "");
+        }
+
+        for (int i = 0; i < 5; i++) {
+            encryptedCodes[i] = Utils.encrypt(codes[i], sukey);
         }
     }
 
@@ -197,29 +209,6 @@ public class Locker extends JLabel implements Cloneable {
 
         if (isOutOfOrder) {
             setColor(OUTOFORDER_COLOR);
-        }
-    }
-
-    public void setCodes(String[] codes, SecretKey sukey) {
-        // codes is unencrypted... encrypting and saving in encCodes
-
-        // The Value of code[i] looks like "00-00-00"
-        // it is saved without the "-", so we have
-        // to remove them.
-
-        encryptedCodes = new String[5];
-
-        for (int i = 0; i < 5; i++) {
-            codes[i] = codes[i].replace("-", "");
-        }
-
-        try {
-            for (int i = 0; i < 5; i++) {
-                encryptedCodes[i] = Utils.encrypt(codes[i], sukey);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Locker.setCodes: " + e.getMessage(), "Fatal Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
         }
     }
 
