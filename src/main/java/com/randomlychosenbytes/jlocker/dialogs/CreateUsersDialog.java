@@ -2,7 +2,6 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.crypto.SecretKey;
@@ -10,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.decryptKeyWithString;
 
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int displayedCardIndex;
@@ -285,8 +286,8 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 if (superUserPassword.equals(superUserRepeatPasswordTextField.getText())) {
                     superUser = new SuperUser(superUserPassword);
 
-                    userMasterKey = Utils.decryptKeyWithString(superUser.getEncryptedUserMasterKeyBase64(), superUserPassword);
-                    superUserMasterKey = Utils.decryptKeyWithString(superUser.getEncryptedSuperUMasterKeyBase64(), superUserPassword);
+                    userMasterKey = decryptKeyWithString(superUser.getEncryptedUserMasterKeyBase64(), superUserPassword);
+                    superUserMasterKey = decryptKeyWithString(superUser.getEncryptedSuperUMasterKeyBase64(), superUserPassword);
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;

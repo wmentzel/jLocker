@@ -14,6 +14,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -131,5 +133,34 @@ final public class Utils {
             e.printStackTrace();
             throw new RuntimeException();
         }
+    }
+
+    public static Calendar getCalendarFromString(String dateStr) {
+
+        if (dateStr.length() < 10) {
+            return null;
+        }
+
+        try {
+            int day = Integer.parseInt(dateStr.substring(0, 2));
+            int month = Integer.parseInt(dateStr.substring(3, 5)) - 1;
+            int year = Integer.parseInt(dateStr.substring(6, 10));
+
+            Calendar calendar = new GregorianCalendar(year, month, day);
+            calendar.setLenient(false);
+            calendar.getTime();
+
+            return calendar;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean isDateValid(String dateStr) {
+        return getCalendarFromString(dateStr) != null;
+    }
+
+    public static long getDifferenceInMonths(Calendar start, Calendar end) {
+        return Math.round(((double) end.getTimeInMillis() - start.getTimeInMillis()) / 2592000000.0); // 2592000000.0 = 24 * 60 * 60 * 1000 * 30
     }
 }

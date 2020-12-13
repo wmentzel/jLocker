@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
+import static com.randomlychosenbytes.jlocker.manager.Utils.encrypt;
+import static com.randomlychosenbytes.jlocker.manager.Utils.unsealAndDeserializeBuildings;
 import static java.lang.System.out;
 
 /**
@@ -165,7 +167,7 @@ public class DataManager {
         try {
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBase64 = Utils.encrypt(gson.toJson(buildings), userMasterKey);
+            encryptedBuildingsBase64 = encrypt(gson.toJson(buildings), userMasterKey);
 
             try (Writer writer = new FileWriter(file)) {
 
@@ -434,9 +436,7 @@ public class DataManager {
 
     public void initBuildingObject() {
         try {
-            this.buildings = Utils.unsealAndDeserializeBuildings(
-                    getEncryptedBuildingsBase64(), userMasterKey
-            );
+            this.buildings = unsealAndDeserializeBuildings(getEncryptedBuildingsBase64(), userMasterKey);
         } catch (Exception e) {
             e.printStackTrace();
         }

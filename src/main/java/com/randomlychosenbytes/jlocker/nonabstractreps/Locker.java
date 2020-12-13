@@ -2,7 +2,6 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.Utils;
 
 import javax.crypto.SecretKey;
 import javax.swing.*;
@@ -10,6 +9,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.*;
 
 public class Locker extends JLabel implements Cloneable {
 
@@ -122,11 +123,11 @@ public class Locker extends JLabel implements Cloneable {
             return "00-00-00";
         }
 
-        String code = Utils.decrypt(encryptedCodes[i], sukey);
+        String code = decrypt(encryptedCodes[i], sukey);
         return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6);
     }
 
-    public void setCodes(String[] codes, SecretKey sukey) {
+    public void setCodes(String[] codes, SecretKey superUserMasterKey) {
         // codes is unencrypted... encrypting and saving in encCodes
 
         // The Value of code[i] looks like "00-00-00"
@@ -140,7 +141,7 @@ public class Locker extends JLabel implements Cloneable {
         }
 
         for (int i = 0; i < 5; i++) {
-            encryptedCodes[i] = Utils.encrypt(codes[i], sukey);
+            encryptedCodes[i] = encrypt(codes[i], superUserMasterKey);
         }
     }
 
@@ -153,43 +154,9 @@ public class Locker extends JLabel implements Cloneable {
         today.setLenient(false);
         today.getTime();
 
-        int iDay = Integer.parseInt(rentedUntilDate.substring(0, 2));
-        int iMonth = Integer.parseInt(rentedUntilDate.substring(3, 5)) - 1;
-        int iYear = Integer.parseInt(rentedUntilDate.substring(6, 10));
+        Calendar end = getCalendarFromString(rentedUntilDate);
 
-        Calendar end = new GregorianCalendar(iYear, iMonth, iDay);
-        end.setLenient(false);
-        end.getTime();
-
-        long iDifferenceInMonths = Math.round(((double) end.getTimeInMillis() - today.getTimeInMillis()) / 2592000000.0); // 2592000000.0 = 24 * 60 * 60 * 1000 * 30
-
-        if (iDifferenceInMonths < 0) {
-            return 0;
-        }
-
-        return iDifferenceInMonths;
-    }
-
-    public static boolean isDateValid(String date) {
-        if (date.length() < 10) {
-            return false;
-        }
-
-        try {
-            // try to extract day, month and year
-            int iDay = Integer.parseInt(date.substring(0, 2));
-            int iMonth = Integer.parseInt(date.substring(3, 5)) - 1; // month is zero-based, january is 0... what the fuck!?
-            int iYear = Integer.parseInt(date.substring(6, 10));
-
-            Calendar c = new GregorianCalendar(iYear, iMonth, iDay);
-
-            c.setLenient(false);
-            c.getTime();
-
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return getDifferenceInMonths(today, end);
     }
 
     public void setAppropriateColor() {

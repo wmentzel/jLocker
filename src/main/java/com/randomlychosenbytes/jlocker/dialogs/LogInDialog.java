@@ -1,13 +1,14 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.decryptKeyWithString;
 
 public class LogInDialog extends javax.swing.JDialog {
     File resPath = null;
@@ -151,10 +152,10 @@ public class LogInDialog extends javax.swing.JDialog {
 
         if (dataManager.getCurrentUser().isPasswordCorrect(password)) {
 
-            dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
+            dataManager.setUserMasterKey(decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
 
             if (isSuperUser) {
-                dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncryptedSuperUMasterKeyBase64(), password));
+                dataManager.setSuperUserMasterKey(decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncryptedSuperUMasterKeyBase64(), password));
             }
 
         } else {

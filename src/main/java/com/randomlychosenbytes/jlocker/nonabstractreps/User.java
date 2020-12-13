@@ -1,7 +1,8 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
-import com.randomlychosenbytes.jlocker.manager.Utils;
+
+import static com.randomlychosenbytes.jlocker.manager.Utils.getHash;
 
 /**
  * Represents a User of the program. There are two different kinds a the moment
@@ -17,7 +18,7 @@ public abstract class User {
     private String encryptedUserMasterKeyBase64;
 
     public User(String password, String encryptedUserMasterKeyBase64) {
-        this.passwordHash = Utils.getHash(password);
+        this.passwordHash = getHash(password);
         this.encryptedUserMasterKeyBase64 = encryptedUserMasterKeyBase64;
     }
 
@@ -27,7 +28,7 @@ public abstract class User {
 
     public boolean isPasswordCorrect(String pw) {
 
-        if (!Utils.getHash(pw).equals(passwordHash)) {
+        if (!getHash(pw).equals(passwordHash)) {
             return false;
         }
 

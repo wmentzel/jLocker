@@ -16,6 +16,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.randomlychosenbytes.jlocker.manager.Utils.isDateValid;
+
 /**
  * This is the main windows of the application. It is displayed right after
  * the login-dialog/create new user dialog.i
@@ -243,7 +245,7 @@ public class MainFrame extends javax.swing.JFrame {
         String from = fromDateTextField.getText();
 
         if (from.length() != 0) {
-            if (!Locker.isDateValid(from)) {
+            if (!isDateValid(from)) {
                 JOptionPane.showMessageDialog(null, "Das Anfangsdatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
@@ -256,7 +258,7 @@ public class MainFrame extends javax.swing.JFrame {
         String until = untilDateTextField.getText();
 
         if (until.length() != 0) {
-            if (!Locker.isDateValid(until)) {
+            if (!isDateValid(until)) {
                 JOptionPane.showMessageDialog(null, "Das Enddatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
