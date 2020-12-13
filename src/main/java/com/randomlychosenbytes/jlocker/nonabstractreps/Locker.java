@@ -229,8 +229,12 @@ public class Locker extends JLabel implements Cloneable {
         hasContract = false;
         paidAmount = 0;
         previoulyPaidAmount = 0;
-        currentCodeIndex = (currentCodeIndex + 1) % encryptedCodes.length;
 
+        if (encryptedCodes == null) {
+            currentCodeIndex = 0;
+        } else {
+            currentCodeIndex = (currentCodeIndex + 1) % encryptedCodes.length;
+        }
         setAppropriateColor();
     }
 
