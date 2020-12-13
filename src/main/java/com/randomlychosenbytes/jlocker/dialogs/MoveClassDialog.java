@@ -82,20 +82,20 @@ public class MoveClassDialog extends javax.swing.JDialog {
                         }
 
                         //
-                        // Find classes assigned to pupils
+                        // Find classes assigned to pupils and gather lockers of pupils with an invalid height
+                        // The height is needed in order to know up to which lockers a pupil can reach.
                         //
                         List<Locker> lockers = munit.getLockerList();
 
                         for (Locker locker : lockers) {
                             String className = locker.getOwnerClass();
-                            int pupilHeight = locker.getOwnerSize();
-
-                            if (pupilHeight == 0) {
-                                lockerIdWithoutHeights.add(locker.getId());
-                            }
 
                             if (!className.isEmpty()) {
                                 assignedClasses.add(className);
+
+                                if (locker.getOwnerSize() == 0) {
+                                    lockerIdWithoutHeights.add(locker.getId());
+                                }
                             }
                         }
                     }
