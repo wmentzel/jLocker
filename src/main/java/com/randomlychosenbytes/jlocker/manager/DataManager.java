@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
+import static java.lang.System.out;
 
 /**
  * DataManager is a singleton class. There can only be one instance of this
@@ -69,10 +70,7 @@ public class DataManager {
         resourceFile = new File(sHomeDir, "jlocker.json");
         backupDirectory = new File(sHomeDir, "Backup");
 
-        System.out.println("* program directory is: \"" + sHomeDir + "\"");
-
-        //---
-
+        out.println("* program directory is: \"" + sHomeDir + "\"");
         settings = new Settings();
     }
 
@@ -89,7 +87,7 @@ public class DataManager {
 
         // Check if backup directory exists. If not, create it.
         if (!backupDirectory.exists() && !backupDirectory.mkdir()) {
-            System.out.println("Backup failed!");
+            out.println("Backup failed!");
         }
 
         //
@@ -115,30 +113,25 @@ public class DataManager {
         if (backupDirectory.exists()) { // if there are not backups yet, we dont have to delete any files
 
             // This filter only returns files (and not directories)
-            FileFilter fileFilter = new FileFilter() {
-                @Override
-                public boolean accept(File file) {
-                    return !file.isDirectory();
-                }
-            };
+            FileFilter fileFilter = file -> !file.isDirectory();
 
             File[] files = backupDirectory.listFiles(fileFilter);
 
             for (int i = 0; i < files.length - settings.numOfBackups; i++) {
-                System.out.print("* delete backup file: \"" + files[i].getName() + "\"...");
+                out.print("* delete backup file: \"" + files[i].getName() + "\"...");
 
                 if (files[i].delete()) {
-                    System.out.println(" successful!");
+                    out.println(" successful!");
                 } else {
-                    System.out.println(" failed!");
+                    out.println(" failed!");
                 }
             }
         }
     }
 
-    private void saveData(File file, Object... obj) {
+    private void saveData(File file) {
 
-        System.out.print("* saving " + file.getName() + "... ");
+        out.print("* saving " + file.getName() + "... ");
 
         try {
 
@@ -155,11 +148,11 @@ public class DataManager {
                         restrictedUser
                 ), writer);
 
-                System.out.println("successful");
+                out.println("successful");
                 mainFrame.setStatusMessage("Speichern erfolgreich");
             }
         } catch (Exception ex) {
-            System.out.println("failed");
+            out.println("failed");
             mainFrame.setStatusMessage("Speichern fehlgeschlagen");
             ex.printStackTrace();
         }
@@ -177,7 +170,7 @@ public class DataManager {
      */
     public void loadFromCustomFile(File file) {
 
-        System.out.print("* reading " + file.getName() + "... ");
+        out.print("* reading " + file.getName() + "... ");
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -194,10 +187,10 @@ public class DataManager {
             tasks = root.tasks;
             settings = root.settings;
 
-            System.out.println("successful");
+            out.println("successful");
             mainFrame.setStatusMessage("Laden erfolgreich");
         } catch (Exception ex) {
-            System.out.println("failed");
+            out.println("failed");
             mainFrame.setStatusMessage("Laden fehlgeschlagen");
             ex.printStackTrace();
         }

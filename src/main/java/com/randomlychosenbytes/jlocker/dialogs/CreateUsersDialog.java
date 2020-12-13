@@ -2,7 +2,6 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.crypto.SecretKey;
@@ -11,13 +10,11 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.generateAndEncryptKey;
-
 public class CreateUsersDialog extends javax.swing.JDialog {
-    private int iDisplayedCard;
+    private int displayedCardIndex;
     private final CardLayout cl;
     private boolean isFirstRun;
-    private SecretKey ukey;
+    private SecretKey userKey;
     private final DataManager dataManager;
 
     public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
@@ -52,11 +49,11 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         centerPanel.add(superUserPanel, "card2");
         centerPanel.add(userPanel, "card3");
 
-        iDisplayedCard = 0;
+        displayedCardIndex = 0;
 
         if (!isFirstRun) {
             cl.next(centerPanel);
-            iDisplayedCard = 1;
+            displayedCardIndex = 1;
         }
 
         previousButton.setEnabled(false);
@@ -79,9 +76,9 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         superUserPanel = new javax.swing.JPanel();
         superUserLabel = new javax.swing.JLabel();
         suPasswordLabel = new javax.swing.JLabel();
-        suPasswordTextField = new javax.swing.JTextField();
+        superUserPasswordTextField = new javax.swing.JTextField();
         suRepeatPasswordLabel = new javax.swing.JLabel();
-        suRepeatPasswordTextField = new javax.swing.JTextField();
+        superUserRepeatPasswordTextField = new javax.swing.JTextField();
         userPanel = new javax.swing.JPanel();
         userLabel = new javax.swing.JLabel();
         userPasswordLabel = new javax.swing.JLabel();
@@ -140,7 +137,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        superUserPanel.add(suPasswordTextField, gridBagConstraints);
+        superUserPanel.add(superUserPasswordTextField, gridBagConstraints);
 
         suRepeatPasswordLabel.setText("Passwort wiederholen");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -151,7 +148,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        superUserPanel.add(suRepeatPasswordTextField, gridBagConstraints);
+        superUserPanel.add(superUserRepeatPasswordTextField, gridBagConstraints);
 
         centerPanel.add(superUserPanel, "card3");
 
@@ -251,12 +248,12 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     {//GEN-HEADEREND:event_previousButtonActionPerformed
         // Prevent the user from returning to the welcome screen, because
         // that would make no sense.
-        if ((iDisplayedCard - 1) > 0) {
-            iDisplayedCard--;
+        if ((displayedCardIndex - 1) > 0) {
+            displayedCardIndex--;
             cl.previous(centerPanel);
         }
 
-        if (iDisplayedCard != 2) {
+        if (displayedCardIndex != 2) {
             nextButton.setText("Weiter >");
         }
     }//GEN-LAST:event_previousButtonActionPerformed
@@ -264,30 +261,24 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_nextButtonActionPerformed
     {//GEN-HEADEREND:event_nextButtonActionPerformed
 
-        if (iDisplayedCard < 2) {
+        if (displayedCardIndex < 2) {
             cl.next(centerPanel); // display next card
         }
 
-        iDisplayedCard++;
+        displayedCardIndex++;
 
-        switch (iDisplayedCard - 1) {
+        switch (displayedCardIndex - 1) {
             case 1: {
-                String supassword = suPasswordTextField.getText();
+                String superUserPassword = superUserPasswordTextField.getText();
 
-                if (supassword.equals("") || supassword.length() < 8) {
+                if (superUserPassword.isEmpty() || superUserPassword.length() < 8) {
                     JOptionPane.showMessageDialog(this, "Bitte geben Sie ein Passwort mit\nmindestens 8 Zeichen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (supassword.equals(suRepeatPasswordTextField.getText())) {
-
-                    dataManager.setSuperUser(new SuperUser(
-                            supassword,
-                            Utils.getHash(supassword),
-                            generateAndEncryptKey(supassword),
-                            generateAndEncryptKey(supassword)
-                    ));
-                    ukey = dataManager.getSuperUser().getUserMasterKey();
+                if (superUserPassword.equals(superUserRepeatPasswordTextField.getText())) {
+                    dataManager.setSuperUser(new SuperUser(superUserPassword));
+                    userKey = dataManager.getSuperUser().getUserMasterKey();
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -307,7 +298,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (password.equals(userRepeatPasswordTextField.getText()))
-                    dataManager.setRestrictedUser(new RestrictedUser(password, ukey));
+                    dataManager.setRestrictedUser(new RestrictedUser(password, userKey));
                 else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -364,9 +355,9 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     private javax.swing.JButton previousButton;
     private javax.swing.JPanel southPanel;
     private javax.swing.JLabel suPasswordLabel;
-    private javax.swing.JTextField suPasswordTextField;
+    private javax.swing.JTextField superUserPasswordTextField;
     private javax.swing.JLabel suRepeatPasswordLabel;
-    private javax.swing.JTextField suRepeatPasswordTextField;
+    private javax.swing.JTextField superUserRepeatPasswordTextField;
     private javax.swing.JLabel superUserLabel;
     private javax.swing.JPanel superUserPanel;
     private javax.swing.JLabel userLabel;
