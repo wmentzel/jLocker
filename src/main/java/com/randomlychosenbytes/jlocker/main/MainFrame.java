@@ -1226,6 +1226,7 @@ public class MainFrame extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_loadMenuItemActionPerformed
         dataManager.loadDefaultFile(dataManager.getCurrentUser() instanceof SuperUser);
         dataManager.initBuildingObject();
+        drawLockerOverview();
     }//GEN-LAST:event_loadMenuItemActionPerformed
 
     private void exitMenuActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitMenuActionPerformed
