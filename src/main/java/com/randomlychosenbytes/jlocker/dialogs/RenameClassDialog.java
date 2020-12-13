@@ -10,7 +10,7 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 import javax.swing.*;
 import java.util.List;
 
-public class RenameClassDialog extends javax.swing.JDialog {
+public class RenameClassDialog extends JDialog {
     DataManager dataManager;
 
     public RenameClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
@@ -114,9 +114,6 @@ public class RenameClassDialog extends javax.swing.JDialog {
                             String sFoundClass = locker.getOwnerClass();
                             sSubClass = "";
 
-                            System.out.println("gesucht nach: " + previousClassName);
-                            System.out.println("gefunden: " + sFoundClass);
-
                             //7, E, Kurs
                             if (searchForAgeGroup) // with dot
                             {
@@ -133,10 +130,7 @@ public class RenameClassDialog extends javax.swing.JDialog {
                             if (sFoundClass.equals(previousClassName)) {
                                 numMatches++;
                                 locker.setClass(newClassName + sSubClass);
-
-                                System.out.println("neue Klassenbezeichnung: " + newClassName + sSubClass);
                             }
-                            System.out.println("-------------------------");
                         }
                     }
                 }
@@ -146,6 +140,7 @@ public class RenameClassDialog extends javax.swing.JDialog {
         if (numMatches == 0) {
             JOptionPane.showMessageDialog(null, "Kann Schließfachmieter besucht die Klasse " + previousClassName + "!", "Fehler", JOptionPane.ERROR_MESSAGE);
         } else {
+            this.dispose();
             JOptionPane.showMessageDialog(null, "Die Klasse von " + numMatches + " Schließfachmietern wurde erfolgreich geändert!", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_okButtonActionPerformed
