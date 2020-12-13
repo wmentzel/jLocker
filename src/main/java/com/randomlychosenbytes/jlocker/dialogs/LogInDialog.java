@@ -132,13 +132,16 @@ public class LogInDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
+
+        boolean isSuperUser = chooseUserComboBox.getSelectedIndex() == 0;
+
         //
         // Loading...
         //
         if (resPath == null) {
-            dataManager.loadDefaultFile();
+            dataManager.loadDefaultFile(isSuperUser);
         } else {
-            dataManager.loadFromCustomFile(resPath); // backup loading
+            dataManager.loadFromCustomFile(resPath, isSuperUser); // backup loading
         }
 
         //
@@ -146,13 +149,9 @@ public class LogInDialog extends javax.swing.JDialog {
         //
         String password = String.valueOf(passwordTextField.getPassword());
 
-        boolean isSuperUser = chooseUserComboBox.getSelectedIndex() == 0;
-
-        dataManager.setCurrentUser(isSuperUser ? dataManager.getSuperUser() : dataManager.getRestrictedUser());
-
-        if (dataManager.getCurUser().isPasswordCorrect(password)) {
+        if (dataManager.getCurrentUser().isPasswordCorrect(password)) {
             if (isSuperUser) {
-                dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncSuperUMasterKeyBase64(), password));
+                dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncryptedSuperUMasterKeyBase64(), password));
                 dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));
             } else {
                 dataManager.setUserMasterKey(Utils.decryptKeyWithString(dataManager.getCurrentUser().getEncryptedUserMasterKeyBase64(), password));

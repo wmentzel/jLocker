@@ -5,6 +5,7 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.manager.Utils;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
+import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -12,9 +13,15 @@ import java.util.List;
 
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int displayedCardIndex;
-    private final CardLayout cl;
+    private final CardLayout cardLayout;
     private boolean isFirstRun;
     private final DataManager dataManager;
+
+    private SuperUser superUser;
+    private RestrictedUser restrictedUser;
+
+    private SecretKey superUserMasterKey;
+    private SecretKey userMasterKey;
 
     public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
@@ -41,9 +48,9 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                         }
                 );
 
-        cl = new CardLayout();
+        cardLayout = new CardLayout();
 
-        centerPanel.setLayout(cl);
+        centerPanel.setLayout(cardLayout);
         centerPanel.add(welcomePanel, "card1");
         centerPanel.add(superUserPanel, "card2");
         centerPanel.add(userPanel, "card3");
@@ -51,7 +58,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         displayedCardIndex = 0;
 
         if (!isFirstRun) {
-            cl.next(centerPanel);
+            cardLayout.next(centerPanel);
             displayedCardIndex = 1;
         }
 
@@ -249,7 +256,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
         // that would make no sense.
         if ((displayedCardIndex - 1) > 0) {
             displayedCardIndex--;
-            cl.previous(centerPanel);
+            cardLayout.previous(centerPanel);
         }
 
         if (displayedCardIndex != 2) {
@@ -261,7 +268,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
     {//GEN-HEADEREND:event_nextButtonActionPerformed
 
         if (displayedCardIndex < 2) {
-            cl.next(centerPanel); // display next card
+            cardLayout.next(centerPanel); // display next card
         }
 
         displayedCardIndex++;
@@ -276,10 +283,10 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                 }
 
                 if (superUserPassword.equals(superUserRepeatPasswordTextField.getText())) {
-                    dataManager.setSuperUser(new SuperUser(superUserPassword));
+                    superUser = new SuperUser(superUserPassword);
 
-                    dataManager.setUserMasterKey(Utils.decryptKeyWithString((dataManager.getCurrentUser()).getEncryptedUserMasterKeyBase64(), superUserPassword));
-                    dataManager.setSuperUserMasterKey(Utils.decryptKeyWithString(((SuperUser) dataManager.getCurrentUser()).getEncSuperUMasterKeyBase64(), superUserPassword));
+                    userMasterKey = Utils.decryptKeyWithString(superUser.getEncryptedUserMasterKeyBase64(), superUserPassword);
+                    superUserMasterKey = Utils.decryptKeyWithString(superUser.getEncryptedSuperUMasterKeyBase64(), superUserPassword);
                 } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -298,15 +305,11 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     return;
                 }
 
-                if (password.equals(userRepeatPasswordTextField.getText()))
-                    dataManager.setRestrictedUser(new RestrictedUser(password, dataManager.getUserMasterKey()));
-                else {
+                if (password.equals(userRepeatPasswordTextField.getText())) {
+                    restrictedUser = new RestrictedUser(password, userMasterKey);
+                } else {
                     JOptionPane.showMessageDialog(this, "Die Passwörter stimmen nicht überein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
-                }
-
-                if (dataManager.getCurrentUser() == null) {
-                    dataManager.setCurrentUser(dataManager.getSuperUser());
                 }
 
                 if (isFirstRun) {
@@ -332,7 +335,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                                             codes[i] = codes[i].replace("-", "");
                                         }
 
-                                        locker.setCodes(codes, dataManager.getSuperUserMasterKey());
+                                        locker.setCodes(codes, superUserMasterKey);
                                     }
                                 }
                             }
@@ -340,11 +343,14 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                     }
                 }
 
+                dataManager.setNewUsers(superUser, restrictedUser, userMasterKey, superUserMasterKey);
+
                 dataManager.saveAndCreateBackup();
 
                 this.dispose();
             }
-        } // end of switch 
+        } // end of switch
+
     }//GEN-LAST:event_nextButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

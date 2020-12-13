@@ -16,8 +16,9 @@ public abstract class User {
     @Expose
     private String encryptedUserMasterKeyBase64;
 
-    public User(String passwordHash, String encryptedUserMasterKeyBase64) {
-        this.passwordHash = passwordHash;
+    public User(String password, String encryptedUserMasterKeyBase64) {
+        this.passwordHash = Utils.getHash(password);
+        this.encryptedUserMasterKeyBase64 = encryptedUserMasterKeyBase64;
     }
 
     public String getEncryptedUserMasterKeyBase64() {

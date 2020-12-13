@@ -58,13 +58,17 @@ public class Locker extends JLabel implements Cloneable {
     @Expose
     private String encryptedCodes[];
 
+    public String[] getEncryptedCodes() {
+        return encryptedCodes;
+    }
+
     // transient
     private Boolean isSelected = false;
 
     public Locker(
             String id, String firstName, String lastName, int sizeInCm,
             String schoolClass, String rentedFrom, String rentedUntil, boolean hasContract,
-            int paidAmount, int currentCodeIndex, String lockCode,
+            int paidAmount, int currentCodeIndex, String[] encryptedCodes, String lockCode,
             boolean isOutOfOrder, String note
     ) {
         this.id = id;
@@ -83,7 +87,7 @@ public class Locker extends JLabel implements Cloneable {
         this.isSelected = false;
 
         this.currentCodeIndex = currentCodeIndex;
-        this.encryptedCodes = null;
+        this.encryptedCodes = encryptedCodes;
 
         // standard color
         setColor(FREE_COLOR);

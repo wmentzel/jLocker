@@ -9,7 +9,7 @@ public class SuperUser extends User {
     @Expose
     private String encSuperUMasterKeyBase64;
 
-    public String getEncSuperUMasterKeyBase64() {
+    public String getEncryptedSuperUMasterKeyBase64() {
         return encSuperUMasterKeyBase64;
     }
 

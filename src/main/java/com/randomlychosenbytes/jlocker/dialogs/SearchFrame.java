@@ -68,7 +68,7 @@ public class SearchFrame extends javax.swing.JFrame {
         dataTypes.add(java.lang.String.class);
 
 
-        if (dataManager.getCurUser() instanceof SuperUser) {
+        if (dataManager.getCurrentUser() instanceof SuperUser) {
             columnData.add("Codes");
             dataTypes.add(java.lang.String.class);
         }
@@ -465,7 +465,7 @@ public class SearchFrame extends javax.swing.JFrame {
                             rowData.add(locker.getUntilDate());
                             rowData.add(locker.getLock());
 
-                            if (dataManager.getCurUser() instanceof SuperUser) {
+                            if (dataManager.getCurrentUser() instanceof SuperUser) {
                                 String[] codearray = locker.getCodes(dataManager.getSuperUserMasterKey());
                                 StringBuilder codes = new StringBuilder();
 

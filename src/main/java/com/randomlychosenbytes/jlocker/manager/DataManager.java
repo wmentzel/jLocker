@@ -59,6 +59,16 @@ public class DataManager {
     private SecretKey userMasterKey;
     private SecretKey superUserMasterKey;
 
+    public void setNewUsers(SuperUser superUser, RestrictedUser restrictedUser, SecretKey userMasterKey, SecretKey superUserMasterKey) {
+        this.superUser = superUser;
+        this.restrictedUser = restrictedUser;
+
+        this.userMasterKey = userMasterKey;
+        this.superUserMasterKey = superUserMasterKey;
+
+        currentUser = superUser;
+    }
+
     public SecretKey getUserMasterKey() {
         return userMasterKey;
     }
@@ -177,8 +187,8 @@ public class DataManager {
         }
     }
 
-    public void loadDefaultFile() {
-        loadFromCustomFile(resourceFile);
+    public void loadDefaultFile(boolean loadAsSuperUser) {
+        loadFromCustomFile(resourceFile, loadAsSuperUser);
     }
 
     /**
@@ -187,7 +197,7 @@ public class DataManager {
      * to load backup files. If you want to load the current "jlocker.dat" file
      * please use loadData() method instead.
      */
-    public void loadFromCustomFile(File file) {
+    public void loadFromCustomFile(File file, boolean loadAsSuperUser) {
 
         out.print("* reading " + file.getName() + "... ");
 
@@ -200,6 +210,12 @@ public class DataManager {
             if (superUser == null && restrictedUser == null) {
                 superUser = root.superUser;
                 restrictedUser = root.restrictedUser;
+            }
+
+            if (loadAsSuperUser) {
+                currentUser = superUser;
+            } else {
+                currentUser = restrictedUser;
             }
 
             encryptedBuildingsBase64 = root.encryptedBuildingsBase64;
@@ -289,6 +305,7 @@ public class DataManager {
                                     l.hasContract(),
                                     l.getMoney(),
                                     l.getCurrentCodeIndex(),
+                                    l.getEncryptedCodes(),
                                     l.getLock(),
                                     l.isOutOfOrder(),
                                     l.getNote()
@@ -337,18 +354,6 @@ public class DataManager {
 
     public String getEncryptedBuildingsBase64() {
         return encryptedBuildingsBase64;
-    }
-
-    public User getCurUser() {
-        return currentUser;
-    }
-
-    public User getRestrictedUser() {
-        return restrictedUser;
-    }
-
-    public User getSuperUser() {
-        return superUser;
     }
 
     public List<Building> getBuildingList() {
@@ -439,14 +444,6 @@ public class DataManager {
 
     public void setMainFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-    }
-
-    public void setRestrictedUser(RestrictedUser restrictedUser) {
-        this.restrictedUser = restrictedUser;
-    }
-
-    public void setSuperUser(SuperUser superUser) {
-        this.superUser = superUser;
     }
 
     public void setDataChanged(boolean changed) {

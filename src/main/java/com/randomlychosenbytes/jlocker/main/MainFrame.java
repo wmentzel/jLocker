@@ -104,7 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         setComboBoxes2CurIndizes();
 
         // If the super user is logged in, he is allowed to change to passwords.
-        changeUserPWMenuItem.setEnabled(dataManager.getCurUser() instanceof SuperUser);
+        changeUserPWMenuItem.setEnabled(dataManager.getCurrentUser() instanceof SuperUser);
     }
 
     /**
@@ -187,7 +187,7 @@ public class MainFrame extends javax.swing.JFrame {
             remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
 
             // Combobox initialization
-            if (dataManager.getCurUser() instanceof SuperUser) {
+            if (dataManager.getCurrentUser() instanceof SuperUser) {
                 codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
@@ -1082,7 +1082,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
     {//GEN-HEADEREND:event_codeTextFieldMouseClicked
-        if (dataManager.getCurUser() instanceof SuperUser) {
+        if (dataManager.getCurrentUser() instanceof SuperUser) {
             EditCodesDialog dialog = new EditCodesDialog(this, dataManager, true);
             dialog.setVisible(true);
         }
@@ -1111,7 +1111,7 @@ public class MainFrame extends javax.swing.JFrame {
             locker.empty();
 
             // Combobox initialization
-            if (dataManager.getCurUser() instanceof SuperUser) {
+            if (dataManager.getCurrentUser() instanceof SuperUser) {
                 codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
             } else {
                 codeTextField.setText("00-00-00");
@@ -1222,7 +1222,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void loadMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_loadMenuItemActionPerformed
     {//GEN-HEADEREND:event_loadMenuItemActionPerformed
-        dataManager.loadDefaultFile();
+        dataManager.loadDefaultFile(dataManager.getCurrentUser() instanceof SuperUser);
         dataManager.initBuildingObject();
     }//GEN-LAST:event_loadMenuItemActionPerformed
 
