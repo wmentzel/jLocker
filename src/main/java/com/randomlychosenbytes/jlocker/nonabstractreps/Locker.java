@@ -73,8 +73,8 @@ public class Locker extends JLabel implements Cloneable {
             boolean isOutOfOrder, String note
     ) {
         this.id = id;
-        this.lastName = firstName;
-        this.firstName = lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.sizeInCm = sizeInCm;
         this.schoolClassName = schoolClass;
         this.rentedFromDate = rentedFrom;
