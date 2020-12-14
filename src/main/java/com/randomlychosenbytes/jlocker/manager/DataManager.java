@@ -306,6 +306,7 @@ public class DataManager {
                                     l.getUntilDate(),
                                     l.hasContract(),
                                     l.getMoney(),
+                                    l.getPrevAmount(),
                                     l.getCurrentCodeIndex(),
                                     l.getEncryptedCodes(),
                                     l.getLock(),

@@ -69,7 +69,7 @@ public class Locker extends JLabel implements Cloneable {
     public Locker(
             String id, String firstName, String lastName, int sizeInCm,
             String schoolClass, String rentedFrom, String rentedUntil, boolean hasContract,
-            int paidAmount, int currentCodeIndex, String[] encryptedCodes, String lockCode,
+            int paidAmount, int previoulyPaidAmount, int currentCodeIndex, String[] encryptedCodes, String lockCode,
             boolean isOutOfOrder, String note
     ) {
         this.id = id;
@@ -81,6 +81,7 @@ public class Locker extends JLabel implements Cloneable {
         this.rentedUntilDate = rentedUntil;
         this.hasContract = hasContract;
         this.paidAmount = paidAmount;
+        this.previoulyPaidAmount = previoulyPaidAmount;
         this.previoulyPaidAmount = paidAmount;
         this.isOutOfOrder = isOutOfOrder;
         this.lockCode = lockCode;
