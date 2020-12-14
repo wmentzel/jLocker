@@ -4,7 +4,6 @@ import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
-import com.randomlychosenbytes.jlocker.nonabstractreps.Pair
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph
@@ -121,12 +120,12 @@ class ShortenClassRoomDistances(
                 val freeLockerToDistancePair = freeLockerToDistancePairList[freeLockerIndex]
 
                 // Is distance of the new locker shorter to the classroom?
-                if (classLockerToDistancePair.y > freeLockerToDistancePair.y) {
-                    val srcLocker = classLockerToDistancePair.x.entity
-                    val destLocker = freeLockerToDistancePair.x.entity
+                if (classLockerToDistancePair.second > freeLockerToDistancePair.second) {
+                    val srcLocker = classLockerToDistancePair.first.entity
+                    val destLocker = freeLockerToDistancePair.first.entity
 
                     // determine minimum size for this locker
-                    val index = freeLockerToDistancePair.x.lValue
+                    val index = freeLockerToDistancePair.first.lValue
 
                     // if no minimum size exists for this locker row, don't move
                     if (index < lockerMinSizes.size) {
@@ -136,10 +135,11 @@ class ShortenClassRoomDistances(
                         if (srcLocker.heightInCm >= lockerMinSize) {
                             statusMessage.append(srcLocker.id).append(" -> ").append(destLocker.id).append("\n")
                             statusMessage.append("Besitzergröße: ")
-                                .append(classLockerToDistancePair.x.entity.heightInCm).append(" cm\n")
+                                .append(classLockerToDistancePair.first.entity.heightInCm).append(" cm\n")
                             statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n")
-                            val distanceReduction = (1.0f - freeLockerToDistancePair.y / classLockerToDistancePair.y
-                                .toFloat()) * 100
+                            val distanceReduction =
+                                (1.0f - freeLockerToDistancePair.second / classLockerToDistancePair.second
+                                    .toFloat()) * 100
                             val df = DecimalFormat("##.#")
                             statusMessage.append("Entfernung verkürzt um: ")
                                 .append(df.format(distanceReduction.toDouble())).append("%\n\n")
@@ -369,8 +369,9 @@ class ShortenClassRoomDistances(
      */
     private class EntityDistanceComparator : Comparator<Pair<EntityCoordinates<Locker>, Int>> {
         override fun compare(p1: Pair<EntityCoordinates<Locker>, Int>, p2: Pair<EntityCoordinates<Locker>, Int>): Int {
-            val dist1 = p1.y as Int
-            val dist2 = p2.y as Int
+            val dist1 = p1.second
+            val dist2 = p2.second
+
             if (dist1 == dist2) {
                 return 0
             }
