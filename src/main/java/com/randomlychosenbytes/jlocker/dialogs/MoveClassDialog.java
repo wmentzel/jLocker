@@ -220,7 +220,17 @@ public class MoveClassDialog extends javax.swing.JDialog {
             return;
         }
 
-        ShortenClassRoomDistances scrd = new ShortenClassRoomDistances(dataManager, classRoomNodeId, className);
+        ShortenClassRoomDistances scrd = new ShortenClassRoomDistances(
+                dataManager.getBuildingList(),
+                dataManager.getSettings(),
+                dataManager.getTasks(),
+                classRoomNodeId,
+                className,
+                (l1, l2, withCodes) -> {
+                    dataManager.moveLockers(l1, l2, withCodes);
+                    return null;
+                }
+        );
 
         final int status = scrd.getStatus();
         String statusMessage = "";

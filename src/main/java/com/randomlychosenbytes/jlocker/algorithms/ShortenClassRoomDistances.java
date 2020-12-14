@@ -2,14 +2,13 @@ package com.randomlychosenbytes.jlocker.algorithms;
 
 import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
+import kotlin.jvm.functions.Function3;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
-import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,12 +46,27 @@ public class ShortenClassRoomDistances {
     private final List<Pair<EntityCoordinates<Locker>, Integer>> freeLockerToDistancePairList;
     private List<String> unreachableLockers;
 
-    private final DataManager dataManager;
     private final String className;
     private final int status;
 
-    public ShortenClassRoomDistances(DataManager dataManager, String classRoomNodeId, String className) {
-        this.dataManager = dataManager;
+    private Settings settings;
+    private List<Task> tasks;
+    private List<Building> buildings;
+    private Function3<Locker, Locker, Boolean, Void> moveLocker;
+
+    public ShortenClassRoomDistances(
+            List<Building> buildings,
+            Settings settings,
+            List<Task> tasks,
+            String classRoomNodeId,
+            String className,
+            Function3<Locker, Locker, Boolean, Void> moveLocker
+    ) {
+        this.buildings = buildings;
+        this.settings = settings;
+        this.tasks = tasks;
+        this.moveLocker = moveLocker;
+
         this.className = className;
         this.classRoomNodeId = classRoomNodeId;
 
@@ -149,7 +163,7 @@ public class ShortenClassRoomDistances {
      */
     public final String execute() {
         StringBuilder statusMessage = new StringBuilder();
-        List<Integer> minSizes = dataManager.getSettings().lockerMinSizes;
+        List<Integer> minSizes = settings.lockerMinSizes;
 
         statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size()).append(" Schließfächer der Klasse ").append(className).append("\n");
         statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size()).append(" freie Schließfächer gefunden!\n\n");
@@ -189,11 +203,7 @@ public class ShortenClassRoomDistances {
                             DecimalFormat df = new DecimalFormat("##.#");
                             statusMessage.append("Entfernung verkürzt um: ").append(df.format(distanceReduction)).append("%\n\n");
 
-                            try {
-                                dataManager.moveLockers(srcLocker, destLocker, false);
-                            } catch (CloneNotSupportedException ex) {
-                                JOptionPane.showMessageDialog(null, "Ein schwerwiegender Fehler ist aufgetreten, die Optimierung konnte nicht ausgeführt werden.", "Fehler", JOptionPane.OK_OPTION);
-                            }
+                            moveLocker.invoke(srcLocker, destLocker, false);
 
                             freeLockerToDistancePairList.remove(freeLockerIndex); // this one is now occupied, so remove it
 
@@ -205,7 +215,7 @@ public class ShortenClassRoomDistances {
                                     + destLocker.getFirstName()
                                     + " " + destLocker.getLastName();
 
-                            dataManager.getTasks().add(new Task(taskText));
+                            tasks.add(new Task(taskText));
                             break;
                         }
                     }
@@ -251,8 +261,6 @@ public class ShortenClassRoomDistances {
      * with its lockers.
      */
     private void connectManagementUnitsAndLockers() {
-        List<Building> buildings = dataManager.getBuildingList();
-
         for (int b = 0; b < buildings.size(); b++) {
             List<Floor> floors = buildings.get(b).getFloors();
 
@@ -308,8 +316,6 @@ public class ShortenClassRoomDistances {
      * Connects the walks with each other on every floor
      */
     private void connectWalksOnFloor() {
-        List<Building> buildings = dataManager.getBuildingList();
-
         for (int b = 0; b < buildings.size(); b++) {
             List<Floor> floors = buildings.get(b).getFloors();
 
@@ -332,8 +338,6 @@ public class ShortenClassRoomDistances {
      * Connects the floors of a building with each other
      */
     private void connectFloorsByStaircases() {
-        List<Building> buildings = dataManager.getBuildingList();
-
         for (int b = 0; b < buildings.size(); b++) {
             List<Floor> floors = buildings.get(b).getFloors();
 
@@ -367,7 +371,6 @@ public class ShortenClassRoomDistances {
      * Returns the IDs of all ManagementUnits on the given floor with the given name
      */
     private List<String> findStaircasesOnFloor(int b, int f, String name) {
-        List<Building> buildings = dataManager.getBuildingList();
         List<Floor> floors = buildings.get(b).getFloors();
         List<String> entityIds = new LinkedList<>();
 
@@ -397,8 +400,6 @@ public class ShortenClassRoomDistances {
      * Connects buildings by staircases
      */
     private void connectBuildinsByStaircases() {
-        List<Building> buildings = dataManager.getBuildingList();
-
         // start with b = 1 so we connect with previous buildings
         for (int b = 1; b < buildings.size(); b++) {
             List<Floor> floors = buildings.get(b).getFloors();
@@ -435,7 +436,7 @@ public class ShortenClassRoomDistances {
      * Returns the IDs of all Staircases for a given building
      */
     private List<String> findStaircasesForBuilding(int b, String name) {
-        Building building = dataManager.getBuildingList().get(b);
+        Building building = buildings.get(b);
         List<String> entityIds = new LinkedList<>();
 
         List<Floor> floors = building.getFloors();

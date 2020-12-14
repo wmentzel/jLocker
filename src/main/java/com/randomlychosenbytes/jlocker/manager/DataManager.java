@@ -262,15 +262,18 @@ public class DataManager {
     /**
      * Moves a student from one locker to another.
      */
-    public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) throws CloneNotSupportedException {
-        Locker destCopy = destLocker.getCopy();
+    public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) {
+        try {
+            Locker destCopy = destLocker.getCopy();
 
-        destLocker.setTo(sourceLocker);
-        sourceLocker.setTo(destCopy);
+            destLocker.setTo(sourceLocker);
+            sourceLocker.setTo(destCopy);
 
-        if (withCodes) {
-            destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey);
-            sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey);
+            if (withCodes) {
+                destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey);
+                sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey);
+            }
+        } catch (Exception e) {
         }
     }
 
