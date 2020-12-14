@@ -170,7 +170,7 @@ public class MainFrame extends javax.swing.JFrame {
             Locker locker = dataManager.getCurLocker();
 
             lockerIDTextField.setText(locker.getId());
-            surnameTextField.setText(locker.getSurname());
+            surnameTextField.setText(locker.getLastName());
             nameTextField.setText(locker.getOwnerName());
             classTextField.setText(locker.getOwnerClass());
             sizeTextField.setText(Integer.toString(locker.getOwnerSize()));
@@ -178,11 +178,11 @@ public class MainFrame extends javax.swing.JFrame {
             hasContractCheckbox.setSelected(locker.hasContract());
             outOfOrderCheckbox.setSelected(locker.isOutOfOrder());
 
-            moneyTextField.setText(Integer.toString(locker.getMoney()));
-            previousAmountTextField.setText(Integer.toString(locker.getPrevAmount()));
+            moneyTextField.setText(Integer.toString(locker.getPaidAmount()));
+            previousAmountTextField.setText(Integer.toString(locker.getPreviouslyPaidAmount()));
 
-            fromDateTextField.setText(locker.getFromDate());
-            untilDateTextField.setText(locker.getUntilDate());
+            fromDateTextField.setText(locker.getRentedFromDate());
+            untilDateTextField.setText(locker.getRentedUntilDate());
 
 
             Long months = locker.getRemainingTimeInMonths();
@@ -195,7 +195,7 @@ public class MainFrame extends javax.swing.JFrame {
                 codeTextField.setText("00-00-00");
             }
 
-            lockTextField.setText(locker.getLock());
+            lockTextField.setText(locker.getLockCode());
             noteTextArea.setText(locker.getNote());
         } else {
             containerPanel.setVisible(false);
@@ -210,18 +210,18 @@ public class MainFrame extends javax.swing.JFrame {
         Locker locker = dataManager.getCurLocker();
 
         locker.setLastName(surnameTextField.getText());
-        locker.setOwnerName(nameTextField.getText());
-        locker.setClass(classTextField.getText());
-        locker.setContract(hasContractCheckbox.isSelected());
+        locker.setFirstName(nameTextField.getText());
+        locker.setSchoolClass(classTextField.getText());
+        locker.setHasContract(hasContractCheckbox.isSelected());
         locker.setOutOfOrder(outOfOrderCheckbox.isSelected());
-        locker.setLock(lockTextField.getText());
+        locker.setLockCode(lockTextField.getText());
         locker.setNote(noteTextArea.getText());
 
         String id = lockerIDTextField.getText();
 
         if (!dataManager.getCurLocker().getId().equals(id)) {
             if (dataManager.isLockerIdUnique(id) && !id.equals("") && !id.equals(" ")) {
-                locker.setID(id);
+                locker.setId(id);
             } else {
                 JOptionPane.showMessageDialog(null, "Diese Schließfach-ID existiert bereits! Wählen Sie eine andere.", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -240,7 +240,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
 
-        locker.setOwnerSize(size);
+        locker.setHeightInCm(size);
 
         String from = fromDateTextField.getText();
 
@@ -1194,9 +1194,9 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             int amount = new Integer(currentAmountTextField.getText());
 
-            dataManager.getCurLocker().setPrevAmount(amount);
-            int iNewFullAmount = dataManager.getCurLocker().getMoney() + amount;
-            dataManager.getCurLocker().setMoney(iNewFullAmount);
+            dataManager.getCurLocker().setPreviouslyPaidAmount(amount);
+            int iNewFullAmount = dataManager.getCurLocker().getPaidAmount() + amount;
+            dataManager.getCurLocker().setPaidAmount(iNewFullAmount);
 
             previousAmountTextField.setText(Integer.toString(amount));
             moneyTextField.setText(Integer.toString(iNewFullAmount));

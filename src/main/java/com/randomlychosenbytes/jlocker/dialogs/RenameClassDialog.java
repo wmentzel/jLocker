@@ -129,7 +129,7 @@ public class RenameClassDialog extends JDialog {
 
                             if (sFoundClass.equals(previousClassName)) {
                                 numMatches++;
-                                locker.setClass(newClassName + sSubClass);
+                                locker.setSchoolClass(newClassName + sSubClass);
                             }
                         }
                     }

@@ -382,7 +382,7 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (surname.length() != 0) {
-                                    if (!surname.equals(locker.getSurname())) {
+                                    if (!surname.equals(locker.getLastName())) {
                                         continue;
                                     }
                                 }
@@ -417,7 +417,7 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (money != -1) {
-                                    if (money != locker.getMoney()) {
+                                    if (money != locker.getPaidAmount()) {
                                         continue;
                                     }
                                 }
@@ -429,19 +429,19 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (!fromdate.equals("")) {
-                                    if (!fromdate.equals(locker.getFromDate())) {
+                                    if (!fromdate.equals(locker.getRentedFromDate())) {
                                         continue;
                                     }
                                 }
 
                                 if (!untildate.equals("")) {
-                                    if (!untildate.equals(locker.getUntilDate())) {
+                                    if (!untildate.equals(locker.getRentedUntilDate())) {
                                         continue;
                                     }
                                 }
 
                                 if (!lock.equals("")) {
-                                    if (!lock.equals(locker.getLock())) {
+                                    if (!lock.equals(locker.getLockCode())) {
                                         continue;
                                     }
                                 }
@@ -454,16 +454,16 @@ public class SearchFrame extends javax.swing.JFrame {
 
                             List<Object> rowData = new LinkedList<>();
                             rowData.add(locker.getId());
-                            rowData.add(locker.getSurname());
+                            rowData.add(locker.getLastName());
                             rowData.add(locker.getOwnerName());
                             rowData.add(locker.getOwnerClass());
                             rowData.add(locker.getOwnerSize());
                             rowData.add(locker.hasContract());
-                            rowData.add(locker.getMoney());
+                            rowData.add(locker.getPaidAmount());
                             rowData.add(locker.getRemainingTimeInMonths());
-                            rowData.add(locker.getFromDate());
-                            rowData.add(locker.getUntilDate());
-                            rowData.add(locker.getLock());
+                            rowData.add(locker.getRentedFromDate());
+                            rowData.add(locker.getRentedUntilDate());
+                            rowData.add(locker.getLockCode());
 
                             if (dataManager.getCurrentUser() instanceof SuperUser) {
                                 String[] codearray = locker.getCodes(dataManager.getSuperUserMasterKey());

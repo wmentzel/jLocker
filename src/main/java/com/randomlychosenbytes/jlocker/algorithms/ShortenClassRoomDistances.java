@@ -203,7 +203,7 @@ public class ShortenClassRoomDistances {
                                     + destLocker.getId() +
                                     " Inhaber(in) "
                                     + destLocker.getOwnerName()
-                                    + " " + destLocker.getSurname();
+                                    + " " + destLocker.getLastName();
 
                             dataManager.getTasks().add(new Task(taskText));
                             break;

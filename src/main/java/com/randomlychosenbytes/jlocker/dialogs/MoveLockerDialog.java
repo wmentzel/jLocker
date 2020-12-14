@@ -119,12 +119,12 @@ public class MoveLockerDialog extends javax.swing.JDialog {
 
             if (!sourceLocker.isFree()) {
                 // TODO check null pointer dereferencing getSurname()
-                String task1 = sourceLocker.getSurname() + ", " + sourceLocker.getOwnerName() + " (" + sourceLocker.getOwnerClass() + ") über Umzug informieren (" + destLocker.getId() + " -> " + sourceLocker.getId() + ")";
+                String task1 = sourceLocker.getLastName() + ", " + sourceLocker.getOwnerName() + " (" + sourceLocker.getOwnerClass() + ") über Umzug informieren (" + destLocker.getId() + " -> " + sourceLocker.getId() + ")";
                 dataManager.addTask(task1);
             }
 
             if (!destLocker.isFree()) {
-                String task2 = destLocker.getSurname() + ", " + destLocker.getOwnerName() + " (" + destLocker.getOwnerClass() + ") über Umzug informieren (" + sourceLocker.getId() + " -> " + destLocker.getId() + ")";
+                String task2 = destLocker.getLastName() + ", " + destLocker.getOwnerName() + " (" + destLocker.getOwnerClass() + ") über Umzug informieren (" + sourceLocker.getId() + " -> " + destLocker.getId() + ")";
                 dataManager.addTask(task2);
             }
             sourceIDTextField.setText("");

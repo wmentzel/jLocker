@@ -24,7 +24,7 @@ public class Locker extends JLabel implements Cloneable {
     private String firstName;
 
     @Expose
-    private int sizeInCm;
+    private int heightInCm;
 
     @Expose
     private String schoolClassName;
@@ -67,7 +67,7 @@ public class Locker extends JLabel implements Cloneable {
     private Boolean isSelected = false;
 
     public Locker(
-            String id, String firstName, String lastName, int sizeInCm,
+            String id, String firstName, String lastName, int heightInCm,
             String schoolClass, String rentedFrom, String rentedUntil, boolean hasContract,
             int paidAmount, int previoulyPaidAmount, int currentCodeIndex, String[] encryptedCodes, String lockCode,
             boolean isOutOfOrder, String note
@@ -75,7 +75,7 @@ public class Locker extends JLabel implements Cloneable {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.sizeInCm = sizeInCm;
+        this.heightInCm = heightInCm;
         this.schoolClassName = schoolClass;
         this.rentedFromDate = rentedFrom;
         this.rentedUntilDate = rentedUntil;
@@ -183,7 +183,7 @@ public class Locker extends JLabel implements Cloneable {
     public void empty() {
         lastName = "";
         firstName = "";
-        sizeInCm = 0;
+        heightInCm = 0;
         schoolClassName = "";
         rentedFromDate = "";
         rentedUntilDate = "";
@@ -202,7 +202,7 @@ public class Locker extends JLabel implements Cloneable {
     public void setTo(Locker newdata) {
         lastName = newdata.lastName;
         firstName = newdata.firstName;
-        sizeInCm = newdata.sizeInCm;
+        heightInCm = newdata.heightInCm;
         schoolClassName = newdata.schoolClassName;
         rentedFromDate = newdata.rentedFromDate;
         rentedUntilDate = newdata.rentedUntilDate;
@@ -213,7 +213,7 @@ public class Locker extends JLabel implements Cloneable {
         setAppropriateColor();
     }
 
-    public void setID(String id) {
+    public void setId(String id) {
         setText(this.id = id);
     }
 
@@ -221,15 +221,15 @@ public class Locker extends JLabel implements Cloneable {
         lastName = sirname;
     }
 
-    public void setOwnerName(String name) {
+    public void setFirstName(String name) {
         firstName = name;
     }
 
-    public void setOwnerSize(int size) {
-        sizeInCm = size;
+    public void setHeightInCm(int size) {
+        heightInCm = size;
     }
 
-    public void setClass(String _class) {
+    public void setSchoolClass(String _class) {
         schoolClassName = _class;
     }
 
@@ -241,15 +241,15 @@ public class Locker extends JLabel implements Cloneable {
         rentedUntilDate = untildate;
     }
 
-    public void setContract(boolean hascontract) {
+    public void setHasContract(boolean hascontract) {
         hasContract = hascontract;
     }
 
-    public void setMoney(int money) {
+    public void setPaidAmount(int money) {
         paidAmount = money;
     }
 
-    public void setPrevAmount(int amount) {
+    public void setPreviouslyPaidAmount(int amount) {
         previoulyPaidAmount = amount;
     }
 
@@ -270,7 +270,7 @@ public class Locker extends JLabel implements Cloneable {
         setColor(SELECTED_COLOR);
     }
 
-    public void setLock(String lock) {
+    public void setLockCode(String lock) {
         lockCode = lock;
     }
 
@@ -293,7 +293,7 @@ public class Locker extends JLabel implements Cloneable {
         return id;
     }
 
-    public String getSurname() {
+    public String getLastName() {
         return lastName;
     }
 
@@ -302,18 +302,18 @@ public class Locker extends JLabel implements Cloneable {
     }
 
     public int getOwnerSize() {
-        return sizeInCm;
+        return heightInCm;
     }
 
     public String getOwnerClass() {
         return schoolClassName;
     }
 
-    public String getFromDate() {
+    public String getRentedFromDate() {
         return rentedFromDate;
     }
 
-    public String getUntilDate() {
+    public String getRentedUntilDate() {
         return rentedUntilDate;
     }
 
@@ -321,11 +321,11 @@ public class Locker extends JLabel implements Cloneable {
         return hasContract;
     }
 
-    public int getMoney() {
+    public int getPaidAmount() {
         return paidAmount;
     }
 
-    public int getPrevAmount() {
+    public int getPreviouslyPaidAmount() {
         return previoulyPaidAmount;
     }
 
@@ -337,7 +337,7 @@ public class Locker extends JLabel implements Cloneable {
         return isOutOfOrder;
     }
 
-    public String getLock() {
+    public String getLockCode() {
         return lockCode;
     }
 

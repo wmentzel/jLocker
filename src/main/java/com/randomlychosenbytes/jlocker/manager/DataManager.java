@@ -298,18 +298,18 @@ public class DataManager {
                 case LOCKER_CABINET: {
                     List<Locker> newLockers = mu.getLockerList().stream().map(l -> new Locker(
                                     l.getId(),
-                                    l.getSurname(),
+                                    l.getLastName(),
                                     l.getOwnerName(),
                                     l.getOwnerSize(),
                                     l.getOwnerClass(),
-                                    l.getFromDate(),
-                                    l.getUntilDate(),
+                                    l.getRentedFromDate(),
+                                    l.getRentedUntilDate(),
                                     l.hasContract(),
-                                    l.getMoney(),
-                                    l.getPrevAmount(),
+                                    l.getPaidAmount(),
+                                    l.getPreviouslyPaidAmount(),
                                     l.getCurrentCodeIndex(),
                                     l.getEncryptedCodes(),
-                                    l.getLock(),
+                                    l.getLockCode(),
                                     l.isOutOfOrder(),
                                     l.getNote()
                             )
