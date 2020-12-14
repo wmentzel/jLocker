@@ -1,17 +1,14 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.nonabstractreps
 
-import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Expose
 
-import java.util.List;
-
-public class Settings {
+class Settings {
+    @Expose
+    var lockerOverviewFontSize = 20
 
     @Expose
-    public Integer lockerOverviewFontSize = 20;
+    var numOfBackups = 10
 
     @Expose
-    public Integer numOfBackups = 10;
-
-    @Expose
-    public List<Integer> lockerMinSizes = List.of(0, 0, 140, 150, 175);
+    var lockerMinSizes = listOf(0, 0, 140, 150, 175)
 }

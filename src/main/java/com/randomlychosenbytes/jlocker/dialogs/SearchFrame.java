@@ -366,7 +366,7 @@ public class SearchFrame extends javax.swing.JFrame {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> cols = walks.get(w).getManagementUnitList();
+                    List<ManagementUnit> cols = walks.get(w).getManagementUnits();
 
                     for (int c = 0; c < cols.size(); c++) {
                         List<Locker> lockers = cols.get(c).getLockerList();

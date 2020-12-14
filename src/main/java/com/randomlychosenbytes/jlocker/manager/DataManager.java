@@ -148,7 +148,7 @@ public class DataManager {
 
             File[] files = backupDirectory.listFiles(fileFilter);
 
-            for (int i = 0; i < files.length - settings.numOfBackups; i++) {
+            for (int i = 0; i < files.length - settings.getNumOfBackups(); i++) {
                 out.print("* delete backup file: \"" + files[i].getName() + "\"...");
 
                 if (files[i].delete()) {
@@ -210,8 +210,8 @@ public class DataManager {
             JsonRoot root = gson.fromJson(reader, JsonRoot.class);
 
             if (superUser == null && restrictedUser == null) {
-                superUser = root.superUser;
-                restrictedUser = root.restrictedUser;
+                superUser = root.getSuperUser();
+                restrictedUser = root.getRestrictedUser();
             }
 
             if (loadAsSuperUser) {
@@ -220,9 +220,9 @@ public class DataManager {
                 currentUser = restrictedUser;
             }
 
-            encryptedBuildingsBase64 = root.encryptedBuildingsBase64;
-            tasks = root.tasks;
-            settings = root.settings;
+            encryptedBuildingsBase64 = root.getEncryptedBuildingsBase64();
+            tasks = root.getTasks();
+            settings = root.getSettings();
 
             out.println("successful");
             mainFrame.setStatusMessage("Laden erfolgreich");
@@ -241,7 +241,7 @@ public class DataManager {
                 List<Walk> walks = floor.getWalks();
 
                 for (Walk walk : walks) {
-                    List<ManagementUnit> mus = walk.getManagementUnitList();
+                    List<ManagementUnit> mus = walk.getManagementUnits();
 
                     for (ManagementUnit mu : mus) {
                         List<Locker> lockers = mu.getLockerList();
@@ -385,7 +385,7 @@ public class DataManager {
     }
 
     public List<ManagementUnit> getCurManagmentUnitList() {
-        return getCurWalk().getManagementUnitList();
+        return getCurWalk().getManagementUnits();
     }
 
     public ManagementUnit getCurManamentUnit() {

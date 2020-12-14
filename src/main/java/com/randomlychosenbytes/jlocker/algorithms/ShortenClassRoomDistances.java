@@ -163,7 +163,7 @@ public class ShortenClassRoomDistances {
      */
     public final String execute() {
         StringBuilder statusMessage = new StringBuilder();
-        List<Integer> minSizes = settings.lockerMinSizes;
+        List<Integer> minSizes = settings.getLockerMinSizes();
 
         statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size()).append(" Schließfächer der Klasse ").append(className).append("\n");
         statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size()).append(" freie Schließfächer gefunden!\n\n");
@@ -268,7 +268,7 @@ public class ShortenClassRoomDistances {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                     String prevMUnitID = null;
 
@@ -345,7 +345,7 @@ public class ShortenClassRoomDistances {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                     for (int m = 0; m < managementUnits.size(); m++) {
                         ManagementUnit munit = managementUnits.get(m);
@@ -379,7 +379,7 @@ public class ShortenClassRoomDistances {
             List<Walk> walks = floors.get(f).getWalks();
 
             for (int w = 0; w < walks.size(); w++) {
-                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                 for (int m = 0; m < managementUnits.size(); m++) {
                     ManagementUnit managementUnit = managementUnits.get(m);
@@ -408,7 +408,7 @@ public class ShortenClassRoomDistances {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                     for (int m = 0; m < managementUnits.size(); m++) {
                         ManagementUnit munit = managementUnits.get(m);
@@ -445,7 +445,7 @@ public class ShortenClassRoomDistances {
             List<Walk> walks = floors.get(f).getWalks();
 
             for (int w = 0; w < walks.size(); w++) {
-                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                 for (int m = 0; m < managementUnits.size(); m++) {
                     ManagementUnit managementUnit = managementUnits.get(m);

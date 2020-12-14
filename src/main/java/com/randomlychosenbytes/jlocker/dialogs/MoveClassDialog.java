@@ -68,7 +68,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnitList();
+                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
 
                     for (int m = 0; m < managementUnits.size(); m++) {
                         ManagementUnit munit = managementUnits.get(m);

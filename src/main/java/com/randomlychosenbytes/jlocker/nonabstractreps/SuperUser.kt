@@ -1,20 +1,12 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.nonabstractreps
 
-import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Expose
+import com.randomlychosenbytes.jlocker.manager.generateAndEncryptKey
 
-import static com.randomlychosenbytes.jlocker.manager.UtilsKt.generateAndEncryptKey;
-
-public class SuperUser extends User {
-
+class SuperUser(password: String) : User(
+    password, generateAndEncryptKey(password)
+) {
     @Expose
-    private String encSuperUMasterKeyBase64;
+    val encryptedSuperUMasterKeyBase64: String = generateAndEncryptKey(password)
 
-    public String getEncryptedSuperUMasterKeyBase64() {
-        return encSuperUMasterKeyBase64;
-    }
-
-    public SuperUser(String password) {
-        super(password, generateAndEncryptKey(password));
-        this.encSuperUMasterKeyBase64 = generateAndEncryptKey(password);
-    }
 }

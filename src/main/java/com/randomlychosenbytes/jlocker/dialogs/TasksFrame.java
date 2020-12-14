@@ -49,8 +49,8 @@ public class TasksFrame extends javax.swing.JFrame {
             Task task = tasks.get(numTasks - t - 1);
 
             List v = new LinkedList();
-            v.add(task.getSDate());
-            v.add(task.getSDescription());
+            v.add(task.getCreationDate());
+            v.add(task.getDescription());
             v.add(task.isDone());
             tableData.add(v);
         }

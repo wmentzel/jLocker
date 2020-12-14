@@ -1,25 +1,8 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.nonabstractreps
 
-import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Expose
 
-import java.util.LinkedList;
-import java.util.List;
-
-public class Floor extends Entity {
-
+class Floor(name: String) : Entity(name) {
     @Expose
-    private List<Walk> walks;
-
-    public Floor(String name) {
-        this.name = name;
-        walks = new LinkedList<>();
-    }
-
-    public void setWalks(List<Walk> walks) {
-        this.walks = walks;
-    }
-
-    public List<Walk> getWalks() {
-        return walks;
-    }
+    var walks: List<Walk> = mutableListOf()
 }

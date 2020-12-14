@@ -1,12 +1,8 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.nonabstractreps
 
-import javax.crypto.SecretKey;
+import com.randomlychosenbytes.jlocker.manager.encryptKeyWithString
+import javax.crypto.SecretKey
 
-import static com.randomlychosenbytes.jlocker.manager.UtilsKt.encryptKeyWithString;
-
-public class RestrictedUser extends User {
-
-    public RestrictedUser(String password, SecretKey key) {
-        super(password, encryptKeyWithString(key, password));
-    }
-}
+class RestrictedUser(password: String, key: SecretKey) : User(
+    password, encryptKeyWithString(key, password)
+)

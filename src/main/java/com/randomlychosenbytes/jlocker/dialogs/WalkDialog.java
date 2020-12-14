@@ -114,8 +114,8 @@ public class WalkDialog extends javax.swing.JDialog {
             dataManager.getCurWalkList().add(new Walk(name));
             dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
 
-            dataManager.getCurWalk().getManagementUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
-            dataManager.setCurrentMUnitIndex(dataManager.getCurWalk().getManagementUnitList().size() - 1);
+            dataManager.getCurWalk().getManagementUnits().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+            dataManager.setCurrentMUnitIndex(dataManager.getCurWalk().getManagementUnits().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }

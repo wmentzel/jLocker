@@ -331,7 +331,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                             List<Walk> walks = floor.getWalks();
 
                             for (Walk walk : walks) {
-                                List<ManagementUnit> mus = walk.getManagementUnitList();
+                                List<ManagementUnit> mus = walk.getManagementUnits();
 
                                 for (ManagementUnit mu : mus) {
                                     List<Locker> lockers = mu.getLockerList();

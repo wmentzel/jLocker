@@ -1,17 +1,8 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.nonabstractreps
 
-import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Expose
 
-public class Entity {
-
+open class Entity(
     @Expose
-    protected String name;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
+    var name: String
+)

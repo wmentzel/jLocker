@@ -9,14 +9,11 @@ import java.util.List;
 
 public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
     private final List<JTextField> textFields = new LinkedList<>();
-    private final List<Integer> minSizes = DataManager.getInstance().getSettings().lockerMinSizes;
-    private final DataManager dataManager;
+    private final List<Integer> minSizes = DataManager.getInstance().getSettings().getLockerMinSizes();
 
     public SetLockerMinimumSizesDialog(JDialog parent, DataManager dataManager, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // focus in the middle
         setLocationRelativeTo(null);
