@@ -9,6 +9,7 @@ import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.abs
 
 class ShortenClassRoomDistances(
     private val buildings: List<Building>,
@@ -44,7 +45,9 @@ class ShortenClassRoomDistances(
         for (lockerEntityCoordinates in allLockersEntityCoordinatesList) {
             if (lockerEntityCoordinates.entity.isFree) {
                 freeLockersEntityCoordinatesList.add(lockerEntityCoordinates)
-            } else if (lockerEntityCoordinates.entity.schoolClassName == className) {
+            }
+
+            if (lockerEntityCoordinates.entity.schoolClassName == className) {
                 classLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
         }
@@ -63,12 +66,12 @@ class ShortenClassRoomDistances(
         unreachableLockers = mutableListOf()
         for (freeLockerECoord in freeLockersEntityCoordinatesList) {
             val dist = getDistance(freeLockerECoord, classRoomNodeId)
-            if (dist != -1) {
-                freeLockerToDistancePairList.add(Pair(freeLockerECoord, dist))
-            } else {
-                // Create list that contains the ids of all lockers that cant 
+            if (dist == -1) {
+                // Create list that contains the ids of all lockers that cant
                 // be reached from the classroom
                 unreachableLockers.add(freeLockerECoord.entity.id)
+            } else {
+                freeLockerToDistancePairList.add(Pair(freeLockerECoord, dist))
             }
         }
         freeLockerToDistancePairList.sortWith(EntityDistanceComparator())
@@ -79,12 +82,12 @@ class ShortenClassRoomDistances(
         //
         for (classLockerECoord in classLockersEntityCoordinatesList) {
             val distance = getDistance(classLockerECoord, classRoomNodeId)
-            if (distance != -1) {
-                classLockerToDistancePairList.add(Pair(classLockerECoord, distance))
-            } else {
+            if (distance == -1) {
                 // Create a list that contains the ids of all lockers that can't
                 // be reached from the classroom
                 unreachableLockers.add(classLockerECoord.entity.id)
+            } else {
+                classLockerToDistancePairList.add(Pair(classLockerECoord, distance))
             }
         }
         classLockerToDistancePairList.sortWith(EntityDistanceComparator())
@@ -105,14 +108,18 @@ class ShortenClassRoomDistances(
     fun execute(): String {
         val statusMessage = StringBuilder()
 
-        statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size).append(" Schließfächer der Klasse ")
-            .append(className).append("\n")
-        statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size)
-            .append(" freie Schließfächer gefunden!\n\n")
-        statusMessage.append("Es wurden ").append(lockerMinSizes.size).append(" Minmalgrößen (cm) angelegt!\n")
+        statusMessage.append(
+            """
+            |Es gibt ${classLockerToDistancePairList.size} Schließfächer der Klasse $className\n
+            |Es wurden ${freeLockerToDistancePairList.size} freie Schließfächer gefunden!\n\n
+            |Es wurden ${lockerMinSizes.size} Minmalgrößen (cm) angelegt!\n
+            """.trimMargin()
+        )
+
         for (size in lockerMinSizes) {
-            statusMessage.append(size).append(" ")
+            statusMessage.append("$size ")
         }
+
         statusMessage.append("\n\n")
         for (classLockerToDistancePair in classLockerToDistancePairList) {
             // search until you find a free locker that is nearer and suits the pupils size
@@ -128,35 +135,35 @@ class ShortenClassRoomDistances(
                     val index = freeLockerToDistancePair.first.lValue
 
                     // if no minimum size exists for this locker row, don't move
-                    if (index < lockerMinSizes.size) {
-                        // TODO lowest locker has coordinate 4, highest coordinate 0...
-                        // this doesn't make sense
-                        val lockerMinSize = lockerMinSizes[Math.abs(index - (lockerMinSizes.size - 1))]
-                        if (srcLocker.heightInCm >= lockerMinSize) {
-                            statusMessage.append(srcLocker.id).append(" -> ").append(destLocker.id).append("\n")
-                            statusMessage.append("Besitzergröße: ")
-                                .append(classLockerToDistancePair.first.entity.heightInCm).append(" cm\n")
-                            statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n")
-                            val distanceReduction =
-                                (1.0f - freeLockerToDistancePair.second / classLockerToDistancePair.second
-                                    .toFloat()) * 100
-                            val df = DecimalFormat("##.#")
-                            statusMessage.append("Entfernung verkürzt um: ")
-                                .append(df.format(distanceReduction.toDouble())).append("%\n\n")
-                            moveLocker(srcLocker, destLocker, false)
-                            freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
-                            val taskText = ("Klassenumzug" + " ("
-                                    + destLocker.schoolClassName + "): "
-                                    + srcLocker.id + " -> "
-                                    + destLocker.id +
-                                    " Inhaber(in) "
-                                    + destLocker.firstName
-                                    + " " + destLocker.lastName)
-
-                            createTask(taskText)
-                            break
-                        }
+                    if (index >= lockerMinSizes.size) {
+                        continue
                     }
+                    // TODO lowest locker has coordinate 4, highest coordinate 0...
+                    // this doesn't make sense
+                    val lockerMinSize = lockerMinSizes[abs(index - (lockerMinSizes.size - 1))]
+
+                    if (srcLocker.heightInCm < lockerMinSize) {
+                        continue
+                    }
+
+                    statusMessage.append(srcLocker.id).append(" -> ").append(destLocker.id).append("\n")
+                    statusMessage.append("Besitzergröße: ")
+                        .append(classLockerToDistancePair.first.entity.heightInCm).append(" cm\n")
+                    statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n")
+
+                    val distanceReduction =
+                        (1.0f - freeLockerToDistancePair.second / classLockerToDistancePair.second
+                            .toFloat()) * 100
+                    val df = DecimalFormat("##.#")
+                    statusMessage.append("Entfernung verkürzt um: ")
+                        .append(df.format(distanceReduction.toDouble())).append("%\n\n")
+                    moveLocker(srcLocker, destLocker, false)
+                    freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
+                    val taskText = "Klassenumzug (${destLocker.schoolClassName} ): ${srcLocker.id} -> "
+                    "${destLocker.id} Inhaber(in) ${destLocker.firstName} ${destLocker.lastName}"
+
+                    createTask(taskText)
+                    break
                 }
             }
         }
@@ -213,7 +220,7 @@ class ShortenClassRoomDistances(
 
                                 // fill locker in the list containing all
                                 // locker coordinates
-                                allLockersEntityCoordinatesList.add(EntityCoordinates(locker, b, f, w, m, l))
+                                allLockersEntityCoordinatesList.add(lockerEntityCoordinates)
                             }
                         }
                     }
@@ -231,7 +238,7 @@ class ShortenClassRoomDistances(
             for (f in floors.indices) {
                 val walks = floors[f].walks
 
-                // we start with w = 1 because we connect every walk with the 
+                // we start with w = 1 because we connect every walk with the
                 // walks before
                 for (w in 1 until walks.size) {
                     val lastMUnitIndex = walks[w - 1].managementUnits.size - 1
@@ -358,7 +365,7 @@ class ShortenClassRoomDistances(
         val shortest = DijkstraShortestPath(weightedGraph, lockerID, classRoomNodeId)
         val path = shortest.path
         return path?.weight?.toInt() ?: -1
-        // not reachable 
+        // not reachable
     }
 
     private fun createNodeId(b: Int, f: Int, w: Int, m: Int) = "$b-$f-$w-$m"
