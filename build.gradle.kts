@@ -1,6 +1,6 @@
 plugins {
-    java
     application
+    kotlin("jvm") version "1.4.20"
 }
 
 application {
@@ -24,9 +24,17 @@ dependencies {
 }
 
 tasks {
+    "wrapper"(Wrapper::class) {
+        gradleVersion = "6.3"
+    }
+
     withType<Jar> {
         manifest {
             attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.main.MainFrame"
         }
+    }
+
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
     }
 }
