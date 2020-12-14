@@ -114,7 +114,7 @@ public class SearchFrame extends javax.swing.JFrame {
             dataManager.getCurLocker().setAppropriateColor();
 
             // reset
-            dataManager.setCurrentMUnitIndex(iMUnitIndex);
+            dataManager.setCurrentManagementUnitIndex(iMUnitIndex);
             dataManager.setCurrentLockerIndex(iLockerIndex);
             dataManager.getCurLocker().setSelected();
 

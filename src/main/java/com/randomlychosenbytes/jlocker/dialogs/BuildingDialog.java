@@ -108,7 +108,7 @@ public class BuildingDialog extends javax.swing.JDialog {
             dataManager.setCurrentWalkIndex(0);
 
             dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
-            dataManager.setCurrentMUnitIndex(dataManager.getCurManagmentUnitList().size() - 1);
+            dataManager.setCurrentManagementUnitIndex(dataManager.getCurManagmentUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }

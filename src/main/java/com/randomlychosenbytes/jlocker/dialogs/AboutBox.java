@@ -115,7 +115,7 @@ public class AboutBox extends javax.swing.JDialog {
 
         centerPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 5));
 
-        appVersionLabel.setText(DataManager.getInstance().getAppVersion());
+        appVersionLabel.setText(DataManager.INSTANCE.getAppVersion());
         centerPanel.add(appVersionLabel);
 
         appVendorLabel.setText("Willi Mentzel");

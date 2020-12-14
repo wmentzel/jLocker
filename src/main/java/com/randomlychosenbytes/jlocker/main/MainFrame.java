@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.LinkedList;
@@ -27,11 +28,7 @@ public class MainFrame extends javax.swing.JFrame {
     private TasksFrame tasksFrame;
     Timer timer;
 
-    /**
-     * In the future the DataManager class won't be a singleton anymore.
-     * The reference will be passed from object to object.
-     */
-    DataManager dataManager = DataManager.getInstance();
+    DataManager dataManager = DataManager.INSTANCE;
 
     public MainFrame() {
         initComponents();
@@ -51,7 +48,7 @@ public class MainFrame extends javax.swing.JFrame {
         // Ask to save changes on exit
         //
         addWindowListener(
-                new java.awt.event.WindowAdapter() {
+                new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent winEvt) {
                         if (dataManager.hasDataChanged()) {
@@ -134,7 +131,7 @@ public class MainFrame extends javax.swing.JFrame {
                 // always set a standard locker as selected
                 if (!mu.getLockerList().isEmpty() && !firstLockerFound) {
                     mu.getLockerList().get(0).setSelected();
-                    dataManager.setCurrentMUnitIndex(i);
+                    dataManager.setCurrentManagementUnitIndex(i);
                     dataManager.setCurrentLockerIndex(0);
                     firstLockerFound = true;
                 } else {
@@ -144,7 +141,7 @@ public class MainFrame extends javax.swing.JFrame {
         }  // for
 
 
-        //List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+        //List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
 
         int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
 
@@ -315,13 +312,13 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public final void setComboBoxes2CurIndizes() {
         initializeComboBox(dataManager.getBuildingList(), buildingComboBox);
-        buildingComboBox.setSelectedIndex(dataManager.getCurBuildingIndex());
+        buildingComboBox.setSelectedIndex(dataManager.getCurrentBuildingIndex());
 
         initializeComboBox(dataManager.getCurFloorList(), floorComboBox);
-        floorComboBox.setSelectedIndex(dataManager.getCurFloorIndex());
+        floorComboBox.setSelectedIndex(dataManager.getCurrentFloorIndex());
 
         initializeComboBox(dataManager.getCurWalkList(), walkComboBox);
-        walkComboBox.setSelectedIndex(dataManager.getCurWalkIndex());
+        walkComboBox.setSelectedIndex(dataManager.getCurrentWalkIndex());
 
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
         removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);
@@ -1036,12 +1033,12 @@ public class MainFrame extends javax.swing.JFrame {
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie dieses Gebäude wirklich löschen?", "Gebäude löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.getBuildingList().remove(dataManager.getCurBuildingIndex());
+            dataManager.getBuildingList().remove(dataManager.getCurrentBuildingIndex());
 
             dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
             dataManager.setCurrentFloorIndex(0);
             dataManager.setCurrentWalkIndex(0);
-            dataManager.setCurrentMUnitIndex(0);
+            dataManager.setCurrentManagementUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
 
             setComboBoxes2CurIndizes();
@@ -1052,11 +1049,11 @@ public class MainFrame extends javax.swing.JFrame {
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diese Etage wirklich löschen?", "Etage löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.getCurFloorList().remove(dataManager.getCurFloorIndex());
+            dataManager.getCurFloorList().remove(dataManager.getCurrentFloorIndex());
 
             dataManager.setCurrentFloorIndex(dataManager.getCurFloorList().size() - 1);
             dataManager.setCurrentWalkIndex(0);
-            dataManager.setCurrentMUnitIndex(0);
+            dataManager.setCurrentManagementUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
 
             setComboBoxes2CurIndizes();
@@ -1067,9 +1064,9 @@ public class MainFrame extends javax.swing.JFrame {
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen Gang wirklich löschen?", "Gang löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.getCurWalkList().remove(dataManager.getCurWalkIndex());
+            dataManager.getCurWalkList().remove(dataManager.getCurrentWalkIndex());
             dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
-            dataManager.setCurrentMUnitIndex(0);
+            dataManager.setCurrentManagementUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
 
             setComboBoxes2CurIndizes();
@@ -1079,7 +1076,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveButtonActionPerformed
     {//GEN-HEADEREND:event_saveButtonActionPerformed
         setLockerInformation();
-        dataManager.setDataChanged(true);
+        dataManager.setHasDataChanged(true);
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
@@ -1092,7 +1089,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void emptyButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_emptyButtonActionPerformed
     {//GEN-HEADEREND:event_emptyButtonActionPerformed
-        dataManager.setDataChanged(true);
+        dataManager.setHasDataChanged(true);
 
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie dieses Schließfach wirklich leeren?", "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -1180,7 +1177,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void walkComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt)//GEN-FIRST:event_walkComboBoxPopupMenuWillBecomeInvisible
     {//GEN-HEADEREND:event_walkComboBoxPopupMenuWillBecomeInvisible
         dataManager.setCurrentWalkIndex(walkComboBox.getSelectedIndex());
-        dataManager.setCurrentMUnitIndex(0);
+        dataManager.setCurrentManagementUnitIndex(0);
 
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
         removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);

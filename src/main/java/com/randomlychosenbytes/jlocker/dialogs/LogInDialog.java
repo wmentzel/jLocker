@@ -38,7 +38,7 @@ public class LogInDialog extends javax.swing.JDialog {
         });
 
         // Check if backup directory exists. If not, create it.
-        loadBackupButton.setEnabled(DataManager.getInstance().getBackupDirectory().exists());
+        loadBackupButton.setEnabled(DataManager.INSTANCE.getBackupDirectory().exists());
     }
 
     /**
@@ -170,7 +170,7 @@ public class LogInDialog extends javax.swing.JDialog {
 
     private void loadBackupButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_loadBackupButtonActionPerformed
     {//GEN-HEADEREND:event_loadBackupButtonActionPerformed
-        final JFileChooser fc = new JFileChooser(DataManager.getInstance().getBackupDirectory());
+        final JFileChooser fc = new JFileChooser(DataManager.INSTANCE.getBackupDirectory());
 
         FileFilter filter = new FileFilter() {
             @Override

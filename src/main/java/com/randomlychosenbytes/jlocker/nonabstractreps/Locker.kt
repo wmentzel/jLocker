@@ -43,13 +43,9 @@ class Locker(
     var isSelected = false
         private set
 
-    fun getCodes(sukey: SecretKey): Array<String?> {
-        val decCodes = arrayOfNulls<String>(5)
-        for (i in 0..4) {
-            decCodes[i] = getCode(i, sukey)
-        }
-        return decCodes
-    }
+    fun getCodes(sukey: SecretKey) = (0..4).map { i ->
+        getCode(i, sukey)
+    }.toTypedArray()
 
     private fun getCode(i: Int, sukey: SecretKey): String {
         if (encryptedCodes == null) {
@@ -170,14 +166,13 @@ class Locker(
      */
     private inner class MouseListener : MouseAdapter() {
         override fun mouseReleased(e: MouseEvent) {
-            val dm = DataManager.getInstance()
-            if (dm.curLockerList.size > 0) {
-                dm.curLocker.setAppropriateColor()
+            if (DataManager.curLockerList.size > 0) {
+                DataManager.curLocker.setAppropriateColor()
             }
             val locker = e.source as Locker
-            dm.curWalk.setCurLockerIndex(locker)
+            DataManager.curWalk.setCurLockerIndex(locker)
             locker.setSelected()
-            DataManager.getInstance().mainFrame.showLockerInformation()
+            DataManager.mainFrame.showLockerInformation()
         }
     }
 

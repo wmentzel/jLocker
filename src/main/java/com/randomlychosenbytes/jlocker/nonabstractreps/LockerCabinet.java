@@ -28,7 +28,7 @@ public class LockerCabinet extends JPanel {
 
         lockers.add(0, locker);
 
-        DataManager.getInstance().updateAllCabinets();
+        DataManager.INSTANCE.updateAllCabinets();
 
         remLockerLabel.setEnabled(true);
     }
@@ -131,7 +131,7 @@ public class LockerCabinet extends JPanel {
 
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.remove(0); // remove first
-                DataManager.getInstance().updateAllCabinets();
+                DataManager.INSTANCE.updateAllCabinets();
             }
         }
     }//GEN-LAST:event_remLockerLabelMouseReleased

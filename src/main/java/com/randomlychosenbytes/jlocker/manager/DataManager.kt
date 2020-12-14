@@ -1,141 +1,102 @@
-package com.randomlychosenbytes.jlocker.manager;
+package com.randomlychosenbytes.jlocker.manager
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import com.randomlychosenbytes.jlocker.main.MainFrame;
-import com.randomlychosenbytes.jlocker.nonabstractreps.*;
-
-import javax.crypto.SecretKey;
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
-import static com.randomlychosenbytes.jlocker.manager.UtilsKt.encrypt;
-import static com.randomlychosenbytes.jlocker.manager.UtilsKt.unsealAndDeserializeBuildings;
-import static java.lang.System.out;
+import com.google.gson.GsonBuilder
+import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
+import com.randomlychosenbytes.jlocker.main.MainFrame
+import com.randomlychosenbytes.jlocker.nonabstractreps.*
+import java.io.File
+import java.io.FileFilter
+import java.io.FileReader
+import java.io.FileWriter
+import java.util.*
+import java.util.stream.Collectors
+import javax.crypto.SecretKey
 
 /**
  * DataManager is a singleton class. There can only be one instance of this
  * class at any time and it has to be accessed from anywhere. This may not be
  * the best design but it stays that way for the time being.
  */
-public class DataManager {
-
-    final private static DataManager instance = new DataManager();
-
-    public static DataManager getInstance() {
-        return instance;
-    }
-
+object DataManager {
     /**
      * TODO remove
      * instance of the MainFrame object is need to call the setStatusMessage method
      */
-    MainFrame mainFrame;
+    lateinit var mainFrame: MainFrame
 
-    private boolean hasDataChanged = false;
+    val ressourceFile: File
+    val backupDirectory: File
 
-    private File resourceFile;
-    private File backupDirectory;
+    var hasDataChanged = false
+    var buildingList: List<Building> = mutableListOf()
+        private set
 
-    private List<Building> buildings = new LinkedList<>();
+    private lateinit var restrictedUser: RestrictedUser
+    private lateinit var superUser: SuperUser
+    lateinit var currentUser: User
+        private set;
 
-    private RestrictedUser restrictedUser;
-    private SuperUser superUser;
+    lateinit var tasks: MutableList<Task>
 
-    private List<Task> tasks;
-    private Settings settings;
+    var settings: Settings = Settings()
+        private set
 
-    private String encryptedBuildingsBase64;
+    private lateinit var encryptedBuildingsBase64: String
 
-    private int currentBuildingIndex = 0;
-    private int currentFloorIndex = 0;
-    private int currentWalkIndex = 0;
-    private int currentColumnIndex = 0;
-    private int currentLockerIndex = 0;
-    private User currentUser;
+    var currentBuildingIndex = 0
+    var currentFloorIndex = 0
+    var currentWalkIndex = 0
+    var currentManagementUnitIndex = 0
+    var currentLockerIndex = 0
 
-    private SecretKey userMasterKey;
-    private SecretKey superUserMasterKey;
 
-    public void setNewUsers(SuperUser superUser, RestrictedUser restrictedUser, SecretKey userMasterKey, SecretKey superUserMasterKey) {
-        this.superUser = superUser;
-        this.restrictedUser = restrictedUser;
+    lateinit var userMasterKey: SecretKey
+    lateinit var superUserMasterKey: SecretKey
 
-        this.userMasterKey = userMasterKey;
-        this.superUserMasterKey = superUserMasterKey;
+    private val bundle = ResourceBundle.getBundle("App")
 
-        currentUser = superUser;
+    fun setNewUsers(
+        superUser: SuperUser,
+        restrictedUser: RestrictedUser,
+        userMasterKey: SecretKey,
+        superUserMasterKey: SecretKey
+    ) {
+        this.superUser = superUser
+        this.restrictedUser = restrictedUser
+        this.userMasterKey = userMasterKey
+        this.superUserMasterKey = superUserMasterKey
+        currentUser = superUser
     }
-
-    public SecretKey getUserMasterKey() {
-        return userMasterKey;
-    }
-
-    public void setUserMasterKey(SecretKey userMasterKey) {
-        this.userMasterKey = userMasterKey;
-    }
-
-    public SecretKey getSuperUserMasterKey() {
-        return superUserMasterKey;
-    }
-
-    public void setSuperUserMasterKey(SecretKey superUserMasterKey) {
-        this.superUserMasterKey = superUserMasterKey;
-    }
-
-    private ResourceBundle bundle = ResourceBundle.getBundle("App");
-
-    public DataManager() {
-
-        URL url = MainFrame.class.getProtectionDomain().getCodeSource().getLocation();
-        File sHomeDir = new File(url.getFile());
-
-        if (!sHomeDir.isDirectory()) {
-            sHomeDir = sHomeDir.getParentFile();
-        }
-
-        resourceFile = new File(sHomeDir, "jlocker.json");
-        backupDirectory = new File(sHomeDir, "Backup");
-
-        out.println("* program directory is: \"" + sHomeDir + "\"");
-        settings = new Settings();
-    }
-
-    /* *************************************************************************
-        Load and save methods
-    ***************************************************************************/
 
     /**
      * Saves all data and creates a backup file with a time stamp.
      */
-    public void saveAndCreateBackup() {
-
-        saveData(resourceFile); // save to file jlocker.dat
+    fun saveAndCreateBackup() {
+        saveData(ressourceFile) // save to file jlocker.dat
 
         // Check if backup directory exists. If not, create it.
         if (!backupDirectory.exists() && !backupDirectory.mkdir()) {
-            out.println("Backup failed!");
+            println("Backup failed!")
         }
 
         //
         // Check if a buildings.dat file exists to copy it to the backup directory.
         //
-        Calendar today = new GregorianCalendar();
-        today.setLenient(false);
-        today.getTime();
-
-        File backupFile = new File(backupDirectory, String.format("jlocker-%04d-%02d-%02d.dat",
-                today.get(Calendar.YEAR),
-                today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH)));
+        val today: Calendar = GregorianCalendar()
+        today.isLenient = false
+        today.time
+        val backupFile = File(
+            backupDirectory, String.format(
+                "jlocker-%04d-%02d-%02d.dat",
+                today[Calendar.YEAR],
+                today[Calendar.MONTH],
+                today[Calendar.DAY_OF_MONTH]
+            )
+        )
 
         // if a backup from this day doesnt exist, create one!
         if (!backupFile.exists()) {
-            saveData(backupFile);
+            saveData(backupFile)
         }
 
         //
@@ -144,53 +105,41 @@ public class DataManager {
         if (backupDirectory.exists()) { // if there are not backups yet, we dont have to delete any files
 
             // This filter only returns files (and not directories)
-            FileFilter fileFilter = file -> !file.isDirectory();
-
-            File[] files = backupDirectory.listFiles(fileFilter);
-
-            for (int i = 0; i < files.length - settings.getNumOfBackups(); i++) {
-                out.print("* delete backup file: \"" + files[i].getName() + "\"...");
-
+            val fileFilter = FileFilter { file: File -> !file.isDirectory }
+            val files = backupDirectory.listFiles(fileFilter)
+            for (i in 0 until files.size - settings.numOfBackups) {
+                print("* delete backup file: \"" + files[i].name + "\"...")
                 if (files[i].delete()) {
-                    out.println(" successful!");
+                    println(" successful!")
                 } else {
-                    out.println(" failed!");
+                    println(" failed!")
                 }
             }
         }
     }
 
-    private void saveData(File file) {
+    private fun saveData(file: File) {
+        print("* saving " + file.name + "... ")
 
-        out.print("* saving " + file.getName() + "... ");
-
-        try {
-
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            encryptedBuildingsBase64 = encrypt(gson.toJson(buildings), userMasterKey);
-
-            try (Writer writer = new FileWriter(file)) {
-
-                gson.toJson(new JsonRoot(
-                        encryptedBuildingsBase64,
-                        settings,
-                        tasks,
-                        superUser,
-                        restrictedUser
-                ), writer);
-
-                out.println("successful");
-                mainFrame.setStatusMessage("Speichern erfolgreich");
-            }
-        } catch (Exception ex) {
-            out.println("failed");
-            mainFrame.setStatusMessage("Speichern fehlgeschlagen");
-            ex.printStackTrace();
+        val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+        encryptedBuildingsBase64 = encrypt(gson.toJson(buildingList), userMasterKey)
+        FileWriter(file).use { writer ->
+            gson.toJson(
+                JsonRoot(
+                    encryptedBuildingsBase64,
+                    settings,
+                    tasks,
+                    superUser,
+                    restrictedUser
+                ), writer
+            )
+            println("successful")
+            mainFrame.setStatusMessage("Speichern erfolgreich")
         }
     }
 
-    public void loadDefaultFile(boolean loadAsSuperUser) {
-        loadFromCustomFile(resourceFile, loadAsSuperUser);
+    fun loadDefaultFile(loadAsSuperUser: Boolean) {
+        loadFromCustomFile(ressourceFile, loadAsSuperUser)
     }
 
     /**
@@ -199,280 +148,145 @@ public class DataManager {
      * to load backup files. If you want to load the current "jlocker.dat" file
      * please use loadData() method instead.
      */
-    public void loadFromCustomFile(File file, boolean loadAsSuperUser) {
+    fun loadFromCustomFile(file: File, loadAsSuperUser: Boolean) {
+        print("* reading " + file.name + "... ")
+        val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
-        out.print("* reading " + file.getName() + "... ");
+        FileReader(file).use { reader ->
+            val root = gson.fromJson(reader, JsonRoot::class.java)
 
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            superUser = root.superUser
+            restrictedUser = root.restrictedUser
 
-        try (Reader reader = new FileReader(file)) {
-
-            JsonRoot root = gson.fromJson(reader, JsonRoot.class);
-
-            if (superUser == null && restrictedUser == null) {
-                superUser = root.getSuperUser();
-                restrictedUser = root.getRestrictedUser();
-            }
-
-            if (loadAsSuperUser) {
-                currentUser = superUser;
+            currentUser = if (loadAsSuperUser) {
+                superUser
             } else {
-                currentUser = restrictedUser;
+                restrictedUser
             }
-
-            encryptedBuildingsBase64 = root.getEncryptedBuildingsBase64();
-            tasks = root.getTasks();
-            settings = root.getSettings();
-
-            out.println("successful");
-            mainFrame.setStatusMessage("Laden erfolgreich");
-        } catch (Exception ex) {
-            out.println("failed");
-            mainFrame.setStatusMessage("Laden fehlgeschlagen");
-            ex.printStackTrace();
+            encryptedBuildingsBase64 = root.encryptedBuildingsBase64
+            tasks = root.tasks.toMutableList()
+            settings = root.settings
+            println("successful")
+            mainFrame.setStatusMessage("Laden erfolgreich")
         }
     }
 
-    public Locker getLockerByID(String id) {
-        for (Building building : buildings) {
-            List<Floor> floors = building.getFloors();
-
-            for (Floor floor : floors) {
-                List<Walk> walks = floor.getWalks();
-
-                for (Walk walk : walks) {
-                    List<ManagementUnit> mus = walk.getManagementUnits();
-
-                    for (ManagementUnit mu : mus) {
-                        List<Locker> lockers = mu.getLockerList();
-
-                        for (Locker locker : lockers) {
-                            if (locker.getId().equals(id)) {
-                                return locker;
+    fun getLockerByID(id: String): Locker? {
+        for (building in buildingList) {
+            val floors: List<Floor> = building.floors
+            for (floor in floors) {
+                val walks: List<Walk> = floor.walks
+                for (walk in walks) {
+                    val mus: List<ManagementUnit> = walk.managementUnits
+                    for (mu in mus) {
+                        val lockers = mu.lockerList
+                        for (locker in lockers) {
+                            if (locker.id == id) {
+                                return locker
                             }
                         }
                     }
                 }
             }
         }
-
-        return null;
+        return null
     }
 
     /**
      * Moves a student from one locker to another.
      */
-    public void moveLockers(Locker sourceLocker, Locker destLocker, boolean withCodes) {
-        try {
-            Locker destCopy = destLocker.getCopy();
-
-            destLocker.setTo(sourceLocker);
-            sourceLocker.setTo(destCopy);
-
-            if (withCodes) {
-                destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey);
-                sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey);
-            }
-        } catch (Exception e) {
+    fun moveLockers(sourceLocker: Locker, destLocker: Locker, withCodes: Boolean) {
+        val destCopy = destLocker.copy
+        destLocker.setTo(sourceLocker)
+        sourceLocker.setTo(destCopy)
+        if (withCodes) {
+            destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey)
+            sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey)
         }
     }
 
-    public void updateAllCabinets() {
-        List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
-
-        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
-
-        mus.stream()
-                .map(ManagementUnit::getLockerCabinet)
-                .forEach(c -> c.updateCabinet(maxRows));
+    fun updateAllCabinets() {
+        val mus: List<ManagementUnit> = curManagmentUnitList
+        val maxRows = mus.map { mu: ManagementUnit -> mu.lockerCabinet.lockers.size }.maxOrNull() ?: 0
+        mus.map { obj: ManagementUnit -> obj.lockerCabinet }.forEach { c: LockerCabinet -> c.updateCabinet(maxRows) }
     }
 
-
-    public List<ManagementUnit> reinstantiateManagementUnits(List<ManagementUnit> managementUnits) {
-        return managementUnits.stream().map(mu -> {
-
-            ManagementUnit newMu = new ManagementUnit(mu.type);
-
-            switch (mu.type) {
-                case ROOM: {
-                    newMu.getRoom().setCaption(mu.getRoom().getRoomName(), mu.getRoom().getSchoolClassName());
-                    break;
-                }
-                case LOCKER_CABINET: {
-                    List<Locker> newLockers = mu.getLockerList()
-                            .stream()
-                            .map(Locker::new)
-                            .collect(Collectors.toList());
-                    newMu.getLockerCabinet().setLockers(newLockers);
-                    break;
-                }
-                case STAIRCASE: {
-                    newMu.getStaircase().setCaption(mu.getStaircase().getStaircaseName());
-                    break;
-                }
+    fun reinstantiateManagementUnits(
+        managementUnits: List<ManagementUnit>
+    ) = managementUnits.map { mu: ManagementUnit ->
+        val newMu = ManagementUnit(mu.type)
+        when (mu.type) {
+            ManagementUnit.ROOM -> {
+                newMu.room.setCaption(mu.room.roomName, mu.room.schoolClassName)
             }
-
-            return newMu;
-        }).collect(Collectors.toList());
-    }
-
-    public MainFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public String getAppTitle() {
-        return bundle.getString("Application.title");
-    }
-
-    public String getAppVersion() {
-        return bundle.getString("Application.version");
-    }
-
-    public Settings getSettings() {
-        return settings;
-    }
-
-    public File getRessourceFile() {
-        return resourceFile;
-    }
-
-    public File getBackupDirectory() {
-        return backupDirectory;
-    }
-
-    public boolean isLockerIdUnique(String id) {
-        return getLockerByID(id) == null;
-    }
-
-    public String getEncryptedBuildingsBase64() {
-        return encryptedBuildingsBase64;
-    }
-
-    public List<Building> getBuildingList() {
-        return buildings;
-    }
-
-    public int getCurBuildingIndex() {
-        return currentBuildingIndex;
-    }
-
-    public Building getCurBuilding() {
-        return buildings.get(currentBuildingIndex);
-    }
-
-    public List<Floor> getCurFloorList() {
-        return getCurBuilding().getFloors();
-    }
-
-    public Floor getCurFloor() {
-        return getCurFloorList().get(currentFloorIndex);
-    }
-
-    public int getCurFloorIndex() {
-        return currentFloorIndex;
-    }
-
-    public List<Walk> getCurWalkList() {
-        return getCurFloor().getWalks();
-    }
-
-    public Walk getCurWalk() {
-        return getCurWalkList().get(currentWalkIndex);
-    }
-
-    public int getCurWalkIndex() {
-        return currentWalkIndex;
-    }
-
-    public List<ManagementUnit> getCurManagmentUnitList() {
-        return getCurWalk().getManagementUnits();
-    }
-
-    public ManagementUnit getCurManamentUnit() {
-        return getCurManagmentUnitList().get(currentColumnIndex);
-    }
-
-    public int getCurManagementUnitIndex() {
-        return currentColumnIndex;
-    }
-
-    public List<Locker> getCurLockerList() {
-        return getCurManamentUnit().getLockerList();
-    }
-
-    public Locker getCurLocker() {
-        return getCurLockerList().get(currentLockerIndex);
-    }
-
-    public int getCurLockerIndex() {
-        return currentLockerIndex;
-    }
-
-    public Room getCurRoom() {
-        return getCurManamentUnit().getRoom();
-    }
-
-    public LockerCabinet getCurLockerCabinet() {
-        return getCurManamentUnit().getLockerCabinet();
-    }
-
-    public boolean hasDataChanged() {
-        return hasDataChanged;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void initBuildingObject() {
-        try {
-            this.buildings = unsealAndDeserializeBuildings(getEncryptedBuildingsBase64(), userMasterKey);
-        } catch (Exception e) {
-            e.printStackTrace();
+            ManagementUnit.LOCKER_CABINET -> {
+                val newLockers = mu.lockerList
+                    .stream()
+                    .map { locker: Locker? -> Locker(locker!!) }
+                    .collect(Collectors.toList())
+                newMu.lockerCabinet.lockers = newLockers
+            }
+            ManagementUnit.STAIRCASE -> {
+                newMu.staircase.setCaption(mu.staircase.staircaseName)
+            }
         }
+        newMu
     }
 
-    public void setMainFrame(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    val appTitle: String
+        get() = bundle.getString("Application.title")
+    val appVersion: String
+        get() = bundle.getString("Application.version")
+
+    fun isLockerIdUnique(id: String): Boolean {
+        return getLockerByID(id) == null
     }
 
-    public void setDataChanged(boolean changed) {
-        hasDataChanged = changed;
+    val curFloorList: List<Floor>
+        get() = curBuilding.floors
+
+    val curWalkList: List<Walk>
+        get() = curFloor.walks
+
+    val curManagmentUnitList: List<ManagementUnit>
+        get() = curWalk.managementUnits
+
+    val curBuilding: Building
+        get() = buildingList[currentBuildingIndex]
+    val curFloor: Floor
+        get() = curFloorList.get(currentFloorIndex)
+    val curWalk: Walk
+        get() = curWalkList.get(currentWalkIndex)
+    val curManamentUnit: ManagementUnit
+        get() = curManagmentUnitList.get(currentManagementUnitIndex)
+    val curLockerList: List<Locker>
+        get() = curManamentUnit.lockerList
+    val curLocker: Locker
+        get() = curLockerList[currentLockerIndex]
+    val curRoom: Room
+        get() = curManamentUnit.room
+    val curLockerCabinet: LockerCabinet
+        get() = curManamentUnit.lockerCabinet
+
+    fun hasDataChanged(): Boolean {
+        return hasDataChanged
     }
 
-    public void setCurrentBuildingIndex(int index) {
-        currentBuildingIndex = index;
+    fun initBuildingObject() {
+        buildingList = unsealAndDeserializeBuildings(encryptedBuildingsBase64, userMasterKey)
     }
 
-    public void setCurrentFloorIndex(int index) {
-        currentFloorIndex = index;
-    }
+    init {
+        val url = MainFrame::class.java.protectionDomain.codeSource.location
+        var homeDirectory = File(url.file)
 
-    public void setCurrentWalkIndex(int index) {
-        currentWalkIndex = index;
-    }
+        if (!homeDirectory.isDirectory) {
+            homeDirectory = homeDirectory.parentFile
+        }
 
-    public void setCurrentMUnitIndex(int index) {
-        currentColumnIndex = index;
-    }
+        ressourceFile = File(homeDirectory, "jlocker.json")
+        backupDirectory = File(homeDirectory, "Backup")
 
-    public void setCurrentLockerIndex(int index) {
-        currentLockerIndex = index;
-    }
-
-    public void setCurrentUser(User user) {
-        currentUser = user;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void addTask(String description) {
-        tasks.add(new Task(description));
-    }
-
-    public void setTaskList(List<Task> tasks) {
-        this.tasks = tasks;
+        println("* program directory is: \"$homeDirectory\"")
     }
 }

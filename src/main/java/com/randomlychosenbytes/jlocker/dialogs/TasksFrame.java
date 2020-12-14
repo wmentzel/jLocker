@@ -199,7 +199,7 @@ public class TasksFrame extends javax.swing.JFrame {
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle erledigten Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (answer == JOptionPane.YES_OPTION) {
-                dataManager.setTaskList(newTasksList);
+                dataManager.setTasks(newTasksList);
 
                 createTableModel();
             }

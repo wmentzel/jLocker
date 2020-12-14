@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 
 import javax.swing.*;
 
@@ -119,12 +120,12 @@ public class MoveLockerDialog extends javax.swing.JDialog {
         if (!sourceLocker.isFree()) {
             // TODO check null pointer dereferencing getSurname()
             String task1 = sourceLocker.getLastName() + ", " + sourceLocker.getFirstName() + " (" + sourceLocker.getSchoolClassName() + ") über Umzug informieren (" + destLocker.getId() + " -> " + sourceLocker.getId() + ")";
-            dataManager.addTask(task1);
+            dataManager.getTasks().add(new Task(task1));
         }
 
         if (!destLocker.isFree()) {
             String task2 = destLocker.getLastName() + ", " + destLocker.getFirstName() + " (" + destLocker.getSchoolClassName() + ") über Umzug informieren (" + sourceLocker.getId() + " -> " + destLocker.getId() + ")";
-            dataManager.addTask(task2);
+            dataManager.getTasks().add(new Task(task2));
         }
         sourceIDTextField.setText("");
         destinationIDTextField.setText("");

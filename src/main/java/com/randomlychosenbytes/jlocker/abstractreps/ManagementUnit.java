@@ -185,7 +185,7 @@ public class ManagementUnit extends JPanel {
 
     private void addMUnitLeftLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addMUnitLeftLabelMouseReleased
     {//GEN-HEADEREND:event_addMUnitLeftLabelMouseReleased
-        List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+        List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
 
         int index = mus.indexOf(this);
         int iNewIndex;
@@ -198,10 +198,10 @@ public class ManagementUnit extends JPanel {
             iNewIndex = index + 1;
         }
 
-        DataManager.getInstance().setCurrentMUnitIndex(iNewIndex);
-        DataManager.getInstance().setCurrentLockerIndex(0);
+        DataManager.INSTANCE.setCurrentManagementUnitIndex(iNewIndex);
+        DataManager.INSTANCE.setCurrentLockerIndex(0);
 
-        DataManager.getInstance().getMainFrame().drawLockerOverview();
+        DataManager.INSTANCE.getMainFrame().drawLockerOverview();
     }//GEN-LAST:event_addMUnitLeftLabelMouseReleased
 
     private void transformLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_transformLabelMouseReleased
@@ -213,31 +213,31 @@ public class ManagementUnit extends JPanel {
 
     private void removeThisMUnitLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     {//GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
-        if (DataManager.getInstance().getCurManagmentUnitList().size() > 1) {
+        if (DataManager.INSTANCE.getCurManagmentUnitList().size() > 1) {
             String type = getNameFromID(this.type);
 
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen " + type + " wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (answer == JOptionPane.YES_OPTION) {
-                List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+                List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
                 mus.remove(this);
-                DataManager.getInstance().getMainFrame().drawLockerOverview();
+                DataManager.INSTANCE.getMainFrame().drawLockerOverview();
             }
         }
     }//GEN-LAST:event_removeThisMUnitLabelMouseReleased
 
     private void addMUnitRightLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addMUnitRightLabelMouseReleased
     {//GEN-HEADEREND:event_addMUnitRightLabelMouseReleased
-        List<ManagementUnit> mus = DataManager.getInstance().getCurManagmentUnitList();
+        List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
 
         int index = mus.indexOf(this);
 
         mus.add(index, new ManagementUnit(ManagementUnit.LOCKER_CABINET));
 
-        DataManager.getInstance().setCurrentMUnitIndex(index);
-        DataManager.getInstance().setCurrentLockerIndex(0);
+        DataManager.INSTANCE.setCurrentManagementUnitIndex(index);
+        DataManager.INSTANCE.setCurrentLockerIndex(0);
 
-        DataManager.getInstance().getMainFrame().drawLockerOverview();
+        DataManager.INSTANCE.getMainFrame().drawLockerOverview();
     }//GEN-LAST:event_addMUnitRightLabelMouseReleased
 
 
