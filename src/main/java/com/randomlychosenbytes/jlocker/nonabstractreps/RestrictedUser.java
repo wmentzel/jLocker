@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import javax.crypto.SecretKey;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.encryptKeyWithString;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.encryptKeyWithString;
 
 public class RestrictedUser extends User {
 

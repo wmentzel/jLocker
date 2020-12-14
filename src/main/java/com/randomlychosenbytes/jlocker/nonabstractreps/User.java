@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.getHash;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.getHash;
 
 /**
  * Represents a User of the program. There are two different kinds a the moment

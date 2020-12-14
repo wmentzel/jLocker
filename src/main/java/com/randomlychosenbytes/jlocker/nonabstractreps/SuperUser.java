@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 
 import com.google.gson.annotations.Expose;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.generateAndEncryptKey;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.generateAndEncryptKey;
 
 public class SuperUser extends User {
 

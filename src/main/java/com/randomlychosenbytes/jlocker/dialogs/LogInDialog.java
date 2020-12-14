@@ -8,7 +8,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.decryptKeyWithString;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.decryptKeyWithString;
 
 public class LogInDialog extends javax.swing.JDialog {
     File resPath = null;

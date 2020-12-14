@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.isDateValid;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.isDateValid;
 
 /**
  * This is the main windows of the application. It is displayed right after

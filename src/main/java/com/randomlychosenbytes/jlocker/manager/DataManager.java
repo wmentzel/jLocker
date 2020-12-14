@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit.*;
-import static com.randomlychosenbytes.jlocker.manager.Utils.encrypt;
-import static com.randomlychosenbytes.jlocker.manager.Utils.unsealAndDeserializeBuildings;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.encrypt;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.unsealAndDeserializeBuildings;
 import static java.lang.System.out;
 
 /**

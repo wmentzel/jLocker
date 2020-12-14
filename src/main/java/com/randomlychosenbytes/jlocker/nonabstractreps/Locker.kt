@@ -1,8 +1,7 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.manager.DataManager
-import com.randomlychosenbytes.jlocker.manager.Utils
+import com.randomlychosenbytes.jlocker.manager.*
 import java.awt.Color
 import java.awt.Font
 import java.awt.event.MouseAdapter
@@ -56,7 +55,7 @@ class Locker(
         if (encryptedCodes == null) {
             return "00-00-00"
         }
-        val code = Utils.decrypt(encryptedCodes!![i], sukey)
+        val code = decrypt(encryptedCodes!![i], sukey)
         return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6)
     }
 
@@ -68,7 +67,7 @@ class Locker(
         // to remove them.
         encryptedCodes = (0..4).map { i ->
             val code = codes[i].replace("-", "")
-            Utils.encrypt(code, superUserMasterKey)
+            encrypt(code, superUserMasterKey)
         }.toTypedArray()
     }
 
@@ -83,8 +82,8 @@ class Locker(
                 time
             }
 
-            val end = Utils.getCalendarFromString(rentedUntilDate)
-            return Utils.getDifferenceInMonths(today, end)
+            val end = getCalendarFromString(rentedUntilDate)
+            return getDifferenceInMonths(today, end!!)
         }
 
     fun setAppropriateColor() {

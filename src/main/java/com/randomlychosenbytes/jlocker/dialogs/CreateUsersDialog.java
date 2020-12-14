@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import static com.randomlychosenbytes.jlocker.manager.Utils.decryptKeyWithString;
+import static com.randomlychosenbytes.jlocker.manager.UtilsKt.decryptKeyWithString;
 
 public class CreateUsersDialog extends javax.swing.JDialog {
     private int displayedCardIndex;
