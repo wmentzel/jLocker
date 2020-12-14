@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     application
     kotlin("jvm") version "1.4.20"
@@ -24,17 +26,21 @@ dependencies {
 }
 
 tasks {
+
+    register<Jar>("fatJar") {
+        manifest {
+            attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.main.MainFrame"
+        }
+        archiveBaseName.set("${project.name}")
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+        with(jar.get())
+    }
+
     "wrapper"(Wrapper::class) {
         gradleVersion = "6.3"
     }
 
-    withType<Jar> {
-        manifest {
-            attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.main.MainFrame"
-        }
-    }
-
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
     }
 }
