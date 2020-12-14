@@ -388,13 +388,13 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (!name.equals("")) {
-                                    if (!name.equals(locker.getOwnerName())) {
+                                    if (!name.equals(locker.getFirstName())) {
                                         continue;
                                     }
                                 }
 
                                 if (!_class.equals("")) {
-                                    String cl = locker.getOwnerClass();
+                                    String cl = locker.getFirstName();
 
                                     if (!_class.contains(".") && !_class.equals("Kurs")) {
                                         if (cl.contains(".")) {
@@ -411,7 +411,7 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (size != -1) {
-                                    if (size != locker.getOwnerSize()) {
+                                    if (size != locker.getHeightInCm()) {
                                         continue;
                                     }
                                 }
@@ -455,10 +455,10 @@ public class SearchFrame extends javax.swing.JFrame {
                             List<Object> rowData = new LinkedList<>();
                             rowData.add(locker.getId());
                             rowData.add(locker.getLastName());
-                            rowData.add(locker.getOwnerName());
-                            rowData.add(locker.getOwnerClass());
-                            rowData.add(locker.getOwnerSize());
-                            rowData.add(locker.hasContract());
+                            rowData.add(locker.getFirstName());
+                            rowData.add(locker.getSchoolClassName());
+                            rowData.add(locker.getHeightInCm());
+                            rowData.add(locker.getHasContract());
                             rowData.add(locker.getPaidAmount());
                             rowData.add(locker.getRemainingTimeInMonths());
                             rowData.add(locker.getRentedFromDate());

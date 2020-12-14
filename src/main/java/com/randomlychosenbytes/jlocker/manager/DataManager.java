@@ -296,24 +296,10 @@ public class DataManager {
                     break;
                 }
                 case LOCKER_CABINET: {
-                    List<Locker> newLockers = mu.getLockerList().stream().map(l -> new Locker(
-                                    l.getId(),
-                                    l.getLastName(),
-                                    l.getOwnerName(),
-                                    l.getOwnerSize(),
-                                    l.getOwnerClass(),
-                                    l.getRentedFromDate(),
-                                    l.getRentedUntilDate(),
-                                    l.hasContract(),
-                                    l.getPaidAmount(),
-                                    l.getPreviouslyPaidAmount(),
-                                    l.getCurrentCodeIndex(),
-                                    l.getEncryptedCodes(),
-                                    l.getLockCode(),
-                                    l.isOutOfOrder(),
-                                    l.getNote()
-                            )
-                    ).collect(Collectors.toList());
+                    List<Locker> newLockers = mu.getLockerList()
+                            .stream()
+                            .map(Locker::new)
+                            .collect(Collectors.toList());
                     newMu.getLockerCabinet().setLockers(newLockers);
                     break;
                 }

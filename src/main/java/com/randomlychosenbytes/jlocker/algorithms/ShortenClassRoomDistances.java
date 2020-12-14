@@ -82,7 +82,7 @@ public class ShortenClassRoomDistances {
                 freeLockersEntityCoordinatesList.add(lockerEntityCoordinates);
             }
             // class locker
-            else if (lockerEntityCoordinates.getEntity().getOwnerClass().equals(className)) {
+            else if (lockerEntityCoordinates.getEntity().getSchoolClassName().equals(className)) {
                 classLockersEntityCoordinatesList.add(lockerEntityCoordinates);
             }
         }
@@ -180,9 +180,9 @@ public class ShortenClassRoomDistances {
                         // this doesn't make sense
                         int lockerMinSize = minSizes.get(Math.abs(index - (minSizes.size() - 1)));
 
-                        if (srcLocker.getOwnerSize() >= lockerMinSize) {
+                        if (srcLocker.getHeightInCm() >= lockerMinSize) {
                             statusMessage.append(srcLocker.getId()).append(" -> ").append(destLocker.getId()).append("\n");
-                            statusMessage.append("Besitzergröße: ").append(classLockerToDistancePair.getX().getEntity().getOwnerSize()).append(" cm\n");
+                            statusMessage.append("Besitzergröße: ").append(classLockerToDistancePair.getX().getEntity().getHeightInCm()).append(" cm\n");
                             statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n");
 
                             float distanceReduction = (1.0f - freeLockerToDistancePair.getY() / ((float) classLockerToDistancePair.getY())) * 100;
@@ -198,11 +198,11 @@ public class ShortenClassRoomDistances {
                             freeLockerToDistancePairList.remove(freeLockerIndex); // this one is now occupied, so remove it
 
                             String taskText = "Klassenumzug" + " ("
-                                    + destLocker.getOwnerClass() + "): "
+                                    + destLocker.getSchoolClassName() + "): "
                                     + srcLocker.getId() + " -> "
                                     + destLocker.getId() +
                                     " Inhaber(in) "
-                                    + destLocker.getOwnerName()
+                                    + destLocker.getFirstName()
                                     + " " + destLocker.getLastName();
 
                             dataManager.getTasks().add(new Task(taskText));

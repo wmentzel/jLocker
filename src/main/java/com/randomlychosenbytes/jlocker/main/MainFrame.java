@@ -171,11 +171,11 @@ public class MainFrame extends javax.swing.JFrame {
 
             lockerIDTextField.setText(locker.getId());
             surnameTextField.setText(locker.getLastName());
-            nameTextField.setText(locker.getOwnerName());
-            classTextField.setText(locker.getOwnerClass());
-            sizeTextField.setText(Integer.toString(locker.getOwnerSize()));
+            nameTextField.setText(locker.getFirstName());
+            classTextField.setText(locker.getSchoolClassName());
+            sizeTextField.setText(Integer.toString(locker.getHeightInCm()));
 
-            hasContractCheckbox.setSelected(locker.hasContract());
+            hasContractCheckbox.setSelected(locker.getHasContract());
             outOfOrderCheckbox.setSelected(locker.isOutOfOrder());
 
             moneyTextField.setText(Integer.toString(locker.getPaidAmount()));
@@ -211,7 +211,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         locker.setLastName(surnameTextField.getText());
         locker.setFirstName(nameTextField.getText());
-        locker.setSchoolClass(classTextField.getText());
+        locker.setSchoolClassName(classTextField.getText());
         locker.setHasContract(hasContractCheckbox.isSelected());
         locker.setOutOfOrder(outOfOrderCheckbox.isSelected());
         locker.setLockCode(lockTextField.getText());
@@ -249,10 +249,10 @@ public class MainFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Das Anfangsdatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
-                locker.setFromDate(from);
+                locker.setRentedFromDate(from);
             }
         } else {
-            locker.setFromDate(from);
+            locker.setRentedFromDate(from);
         }
 
         String until = untilDateTextField.getText();
@@ -262,10 +262,10 @@ public class MainFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Das Enddatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
-                locker.setUntilDate(until);
+                locker.setRentedUntilDate(until);
             }
         } else {
-            locker.setUntilDate(until);
+            locker.setRentedUntilDate(until);
         }
 
         long months = locker.getRemainingTimeInMonths();

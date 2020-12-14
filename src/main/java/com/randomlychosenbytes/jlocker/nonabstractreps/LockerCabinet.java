@@ -121,7 +121,7 @@ public class LockerCabinet extends JPanel {
 
     private void addLockerLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addLockerLabelMouseReleased
     {//GEN-HEADEREND:event_addLockerLabelMouseReleased
-        addLocker(new Locker("", "", "", 0, "", "", "", false, 0, 0, null, "", false, ""));
+        addLocker(new Locker());
     }//GEN-LAST:event_addLockerLabelMouseReleased
 
     private void remLockerLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_remLockerLabelMouseReleased

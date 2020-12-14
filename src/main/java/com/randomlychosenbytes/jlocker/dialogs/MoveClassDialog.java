@@ -88,12 +88,12 @@ public class MoveClassDialog extends javax.swing.JDialog {
                         List<Locker> lockers = munit.getLockerList();
 
                         for (Locker locker : lockers) {
-                            String className = locker.getOwnerClass();
+                            String className = locker.getSchoolClassName();
 
                             if (!className.isEmpty()) {
                                 assignedClasses.add(className);
 
-                                if (locker.getOwnerSize() == 0) {
+                                if (locker.getHeightInCm() == 0) {
                                     lockerIdWithoutHeights.add(locker.getId());
                                 }
                             }

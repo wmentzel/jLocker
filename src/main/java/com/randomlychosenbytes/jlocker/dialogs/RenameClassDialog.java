@@ -111,7 +111,7 @@ public class RenameClassDialog extends JDialog {
                         String sSubClass;
 
                         for (Locker locker : lockers) {
-                            String sFoundClass = locker.getOwnerClass();
+                            String sFoundClass = locker.getSchoolClassName();
                             sSubClass = "";
 
                             //7, E, Kurs
@@ -129,7 +129,7 @@ public class RenameClassDialog extends JDialog {
 
                             if (sFoundClass.equals(previousClassName)) {
                                 numMatches++;
-                                locker.setSchoolClass(newClassName + sSubClass);
+                                locker.setSchoolClassName(newClassName + sSubClass);
                             }
                         }
                     }
