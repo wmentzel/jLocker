@@ -3,10 +3,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
+import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
 import java.util.*;
@@ -199,7 +196,7 @@ public class MoveClassDialog extends JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        // TODO gather infor from drop down menu
+        // TODO gather info from drop down menu
         String className = (String) classComboBox.getSelectedItem();
         String classRoomNodeId = classToClassRoomNodeId.get(className);
 
@@ -222,17 +219,20 @@ public class MoveClassDialog extends JDialog {
 
         ShortenClassRoomDistances scrd = new ShortenClassRoomDistances(
                 dataManager.getBuildingList(),
-                dataManager.getSettings(),
-                dataManager.getTasks(),
+                dataManager.getSettings().getLockerMinSizes(),
                 classRoomNodeId,
                 className,
+                (taskText) -> {
+                    dataManager.getTasks().add(new Task(taskText));
+                    return null;
+                },
                 (l1, l2, withCodes) -> {
                     dataManager.moveLockers(l1, l2, withCodes);
                     return null;
                 }
         );
 
-        final int status = scrd.getStatus();
+        final int status = scrd.check();
         String statusMessage = "";
 
         switch (status) {
