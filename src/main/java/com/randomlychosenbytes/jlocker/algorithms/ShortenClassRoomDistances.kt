@@ -1,309 +1,210 @@
-package com.randomlychosenbytes.jlocker.algorithms;
+package com.randomlychosenbytes.jlocker.algorithms
 
-import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
-import com.randomlychosenbytes.jlocker.nonabstractreps.*;
-import kotlin.jvm.functions.Function3;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
+import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
+import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
+import com.randomlychosenbytes.jlocker.nonabstractreps.*
+import org.jgrapht.alg.DijkstraShortestPath
+import org.jgrapht.graph.DefaultWeightedEdge
+import org.jgrapht.graph.SimpleWeightedGraph
+import java.text.DecimalFormat
+import java.util.*
 
-import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
-public class ShortenClassRoomDistances {
-    //
-    // Status codes
-    //
-    public static final int CLASS_HAS_NO_ROOM = 0;
-    public static final int NO_EMPTY_LOCKERS_AVAILABLE = 1;
-    public static final int CLASS_HAS_NO_PUPILS = 2;
-    public static final int NON_REACHABLE_LOCKERS_EXIST = 3;
-    public static final int NO_MINIMUM_SIZE_DEFINED_FOR_ROW = 4;
-    public static final int SUCCESS = 5;
-
+class ShortenClassRoomDistances(
+    private val buildings: List<Building>,
+    private val settings: Settings,
+    private val tasks: MutableList<Task>,
+    private val classRoomNodeId: String,
+    private val className: String,
+    private val moveLocker: (Locker, Locker, Boolean) -> Unit
+) {
     //
     // Calibration for the algorithm: edge weights
     //
-    private final float buildingToBuildingEdgeWeight = 100.0f;
-    private final float walkToWalkEdgeWeight = 5.0f;
-    private final float floorToFloorEdgeWeight = 20.0f;
-    private final float managementUnitToMUEdgeWeight = 2.0f;
-    private final float managementUnitToLockerEdgeWeight = 1.0f;
+    private val weightedGraph: SimpleWeightedGraph<String?, DefaultWeightedEdge> =
+        SimpleWeightedGraph(DefaultWeightedEdge::class.java)
 
-    private final List<EntityCoordinates<Locker>> allLockersEntityCoordinatesList;
-    private final SimpleWeightedGraph<String, DefaultWeightedEdge> managementUnitGraph;
+    private val allLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+    private val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+    private val classLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+    private val classLockerToDistancePairList: MutableList<Pair<EntityCoordinates<Locker>, Int>> = mutableListOf()
+    private val freeLockerToDistancePairList: MutableList<Pair<EntityCoordinates<Locker>, Int>> = mutableListOf()
+    private var unreachableLockers: MutableList<String> = mutableListOf()
 
-    private final List<EntityCoordinates<Locker>> freeLockersEntityCoordinatesList;
-    private final List<EntityCoordinates<Locker>> classLockersEntityCoordinatesList;
+    val status: Int
 
-    private final String classRoomNodeId;
-    private final List<Pair<EntityCoordinates<Locker>, Integer>> classLockerToDistancePairList;
-    private final List<Pair<EntityCoordinates<Locker>, Integer>> freeLockerToDistancePairList;
-    private List<String> unreachableLockers;
-
-    private final String className;
-    private final int status;
-
-    private Settings settings;
-    private List<Task> tasks;
-    private List<Building> buildings;
-    private Function3<Locker, Locker, Boolean, Void> moveLocker;
-
-    public ShortenClassRoomDistances(
-            List<Building> buildings,
-            Settings settings,
-            List<Task> tasks,
-            String classRoomNodeId,
-            String className,
-            Function3<Locker, Locker, Boolean, Void> moveLocker
-    ) {
-        this.buildings = buildings;
-        this.settings = settings;
-        this.tasks = tasks;
-        this.moveLocker = moveLocker;
-
-        this.className = className;
-        this.classRoomNodeId = classRoomNodeId;
-
-        this.managementUnitGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-        this.allLockersEntityCoordinatesList = new LinkedList<>();
-
-        this.freeLockersEntityCoordinatesList = new LinkedList<>();
-        this.classLockersEntityCoordinatesList = new LinkedList<>();
-
-        this.classLockerToDistancePairList = new LinkedList<>();
-        this.freeLockerToDistancePairList = new LinkedList<>();
-
-        // creates a weighted graph
-        connectManagementUnitsAndLockers();
-        connectWalksOnFloor();
-        connectFloorsByStaircases();
-        connectBuildinsByStaircases();
-
-        status = check();
-    }
-
-    private int check() {
+    private fun check(): Int {
         // create a list of all free lockers
         // and all the lockers that belong to people of that class
-        for (EntityCoordinates<Locker> lockerEntityCoordinates : allLockersEntityCoordinatesList) {
-            if (lockerEntityCoordinates.getEntity().isFree()) {
-                freeLockersEntityCoordinatesList.add(lockerEntityCoordinates);
-            }
-            // class locker
-            else if (lockerEntityCoordinates.getEntity().getSchoolClassName().equals(className)) {
-                classLockersEntityCoordinatesList.add(lockerEntityCoordinates);
+        for (lockerEntityCoordinates in allLockersEntityCoordinatesList) {
+            if (lockerEntityCoordinates.entity.isFree) {
+                freeLockersEntityCoordinatesList.add(lockerEntityCoordinates)
+            } else if (lockerEntityCoordinates.entity.schoolClassName == className) {
+                classLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
         }
-
         if (freeLockersEntityCoordinatesList.isEmpty()) {
-            return NO_EMPTY_LOCKERS_AVAILABLE;
+            return NO_EMPTY_LOCKERS_AVAILABLE
         }
-
         if (classLockersEntityCoordinatesList.isEmpty()) {
-            return CLASS_HAS_NO_PUPILS;
+            return CLASS_HAS_NO_PUPILS
         }
 
         //
         // Sort free lockers, beginning with the one that is the closest one
         //
-        unreachableLockers = new LinkedList<>();
-
-        for (EntityCoordinates<Locker> freeLockerECoord : freeLockersEntityCoordinatesList) {
-            int dist = getDistance(freeLockerECoord, classRoomNodeId);
-
+        unreachableLockers = LinkedList()
+        for (freeLockerECoord in freeLockersEntityCoordinatesList) {
+            val dist = getDistance(freeLockerECoord, classRoomNodeId)
             if (dist != -1) {
-                freeLockerToDistancePairList.add(new Pair<>(freeLockerECoord, dist));
+                freeLockerToDistancePairList.add(Pair(freeLockerECoord, dist))
             } else {
                 // Create list that contains the ids of all lockers that cant 
                 // be reached from the classroom
-                unreachableLockers.add(freeLockerECoord.getEntity().getId());
+                unreachableLockers.add(freeLockerECoord.entity.id)
             }
         }
-        freeLockerToDistancePairList.sort(new EntityDistanceComparator());
+        freeLockerToDistancePairList.sortWith(EntityDistanceComparator())
 
         //
         // Sort class lockers, beginning with the one that is the farthest 
         // distance to the class room
         //
-        for (EntityCoordinates<Locker> classLockerECoord : classLockersEntityCoordinatesList) {
-            int distance = getDistance(classLockerECoord, classRoomNodeId);
-
+        for (classLockerECoord in classLockersEntityCoordinatesList) {
+            val distance = getDistance(classLockerECoord, classRoomNodeId)
             if (distance != -1) {
-                classLockerToDistancePairList.add(new Pair<>(classLockerECoord, distance));
+                classLockerToDistancePairList.add(Pair(classLockerECoord, distance))
             } else {
                 // Create a list that contains the ids of all lockers that can't
                 // be reached from the classroom
-                unreachableLockers.add(classLockerECoord.getEntity().getId());
+                unreachableLockers.add(classLockerECoord.entity.id)
             }
         }
-        classLockerToDistancePairList.sort(new EntityDistanceComparator());
-        Collections.reverse(classLockerToDistancePairList);
+        classLockerToDistancePairList.sortWith(EntityDistanceComparator())
+        classLockerToDistancePairList.reverse()
 
         // Output how many lockers cant be reached
-        if (!unreachableLockers.isEmpty()) {
-            return NON_REACHABLE_LOCKERS_EXIST;
+        return if (unreachableLockers.isEmpty()) {
+            SUCCESS
+        } else {
+            NON_REACHABLE_LOCKERS_EXIST
         }
-
-        return SUCCESS;
-    }
-
-    private void addStatusText() {
-
     }
 
     /**
      * Does the actual moving based on the data gathered before.
      * and returns a list of the moving operations.
      */
-    public final String execute() {
-        StringBuilder statusMessage = new StringBuilder();
-        List<Integer> minSizes = settings.getLockerMinSizes();
+    fun execute(): String {
+        val statusMessage = StringBuilder()
+        val minSizes = settings.lockerMinSizes
 
-        statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size()).append(" Schließfächer der Klasse ").append(className).append("\n");
-        statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size()).append(" freie Schließfächer gefunden!\n\n");
-        statusMessage.append("Es wurden ").append(minSizes.size()).append(" Minmalgrößen (cm) angelegt!\n");
-
-        for (int size : minSizes) {
-            statusMessage.append(size).append(" ");
+        statusMessage.append("Es gibt ").append(classLockerToDistancePairList.size).append(" Schließfächer der Klasse ")
+            .append(className).append("\n")
+        statusMessage.append("Es wurden ").append(freeLockerToDistancePairList.size)
+            .append(" freie Schließfächer gefunden!\n\n")
+        statusMessage.append("Es wurden ").append(minSizes.size).append(" Minmalgrößen (cm) angelegt!\n")
+        for (size in minSizes) {
+            statusMessage.append(size).append(" ")
         }
-
-        statusMessage.append("\n\n");
-
-        for (Pair<EntityCoordinates<Locker>, Integer> classLockerToDistancePair : classLockerToDistancePairList) {
+        statusMessage.append("\n\n")
+        for (classLockerToDistancePair in classLockerToDistancePairList) {
             // search until you find a free locker that is nearer and suits the pupils size
-            for (int freeLockerIndex = 0; freeLockerIndex < freeLockerToDistancePairList.size(); freeLockerIndex++) {
-                Pair<EntityCoordinates<Locker>, Integer> freeLockerToDistancePair = freeLockerToDistancePairList.get(freeLockerIndex);
+            for (freeLockerIndex in freeLockerToDistancePairList.indices) {
+                val freeLockerToDistancePair = freeLockerToDistancePairList[freeLockerIndex]
 
                 // Is distance of the new locker shorter to the classroom?
-                if (classLockerToDistancePair.getY() > freeLockerToDistancePair.getY()) {
-                    Locker srcLocker = classLockerToDistancePair.getX().getEntity();
-                    Locker destLocker = freeLockerToDistancePair.getX().getEntity();
+                if (classLockerToDistancePair.y > freeLockerToDistancePair.y) {
+                    val srcLocker = classLockerToDistancePair.x.entity
+                    val destLocker = freeLockerToDistancePair.x.entity
 
                     // determine minimum size for this locker
-                    int index = freeLockerToDistancePair.getX().getLValue();
+                    val index = freeLockerToDistancePair.x.lValue
 
                     // if no minimum size exists for this locker row, don't move
-                    if (index < minSizes.size()) {
+                    if (index < minSizes.size) {
                         // TODO lowest locker has coordinate 4, highest coordinate 0...
                         // this doesn't make sense
-                        int lockerMinSize = minSizes.get(Math.abs(index - (minSizes.size() - 1)));
-
-                        if (srcLocker.getHeightInCm() >= lockerMinSize) {
-                            statusMessage.append(srcLocker.getId()).append(" -> ").append(destLocker.getId()).append("\n");
-                            statusMessage.append("Besitzergröße: ").append(classLockerToDistancePair.getX().getEntity().getHeightInCm()).append(" cm\n");
-                            statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n");
-
-                            float distanceReduction = (1.0f - freeLockerToDistancePair.getY() / ((float) classLockerToDistancePair.getY())) * 100;
-                            DecimalFormat df = new DecimalFormat("##.#");
-                            statusMessage.append("Entfernung verkürzt um: ").append(df.format(distanceReduction)).append("%\n\n");
-
-                            moveLocker.invoke(srcLocker, destLocker, false);
-
-                            freeLockerToDistancePairList.remove(freeLockerIndex); // this one is now occupied, so remove it
-
-                            String taskText = "Klassenumzug" + " ("
-                                    + destLocker.getSchoolClassName() + "): "
-                                    + srcLocker.getId() + " -> "
-                                    + destLocker.getId() +
+                        val lockerMinSize = minSizes[Math.abs(index - (minSizes.size - 1))]
+                        if (srcLocker.heightInCm >= lockerMinSize) {
+                            statusMessage.append(srcLocker.id).append(" -> ").append(destLocker.id).append("\n")
+                            statusMessage.append("Besitzergröße: ")
+                                .append(classLockerToDistancePair.x.entity.heightInCm).append(" cm\n")
+                            statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n")
+                            val distanceReduction = (1.0f - freeLockerToDistancePair.y / classLockerToDistancePair.y
+                                .toFloat()) * 100
+                            val df = DecimalFormat("##.#")
+                            statusMessage.append("Entfernung verkürzt um: ")
+                                .append(df.format(distanceReduction.toDouble())).append("%\n\n")
+                            moveLocker(srcLocker, destLocker, false)
+                            freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
+                            val taskText = ("Klassenumzug" + " ("
+                                    + destLocker.schoolClassName + "): "
+                                    + srcLocker.id + " -> "
+                                    + destLocker.id +
                                     " Inhaber(in) "
-                                    + destLocker.getFirstName()
-                                    + " " + destLocker.getLastName();
-
-                            tasks.add(new Task(taskText));
-                            break;
+                                    + destLocker.firstName
+                                    + " " + destLocker.lastName)
+                            tasks.add(Task(taskText))
+                            break
                         }
                     }
                 }
             }
         }
-
-        return statusMessage.toString();
+        return statusMessage.toString()
     }
 
-    public SimpleWeightedGraph<String, DefaultWeightedEdge> getWeightedGraph() {
-        return managementUnitGraph;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public List<EntityCoordinates<Locker>> getEntityCoordinatesOfFreeLockers() {
-        return freeLockersEntityCoordinatesList;
-    }
-
-    public String getIdsOfUnreachableLockers() {
-        StringBuilder s = new StringBuilder();
-
-        for (int i = 0; i < unreachableLockers.size(); i++) {
-            if (i != 0) {
-                s.append(", ");
+    val idsOfUnreachableLockers: String
+        get() = unreachableLockers.withIndex().joinToString(separator = ", ") {
+            if (it.index % 15 == 0) {
+                "${it.value}\n"
+            } else {
+                it.value
             }
-
-            if (i % 15 == 0) {
-                s.append("\n");
-            }
-
-            s.append(unreachableLockers.get(i));
         }
-
-        return s.toString();
-    }
 
     /**
      * Connects MangementUnits on a floor with each other and each ManamentUnit
      * with its lockers.
      */
-    private void connectManagementUnitsAndLockers() {
-        for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloors();
-
-            for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalks();
-
-                for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
-
-                    String prevMUnitID = null;
+    private fun connectManagementUnitsAndLockers() {
+        for (b in buildings.indices) {
+            val floors = buildings[b].floors
+            for (f in floors.indices) {
+                val walks = floors[f].walks
+                for (w in walks.indices) {
+                    val managementUnits = walks[w].managementUnits
+                    var previousMUnitId: String? = null
 
                     // Connect ManagementUnits with each other
-                    for (int m = 0; m < managementUnits.size(); m++) {
-                        ManagementUnit munit = managementUnits.get(m);
-                        String currentMUnitID = createNodeId(b, f, w, m);
-
-                        managementUnitGraph.addVertex(currentMUnitID);
+                    for (m in managementUnits.indices) {
+                        val munit = managementUnits[m]
+                        val currentMUnitID = createNodeId(b, f, w, m)
+                        weightedGraph.addVertex(currentMUnitID)
 
                         // connect with previous munit
                         if (m > 0) {
-                            DefaultWeightedEdge edge = managementUnitGraph.addEdge(prevMUnitID, currentMUnitID);
-                            managementUnitGraph.setEdgeWeight(edge, managementUnitToMUEdgeWeight);
+                            val edge = weightedGraph.addEdge(previousMUnitId, currentMUnitID)
+                            weightedGraph.setEdgeWeight(edge, managementUnitToMUEdgeWeight.toDouble())
                         }
 
                         // vertices have been connected, set prevMUnitID for next run
-                        prevMUnitID = currentMUnitID;
-
+                        previousMUnitId = currentMUnitID
                         if (munit.getType() == ManagementUnit.LOCKER_CABINET) {
-                            List<Locker> lockers = managementUnits.get(m).getLockerCabinet().getLockers();
+                            val lockers = managementUnits[m].lockerCabinet.lockers
 
                             // connect each locker with its ManagementUnit
-                            for (int l = 0; l < lockers.size(); l++) {
-                                Locker locker = lockers.get(l);
-
-                                managementUnitGraph.addVertex(locker.getId());
+                            for (l in lockers.indices) {
+                                val locker = lockers[l]
+                                weightedGraph.addVertex(locker.id)
 
                                 // Connect lockers with their ManagmentUnit
-                                DefaultWeightedEdge edge = managementUnitGraph.addEdge(currentMUnitID, locker.getId());
-                                managementUnitGraph.setEdgeWeight(edge, managementUnitToLockerEdgeWeight);
+                                val edge = weightedGraph.addEdge(currentMUnitID, locker.id)
+                                weightedGraph.setEdgeWeight(edge, managementUnitToLockerEdgeWeight.toDouble())
 
                                 // fill locker in the list containing all
                                 // locker coordinates
-                                allLockersEntityCoordinatesList.add(new EntityCoordinates<>(locker, b, f, w, m, l));
+                                allLockersEntityCoordinatesList.add(EntityCoordinates(locker, b, f, w, m, l))
                             }
                         }
                     }
@@ -315,20 +216,19 @@ public class ShortenClassRoomDistances {
     /**
      * Connects the walks with each other on every floor
      */
-    private void connectWalksOnFloor() {
-        for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloors();
-
-            for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalks();
+    private fun connectWalksOnFloor() {
+        for (b in buildings.indices) {
+            val floors = buildings[b].floors
+            for (f in floors.indices) {
+                val walks = floors[f].walks
 
                 // we start with w = 1 because we connect every walk with the 
                 // walks before
-                for (int w = 1; w < walks.size(); w++) {
-                    int lastMUnitIndex = walks.get(w - 1).getManagementUnits().size() - 1;
-
-                    DefaultWeightedEdge edge = managementUnitGraph.addEdge(createNodeId(b, f, w - 1, lastMUnitIndex), createNodeId(b, f, w, 0));
-                    managementUnitGraph.setEdgeWeight(edge, walkToWalkEdgeWeight);
+                for (w in 1 until walks.size) {
+                    val lastMUnitIndex = walks[w - 1].managementUnits.size - 1
+                    val edge =
+                        weightedGraph.addEdge(createNodeId(b, f, w - 1, lastMUnitIndex), createNodeId(b, f, w, 0))
+                    weightedGraph.setEdgeWeight(edge, walkToWalkEdgeWeight.toDouble())
                 }
             }
         }
@@ -337,28 +237,23 @@ public class ShortenClassRoomDistances {
     /**
      * Connects the floors of a building with each other
      */
-    private void connectFloorsByStaircases() {
-        for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloors();
-
-            for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalks();
-
-                for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
-
-                    for (int m = 0; m < managementUnits.size(); m++) {
-                        ManagementUnit munit = managementUnits.get(m);
+    private fun connectFloorsByStaircases() {
+        for (b in buildings.indices) {
+            val floors = buildings[b].floors
+            for (f in floors.indices) {
+                val walks = floors[f].walks
+                for (w in walks.indices) {
+                    val managementUnits = walks[w].managementUnits
+                    for (m in managementUnits.indices) {
+                        val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
-                            String currentMUnitID = createNodeId(b, f, w, m);
-
-                            List<String> ids = findStaircasesOnFloor(b, f + 1, munit.getStaircase().getStaircaseName());
-
-                            for (String id : ids) {
-                                DefaultWeightedEdge edge = managementUnitGraph.addEdge(currentMUnitID, id);
-                                managementUnitGraph.setEdgeWeight(edge, floorToFloorEdgeWeight);
+                            val currentMUnitID = createNodeId(b, f, w, m)
+                            val ids = findStaircasesOnFloor(b, f + 1, munit.staircase.staircaseName)
+                            for (id in ids) {
+                                val edge = weightedGraph.addEdge(currentMUnitID, id)
+                                weightedGraph.setEdgeWeight(edge, floorToFloorEdgeWeight.toDouble())
                             }
                         }
                     }
@@ -370,60 +265,50 @@ public class ShortenClassRoomDistances {
     /**
      * Returns the IDs of all ManagementUnits on the given floor with the given name
      */
-    private List<String> findStaircasesOnFloor(int b, int f, String name) {
-        List<Floor> floors = buildings.get(b).getFloors();
-        List<String> entityIds = new LinkedList<>();
+    private fun findStaircasesOnFloor(b: Int, f: Int, name: String): List<String> {
+        val floors = buildings[b].floors
+        val entityIds: MutableList<String> = LinkedList()
 
         // does the floor exist?
-        if (floors.size() > f) {
-            List<Walk> walks = floors.get(f).getWalks();
-
-            for (int w = 0; w < walks.size(); w++) {
-                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
-
-                for (int m = 0; m < managementUnits.size(); m++) {
-                    ManagementUnit managementUnit = managementUnits.get(m);
-
+        if (floors.size > f) {
+            val walks = floors[f].walks
+            for (w in walks.indices) {
+                val managementUnits = walks[w].managementUnits
+                for (m in managementUnits.indices) {
+                    val managementUnit = managementUnits[m]
                     if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.getStaircase().getStaircaseName().equals(name)) {
-                            entityIds.add(createNodeId(b, f, w, m));
+                        if (managementUnit.staircase.staircaseName == name) {
+                            entityIds.add(createNodeId(b, f, w, m))
                         }
                     }
                 }
             }
         }
-
-        return entityIds;
+        return entityIds
     }
 
     /**
      * Connects buildings by staircases
      */
-    private void connectBuildinsByStaircases() {
+    private fun connectBuildinsByStaircases() {
         // start with b = 1 so we connect with previous buildings
-        for (int b = 1; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloors();
-
-            for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalks();
-
-                for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
-
-                    for (int m = 0; m < managementUnits.size(); m++) {
-                        ManagementUnit munit = managementUnits.get(m);
+        for (b in 1 until buildings.size) {
+            val floors = buildings[b].floors
+            for (f in floors.indices) {
+                val walks = floors[f].walks
+                for (w in walks.indices) {
+                    val managementUnits = walks[w].managementUnits
+                    for (m in managementUnits.indices) {
+                        val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
-                            String staircaseName = munit.getStaircase().getStaircaseName();
-
-                            List<String> staircaseIds = findStaircasesForBuilding(b - 1, staircaseName);
-
-                            String currentStaircaseId = createNodeId(b, f, w, m);
-
-                            for (String staircaseId : staircaseIds) {
-                                DefaultWeightedEdge edge = managementUnitGraph.addEdge(currentStaircaseId, staircaseId);
-                                managementUnitGraph.setEdgeWeight(edge, buildingToBuildingEdgeWeight);
+                            val staircaseName = munit.staircase.staircaseName
+                            val staircaseIds = findStaircasesForBuilding(b - 1, staircaseName)
+                            val currentStaircaseId = createNodeId(b, f, w, m)
+                            for (staircaseId in staircaseIds) {
+                                val edge = weightedGraph.addEdge(currentStaircaseId, staircaseId)
+                                weightedGraph.setEdgeWeight(edge, buildingToBuildingEdgeWeight.toDouble())
                             }
                         }
                     }
@@ -435,69 +320,80 @@ public class ShortenClassRoomDistances {
     /**
      * Returns the IDs of all Staircases for a given building
      */
-    private List<String> findStaircasesForBuilding(int b, String name) {
-        Building building = buildings.get(b);
-        List<String> entityIds = new LinkedList<>();
-
-        List<Floor> floors = building.getFloors();
-
-        for (int f = 0; f < floors.size(); f++) {
-            List<Walk> walks = floors.get(f).getWalks();
-
-            for (int w = 0; w < walks.size(); w++) {
-                List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
-
-                for (int m = 0; m < managementUnits.size(); m++) {
-                    ManagementUnit managementUnit = managementUnits.get(m);
-
+    private fun findStaircasesForBuilding(b: Int, name: String): List<String> {
+        val building = buildings[b]
+        val entityIds: MutableList<String> = LinkedList()
+        val floors = building.floors
+        for (f in floors.indices) {
+            val walks = floors[f].walks
+            for (w in walks.indices) {
+                val managementUnits = walks[w].managementUnits
+                for (m in managementUnits.indices) {
+                    val managementUnit = managementUnits[m]
                     if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.getStaircase().getStaircaseName().equals(name)) {
-                            entityIds.add(createNodeId(b, f, w, m));
+                        if (managementUnit.staircase.staircaseName == name) {
+                            entityIds.add(createNodeId(b, f, w, m))
                         }
                     }
                 }
             }
         }
-
-        return entityIds;
+        return entityIds
     }
 
     /**
      * Returns a value of distance between a locker and a class room.
      */
-    private int getDistance(EntityCoordinates<Locker> locker, String classRoomNodeId) {
-        String lockerID = locker.getEntity().getId();
-
-        DijkstraShortestPath<String, DefaultWeightedEdge> shortest = new DijkstraShortestPath<>(managementUnitGraph, lockerID, classRoomNodeId);
-
-        GraphPath<String, DefaultWeightedEdge> path = shortest.getPath();
-
-        if (path != null) {
-            return (int) path.getWeight();
-        }
-
-        return -1; // not reachable 
+    private fun getDistance(locker: EntityCoordinates<Locker>, classRoomNodeId: String): Int {
+        val lockerID = locker.entity.id
+        val shortest = DijkstraShortestPath(weightedGraph, lockerID, classRoomNodeId)
+        val path = shortest.path
+        return path?.weight?.toInt() ?: -1
+        // not reachable 
     }
 
-    private String createNodeId(int b, int f, int w, int m) {
-        return b + "-" + f + "-" + w + "-" + m;
-    }
+    private fun createNodeId(b: Int, f: Int, w: Int, m: Int) = "$b-$f-$w-$m"
 
     /**
      * Compares the Y value of a pair containing an EntityCoordintes object
      * and distance as integer
      */
-    private static class EntityDistanceComparator implements Comparator<Pair<EntityCoordinates<Locker>, Integer>> {
-        @Override
-        public int compare(Pair p1, Pair p2) {
-            int dist1 = ((Integer) p1.getY());
-            int dist2 = ((Integer) p2.getY());
-
+    private class EntityDistanceComparator : Comparator<Pair<EntityCoordinates<Locker>, Int>> {
+        override fun compare(p1: Pair<EntityCoordinates<Locker>, Int>, p2: Pair<EntityCoordinates<Locker>, Int>): Int {
+            val dist1 = p1.y as Int
+            val dist2 = p2.y as Int
             if (dist1 == dist2) {
-                return 0;
+                return 0
             }
-
-            return dist1 > dist2 ? +1 : -1;
+            return if (dist1 > dist2) +1 else -1
         }
+    }
+
+    companion object {
+        private const val buildingToBuildingEdgeWeight = 100.0f
+        private const val walkToWalkEdgeWeight = 5.0f
+        private const val floorToFloorEdgeWeight = 20.0f
+        private const val managementUnitToMUEdgeWeight = 2.0f
+        private const val managementUnitToLockerEdgeWeight = 1.0f
+
+        //
+        // Status codes
+        //
+        const val CLASS_HAS_NO_ROOM = 0
+        const val NO_EMPTY_LOCKERS_AVAILABLE = 1
+        const val CLASS_HAS_NO_PUPILS = 2
+        const val NON_REACHABLE_LOCKERS_EXIST = 3
+        const val NO_MINIMUM_SIZE_DEFINED_FOR_ROW = 4
+        const val SUCCESS = 5
+    }
+
+    init {
+
+        // creates a weighted graph
+        connectManagementUnitsAndLockers()
+        connectWalksOnFloor()
+        connectFloorsByStaircases()
+        connectBuildinsByStaircases()
+        status = check()
     }
 }
