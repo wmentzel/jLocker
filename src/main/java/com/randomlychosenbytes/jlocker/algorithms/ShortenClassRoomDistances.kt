@@ -212,10 +212,23 @@ class ShortenClassRoomDistances(
                             // connect each locker with its ManagementUnit
                             for (l in lockers.indices) {
                                 val locker = lockers[l]
+                                val lockerEntityCoordinates = EntityCoordinates(locker, b, f, w, m, l)
                                 weightedGraph.addVertex(locker.id)
 
                                 // Connect lockers with their ManagmentUnit
                                 val edge = weightedGraph.addEdge(currentMUnitID, locker.id)
+
+                                // ignore if no id has been set, or same id is assigned more than once
+                                if (locker.id.isEmpty()) {
+                                    println("Error Locker $lockerEntityCoordinates cannot be connected to its management unit because it does not have a valid id.")
+                                    continue
+                                }
+
+                                if (edge == null) {
+                                    println("""Error Locker with id "${locker.id}" cannot be connected to its management unit because another locker with the same id was already connected.""")
+                                    continue
+                                }
+
                                 weightedGraph.setEdgeWeight(edge, managementUnitToLockerEdgeWeight.toDouble())
 
                                 // fill locker in the list containing all

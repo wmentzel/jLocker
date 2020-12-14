@@ -16,4 +16,8 @@ class EntityCoordinates<T : Any>(
     var wValue: Int,
     var mValue: Int,
     var lValue: Int,
-)
+) {
+    override fun toString(): String {
+        return "$bValue-$fValue-$wValue-$mValue-$lValue"
+    }
+}
