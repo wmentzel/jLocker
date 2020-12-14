@@ -101,14 +101,14 @@ public class MoveLockerDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        Locker sourceLocker = dataManager.getLockerByID(sourceIDTextField.getText());
+        Locker sourceLocker = dataManager.getLockerById(sourceIDTextField.getText());
 
         if (sourceLocker == null) {
             JOptionPane.showMessageDialog(this, "Das Quellschließfach existiert nicht!", "Fehler", JOptionPane.OK_OPTION);
             return;
         }
 
-        Locker destLocker = dataManager.getLockerByID(destinationIDTextField.getText());
+        Locker destLocker = dataManager.getLockerById(destinationIDTextField.getText());
 
         if (destLocker == null) {
             JOptionPane.showMessageDialog(this, "Das Zielschließfach existiert nicht!", "Fehler", JOptionPane.OK_OPTION);

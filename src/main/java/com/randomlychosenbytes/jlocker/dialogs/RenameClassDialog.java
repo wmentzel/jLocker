@@ -107,7 +107,7 @@ public class RenameClassDialog extends JDialog {
                     List<ManagementUnit> cols = walk.getManagementUnits();
 
                     for (ManagementUnit col : cols) {
-                        List<Locker> lockers = col.getLockerList();
+                        List<Locker> lockers = col.getLockerCabinet().getLockers();
                         String sSubClass;
 
                         for (Locker locker : lockers) {

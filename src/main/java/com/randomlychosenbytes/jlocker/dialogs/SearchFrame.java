@@ -369,7 +369,7 @@ public class SearchFrame extends javax.swing.JFrame {
                     List<ManagementUnit> cols = walks.get(w).getManagementUnits();
 
                     for (int c = 0; c < cols.size(); c++) {
-                        List<Locker> lockers = cols.get(c).getLockerList();
+                        List<Locker> lockers = cols.get(c).getLockerCabinet().getLockers();
 
                         for (int l = 0; l < lockers.size(); l++) {
                             Locker locker = lockers.get(l);

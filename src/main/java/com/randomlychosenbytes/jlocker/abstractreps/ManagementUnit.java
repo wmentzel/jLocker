@@ -3,7 +3,6 @@ package com.randomlychosenbytes.jlocker.abstractreps;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
@@ -48,10 +47,6 @@ public class ManagementUnit extends JPanel {
 
     public LockerCabinet getLockerCabinet() {
         return lockerCabinet;
-    }
-
-    public List<Locker> getLockerList() {
-        return lockerCabinet.getLockers();
     }
 
     public Room getRoom() {

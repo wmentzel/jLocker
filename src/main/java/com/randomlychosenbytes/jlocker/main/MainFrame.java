@@ -129,8 +129,8 @@ public class MainFrame extends javax.swing.JFrame {
 
             for (Locker locker : lockers) {
                 // always set a standard locker as selected
-                if (!mu.getLockerList().isEmpty() && !firstLockerFound) {
-                    mu.getLockerList().get(0).setSelected();
+                if (!lockers.isEmpty() && !firstLockerFound) {
+                    lockers.get(0).setSelected();
                     dataManager.setCurrentManagementUnitIndex(i);
                     dataManager.setCurrentLockerIndex(0);
                     firstLockerFound = true;
@@ -138,10 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
                     locker.setAppropriateColor();
                 }
             }
-        }  // for
-
-
-        //List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
+        }
 
         int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
 

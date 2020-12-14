@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.randomlychosenbytes.jlocker.manager.UtilsKt.decryptKeyWithString;
 
-public class CreateUsersDialog extends javax.swing.JDialog {
+public class CreateUsersDialog extends JDialog {
     private int displayedCardIndex;
     private final CardLayout cardLayout;
     private boolean isFirstRun;
@@ -334,7 +334,7 @@ public class CreateUsersDialog extends javax.swing.JDialog {
                                 List<ManagementUnit> mus = walk.getManagementUnits();
 
                                 for (ManagementUnit mu : mus) {
-                                    List<Locker> lockers = mu.getLockerList();
+                                    List<Locker> lockers = mu.getLockerCabinet().getLockers();
 
                                     for (Locker locker : lockers) {
                                         String[] codes = locker.getCodes(dataManager.getSuperUserMasterKey());

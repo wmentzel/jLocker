@@ -22,7 +22,7 @@ import java.util.*;
  *
  * SimpleWeightedGraph
  */
-public class MoveClassDialog extends javax.swing.JDialog {
+public class MoveClassDialog extends JDialog {
     private final DataManager dataManager;
     private Map<String, String> classToClassRoomNodeId;
     private Set<String> lockerIdWithoutHeights;
@@ -85,7 +85,7 @@ public class MoveClassDialog extends javax.swing.JDialog {
                         // Find classes assigned to pupils and gather lockers of pupils with an invalid height
                         // The height is needed in order to know up to which lockers a pupil can reach.
                         //
-                        List<Locker> lockers = munit.getLockerList();
+                        List<Locker> lockers = munit.getLockerCabinet().getLockers();
 
                         for (Locker locker : lockers) {
                             String className = locker.getSchoolClassName();

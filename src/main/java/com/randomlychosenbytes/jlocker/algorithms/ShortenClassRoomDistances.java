@@ -289,7 +289,7 @@ public class ShortenClassRoomDistances {
                         prevMUnitID = currentMUnitID;
 
                         if (munit.getType() == ManagementUnit.LOCKER_CABINET) {
-                            List<Locker> lockers = managementUnits.get(m).getLockerList();
+                            List<Locker> lockers = managementUnits.get(m).getLockerCabinet().getLockers();
 
                             // connect each locker with its ManagementUnit
                             for (int l = 0; l < lockers.size(); l++) {

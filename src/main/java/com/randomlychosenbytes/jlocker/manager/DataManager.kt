@@ -171,26 +171,19 @@ object DataManager {
         }
     }
 
-    fun getLockerByID(id: String): Locker? {
-        for (building in buildingList) {
-            val floors: List<Floor> = building.floors
-            for (floor in floors) {
-                val walks: List<Walk> = floor.walks
-                for (walk in walks) {
-                    val mus: List<ManagementUnit> = walk.managementUnits
-                    for (mu in mus) {
-                        val lockers = mu.lockerList
-                        for (locker in lockers) {
-                            if (locker.id == id) {
-                                return locker
-                            }
-                        }
-                    }
-                }
-            }
+    fun getLockerById(id: String) = buildingList.asSequence()
+        .flatMap(Building::floors)
+        .flatMap(Floor::walks)
+        .flatMap(Walk::managementUnits)
+        .filter {
+            it.type == ManagementUnit.LOCKER_CABINET
+        }.map {
+            it.lockerCabinet
+        }.flatMap {
+            it.lockers
+        }.firstOrNull {
+            it.id == id
         }
-        return null
-    }
 
     /**
      * Moves a student from one locker to another.
@@ -220,7 +213,7 @@ object DataManager {
                 newMu.room.setCaption(mu.room.roomName, mu.room.schoolClassName)
             }
             ManagementUnit.LOCKER_CABINET -> {
-                val newLockers = mu.lockerList
+                val newLockers = mu.lockerCabinet.lockers
                     .stream()
                     .map { locker: Locker? -> Locker(locker!!) }
                     .collect(Collectors.toList())
@@ -239,7 +232,7 @@ object DataManager {
         get() = bundle.getString("Application.version")
 
     fun isLockerIdUnique(id: String): Boolean {
-        return getLockerByID(id) == null
+        return getLockerById(id) == null
     }
 
     val curFloorList: List<Floor>
@@ -260,7 +253,7 @@ object DataManager {
     val curManamentUnit: ManagementUnit
         get() = curManagmentUnitList.get(currentManagementUnitIndex)
     val curLockerList: List<Locker>
-        get() = curManamentUnit.lockerList
+        get() = curManamentUnit.lockerCabinet.lockers
     val curLocker: Locker
         get() = curLockerList[currentLockerIndex]
     val curRoom: Room
