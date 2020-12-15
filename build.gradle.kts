@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClass.set("com.randomlychosenbytes.jlocker.main.MainFrame")
+    mainClassName = "com.randomlychosenbytes.jlocker.main.MainFrame"
 }
 
 group = "org.example"
@@ -37,7 +37,7 @@ tasks {
     }
 
     "wrapper"(Wrapper::class) {
-        gradleVersion = "6.3"
+        gradleVersion = "6.7.1"
     }
 
     withType<KotlinCompile> {
