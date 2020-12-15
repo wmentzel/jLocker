@@ -47,7 +47,7 @@ class ShortenClassRoomDistances(
                 freeLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
 
-            if (lockerEntityCoordinates.entity.schoolClassName == className) {
+            if (lockerEntityCoordinates.entity.pupil.schoolClassName == className) {
                 classLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
         }
@@ -142,13 +142,13 @@ class ShortenClassRoomDistances(
                     // this doesn't make sense
                     val lockerMinSize = lockerMinSizes[abs(index - (lockerMinSizes.size - 1))]
 
-                    if (srcLocker.heightInCm < lockerMinSize) {
+                    if (srcLocker.pupil.heightInCm < lockerMinSize) {
                         continue
                     }
 
                     statusMessage.append(srcLocker.id).append(" -> ").append(destLocker.id).append("\n")
                     statusMessage.append("Besitzergröße: ")
-                        .append(classLockerToDistancePair.first.entity.heightInCm).append(" cm\n")
+                        .append(classLockerToDistancePair.first.entity.pupil.heightInCm).append(" cm\n")
                     statusMessage.append("Minimalgröße: ").append(lockerMinSize).append("\n")
 
                     val distanceReduction =
@@ -159,8 +159,8 @@ class ShortenClassRoomDistances(
                         .append(df.format(distanceReduction.toDouble())).append("%\n\n")
                     moveLocker(srcLocker, destLocker, false)
                     freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
-                    val taskText = "Klassenumzug (${destLocker.schoolClassName} ): ${srcLocker.id} -> "
-                    "${destLocker.id} Inhaber(in) ${destLocker.firstName} ${destLocker.lastName}"
+                    val taskText = "Klassenumzug (${destLocker.pupil.schoolClassName} ): ${srcLocker.id} -> "
+                    "${destLocker.id} Inhaber(in) ${destLocker.pupil.firstName} ${destLocker.pupil.lastName}"
 
                     createTask(taskText)
                     break

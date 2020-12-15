@@ -1,32 +1,32 @@
 package com.randomlychosenbytes.jlocker.nonabstractreps
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.manager.*
+import com.google.gson.annotations.SerializedName
+import com.randomlychosenbytes.jlocker.manager.DataManager
+import com.randomlychosenbytes.jlocker.manager.decrypt
+import com.randomlychosenbytes.jlocker.manager.encrypt
 import java.awt.Color
 import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.*
 import javax.crypto.SecretKey
 import javax.swing.JLabel
 
 class Locker(
     id: String,
-    @Expose var firstName: String,
-    @Expose var lastName: String,
-    @Expose var heightInCm: Int,
-    @Expose var schoolClassName: String, // TODO: use LocalDate
-    @Expose var rentedFromDate: String, // TODO: use LocalDate
-    @Expose var rentedUntilDate: String,
-    @Expose var hasContract: Boolean,
-    @Expose var paidAmount: Int,
-    @Expose var previouslyPaidAmount: Int,
+    pupil: Pupil?,
     @Expose var lockCode: String,
     @Expose var isOutOfOrder: Boolean,
     @Expose var note: String,
     @Expose var currentCodeIndex: Int,
     encryptedCodes: Array<String>?
 ) : JLabel(), Cloneable {
+
+    @SerializedName("pupil")
+    @Expose
+    var _pupil: Pupil? = pupil
+
+    val pupil get() = _pupil ?: throw IllegalStateException()
 
     @Expose
     var id: String = ""
@@ -67,48 +67,29 @@ class Locker(
         }.toTypedArray()
     }
 
-    val remainingTimeInMonths: Long
-        get() {
-            if (rentedUntilDate == "" || rentedFromDate == "" || isFree) {
-                return 0
-            }
-
-            val today: Calendar = GregorianCalendar().apply {
-                isLenient = false
-                time
-            }
-
-            val end = getCalendarFromString(rentedUntilDate)
-            return getDifferenceInMonths(today, end!!)
-        }
-
     fun setAppropriateColor() {
-        if (hasContract) {
-            setColor(RENTED_COLOR)
-        } else {
-            setColor(NOCONTRACT_COLOR)
-        }
-        if (remainingTimeInMonths <= 1) {
-            setColor(ONEMONTHREMAINING_COLOR)
-        }
+
         if (isFree) {
             setColor(FREE_COLOR)
+        } else {
+            if (pupil.hasContract) {
+                setColor(RENTED_COLOR)
+            } else {
+                setColor(NOCONTRACT_COLOR)
+            }
+
+            if (pupil.remainingTimeInMonths <= 1) {
+                setColor(ONEMONTHREMAINING_COLOR)
+            }
         }
+
         if (isOutOfOrder) {
             setColor(OUTOFORDER_COLOR)
         }
     }
 
     fun empty() {
-        lastName = ""
-        firstName = ""
-        heightInCm = 0
-        schoolClassName = ""
-        rentedFromDate = ""
-        rentedUntilDate = ""
-        hasContract = false
-        paidAmount = 0
-        previouslyPaidAmount = 0
+        _pupil = null
         currentCodeIndex = if (encryptedCodes == null) {
             0
         } else {
@@ -118,15 +99,7 @@ class Locker(
     }
 
     fun setTo(newdata: Locker) {
-        lastName = newdata.lastName
-        firstName = newdata.firstName
-        heightInCm = newdata.heightInCm
-        schoolClassName = newdata.schoolClassName
-        rentedFromDate = newdata.rentedFromDate
-        rentedUntilDate = newdata.rentedUntilDate
-        hasContract = newdata.hasContract
-        paidAmount = newdata.paidAmount
-        previouslyPaidAmount = newdata.previouslyPaidAmount
+        _pupil = newdata.pupil
         setAppropriateColor()
     }
 
@@ -151,7 +124,7 @@ class Locker(
     }
 
     val isFree: Boolean
-        get() = firstName == ""
+        get() = _pupil == null
 
     fun getCurrentCode(sukey: SecretKey): String {
         return getCode(currentCodeIndex, sukey)
@@ -178,15 +151,7 @@ class Locker(
 
     constructor() : this(
         id = "",
-        firstName = "",
-        lastName = "",
-        heightInCm = 0,
-        schoolClassName = "",
-        rentedFromDate = "",
-        rentedUntilDate = "",
-        hasContract = false,
-        paidAmount = 0,
-        previouslyPaidAmount = 0,
+        pupil = null,
         currentCodeIndex = 0,
         lockCode = "",
         isOutOfOrder = false,
@@ -196,15 +161,7 @@ class Locker(
 
     constructor(locker: Locker) : this(
         id = locker.id,
-        firstName = locker.firstName,
-        lastName = locker.lastName,
-        heightInCm = locker.heightInCm,
-        schoolClassName = locker.schoolClassName,
-        rentedFromDate = locker.rentedFromDate,
-        rentedUntilDate = locker.rentedUntilDate,
-        hasContract = locker.hasContract,
-        paidAmount = locker.paidAmount,
-        previouslyPaidAmount = locker.previouslyPaidAmount,
+        pupil = if (locker.isFree) null else locker.pupil,
         currentCodeIndex = locker.currentCodeIndex,
         lockCode = locker.lockCode,
         isOutOfOrder = locker.isOutOfOrder,

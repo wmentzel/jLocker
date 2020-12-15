@@ -9,7 +9,6 @@ import java.io.FileFilter
 import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
-import java.util.stream.Collectors
 import javax.crypto.SecretKey
 
 /**
@@ -213,10 +212,7 @@ object DataManager {
                 newMu.room.setCaption(mu.room.roomName, mu.room.schoolClassName)
             }
             ManagementUnit.LOCKER_CABINET -> {
-                val newLockers = mu.lockerCabinet.lockers
-                    .stream()
-                    .map { locker: Locker? -> Locker(locker!!) }
-                    .collect(Collectors.toList())
+                val newLockers = mu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
                 newMu.lockerCabinet.lockers = newLockers
             }
             ManagementUnit.STAIRCASE -> {

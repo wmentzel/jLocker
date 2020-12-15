@@ -382,19 +382,19 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (surname.length() != 0) {
-                                    if (!surname.equals(locker.getLastName())) {
+                                    if (!surname.equals(locker.getPupil().getLastName())) {
                                         continue;
                                     }
                                 }
 
                                 if (!name.equals("")) {
-                                    if (!name.equals(locker.getFirstName())) {
+                                    if (!name.equals(locker.getPupil().getFirstName())) {
                                         continue;
                                     }
                                 }
 
                                 if (!_class.equals("")) {
-                                    String cl = locker.getFirstName();
+                                    String cl = locker.getPupil().getFirstName();
 
                                     if (!_class.contains(".") && !_class.equals("Kurs")) {
                                         if (cl.contains(".")) {
@@ -411,31 +411,31 @@ public class SearchFrame extends javax.swing.JFrame {
                                 }
 
                                 if (size != -1) {
-                                    if (size != locker.getHeightInCm()) {
+                                    if (size != locker.getPupil().getHeightInCm()) {
                                         continue;
                                     }
                                 }
 
                                 if (money != -1) {
-                                    if (money != locker.getPaidAmount()) {
+                                    if (money != locker.getPupil().getPaidAmount()) {
                                         continue;
                                     }
                                 }
 
                                 if (remainingTimeInMonths != -1) {
-                                    if (locker.getRemainingTimeInMonths() != remainingTimeInMonths) {
+                                    if (locker.getPupil().getRemainingTimeInMonths() != remainingTimeInMonths) {
                                         continue;
                                     }
                                 }
 
                                 if (!fromdate.equals("")) {
-                                    if (!fromdate.equals(locker.getRentedFromDate())) {
+                                    if (!fromdate.equals(locker.getPupil().getRentedFromDate())) {
                                         continue;
                                     }
                                 }
 
                                 if (!untildate.equals("")) {
-                                    if (!untildate.equals(locker.getRentedUntilDate())) {
+                                    if (!untildate.equals(locker.getPupil().getRentedUntilDate())) {
                                         continue;
                                     }
                                 }
@@ -454,15 +454,15 @@ public class SearchFrame extends javax.swing.JFrame {
 
                             List<Object> rowData = new LinkedList<>();
                             rowData.add(locker.getId());
-                            rowData.add(locker.getLastName());
-                            rowData.add(locker.getFirstName());
-                            rowData.add(locker.getSchoolClassName());
-                            rowData.add(locker.getHeightInCm());
-                            rowData.add(locker.getHasContract());
-                            rowData.add(locker.getPaidAmount());
-                            rowData.add(locker.getRemainingTimeInMonths());
-                            rowData.add(locker.getRentedFromDate());
-                            rowData.add(locker.getRentedUntilDate());
+                            rowData.add(locker.getPupil().getLastName());
+                            rowData.add(locker.getPupil().getFirstName());
+                            rowData.add(locker.getPupil().getSchoolClassName());
+                            rowData.add(locker.getPupil().getHeightInCm());
+                            rowData.add(locker.getPupil().getHasContract());
+                            rowData.add(locker.getPupil().getPaidAmount());
+                            rowData.add(locker.getPupil().getRemainingTimeInMonths());
+                            rowData.add(locker.getPupil().getRentedFromDate());
+                            rowData.add(locker.getPupil().getRentedUntilDate());
                             rowData.add(locker.getLockCode());
 
                             if (dataManager.getCurrentUser() instanceof SuperUser) {
