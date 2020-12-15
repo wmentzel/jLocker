@@ -187,14 +187,18 @@ object DataManager {
     /**
      * Moves a student from one locker to another.
      */
-    fun moveLockers(sourceLocker: Locker, destLocker: Locker, withCodes: Boolean) {
-        val destCopy = destLocker.copy
-        destLocker.setTo(sourceLocker)
-        sourceLocker.setTo(destCopy)
-        if (withCodes) {
-            destLocker.setCodes(sourceLocker.getCodes(superUserMasterKey), superUserMasterKey)
-            sourceLocker.setCodes(destCopy.getCodes(superUserMasterKey), superUserMasterKey)
+    fun moveLockers(sourceLocker: Locker, destLocker: Locker) {
+
+        if (sourceLocker.isFree) {
+            throw IllegalStateException("The source locker does not have an owner who could be moved to a new locker.")
         }
+
+        if (!destLocker.isFree) {
+            throw IllegalStateException("The destination locker still has an owner who has to be unassigned before a new owner can be assigned.")
+        }
+
+        destLocker.moveInNewOwner(sourceLocker.pupil)
+        sourceLocker.empty()
     }
 
     fun updateAllCabinets() {

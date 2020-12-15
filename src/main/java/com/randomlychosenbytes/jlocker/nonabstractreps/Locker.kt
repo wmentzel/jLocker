@@ -24,9 +24,14 @@ class Locker(
 
     @SerializedName("pupil")
     @Expose
-    var _pupil: Pupil? = pupil
+    private var _pupil: Pupil? = pupil
 
     val pupil get() = _pupil ?: throw IllegalStateException()
+
+    fun moveInNewOwner(pupil: Pupil) {
+        _pupil = pupil
+        setAppropriateColor()
+    }
 
     @Expose
     var id: String = ""
@@ -95,11 +100,6 @@ class Locker(
         } else {
             (currentCodeIndex + 1) % encryptedCodes!!.size
         }
-        setAppropriateColor()
-    }
-
-    fun setTo(newdata: Locker) {
-        _pupil = newdata.pupil
         setAppropriateColor()
     }
 

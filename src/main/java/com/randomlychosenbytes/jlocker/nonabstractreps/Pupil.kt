@@ -16,6 +16,18 @@ class Pupil(
     @Expose var paidAmount: Int,
     @Expose var previouslyPaidAmount: Int,
 ) {
+    constructor(firstName: String, lastName: String) : this(
+        firstName = firstName,
+        lastName = lastName,
+        heightInCm = 0,
+        schoolClassName = "",
+        rentedFromDate = "",
+        rentedUntilDate = "",
+        hasContract = false,
+        paidAmount = 0,
+        previouslyPaidAmount = 0
+    )
+
     val remainingTimeInMonths: Long
         get() {
             if (rentedUntilDate == "" || rentedFromDate == "") {

@@ -17,7 +17,7 @@ class ShortenClassRoomDistances(
     private val classRoomNodeId: String,
     private val className: String,
     private val createTask: (String) -> Unit,
-    private val moveLocker: (Locker, Locker, Boolean) -> Unit
+    private val moveLocker: (Locker, Locker) -> Unit
 ) {
     //
     // Calibration for the algorithm: edge weights
@@ -157,7 +157,9 @@ class ShortenClassRoomDistances(
                     val df = DecimalFormat("##.#")
                     statusMessage.append("Entfernung verkürzt um: ")
                         .append(df.format(distanceReduction.toDouble())).append("%\n\n")
-                    moveLocker(srcLocker, destLocker, false)
+
+                    moveLocker(srcLocker, destLocker);
+
                     freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
                     val taskText = "Klassenumzug (${destLocker.pupil.schoolClassName} ): ${srcLocker.id} -> "
                     "${destLocker.id} Inhaber(in) ${destLocker.pupil.firstName} ${destLocker.pupil.lastName}"

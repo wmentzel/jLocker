@@ -115,7 +115,7 @@ public class MoveLockerDialog extends javax.swing.JDialog {
             return;
         }
 
-        dataManager.moveLockers(sourceLocker, destLocker, false);
+        dataManager.moveLockers(sourceLocker, destLocker);
 
         if (!sourceLocker.isFree()) {
             // TODO check null pointer dereferencing getSurname()

@@ -226,8 +226,8 @@ public class MoveClassDialog extends JDialog {
                     dataManager.getTasks().add(new Task(taskText));
                     return null;
                 },
-                (l1, l2, withCodes) -> {
-                    dataManager.moveLockers(l1, l2, withCodes);
+                (l1, l2) -> {
+                    dataManager.moveLockers(l1, l2);
                     return null;
                 }
         );
