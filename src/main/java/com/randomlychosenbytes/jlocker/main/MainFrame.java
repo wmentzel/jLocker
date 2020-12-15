@@ -117,10 +117,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         dataManager.getCurWalk().setManagementUnits(mus);
 
-        final int numMUnits = mus.size();
+        final int numManagementUnits = mus.size();
         boolean firstLockerFound = false;
 
-        for (int i = numMUnits - 1; i >= 0; i--) {
+        for (int i = 0; i < numManagementUnits; i++) {
             ManagementUnit mu = mus.get(i);
 
             lockerOverviewPanel.add(mu);
