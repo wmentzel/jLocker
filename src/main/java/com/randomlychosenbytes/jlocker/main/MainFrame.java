@@ -156,47 +156,61 @@ public class MainFrame extends JFrame {
      * GUI components (surname, name, etc.)
      */
     public void showLockerInformation() {
+
+        if (dataManager.getCurLockerList().isEmpty()) {
+            containerPanel.setVisible(false);
+            return;
+        }
+
         //
         // Initialize all childs of userDataPanel
         //
-        if (!dataManager.getCurLockerList().isEmpty()) {
-            containerPanel.setVisible(true);
+        containerPanel.setVisible(true);
 
-            Locker locker = dataManager.getCurrentLocker();
+        Locker locker = dataManager.getCurrentLocker();
 
-            lockerIDTextField.setText(locker.getId());
-
-            if (!locker.isFree()) {
-                surnameTextField.setText(locker.getPupil().getLastName());
-                nameTextField.setText(locker.getPupil().getFirstName());
-                classTextField.setText(locker.getPupil().getSchoolClassName());
-                sizeTextField.setText(Integer.toString(locker.getPupil().getHeightInCm()));
-
-                hasContractCheckbox.setSelected(locker.getPupil().getHasContract());
-                outOfOrderCheckbox.setSelected(locker.isOutOfOrder());
-
-                moneyTextField.setText(Integer.toString(locker.getPupil().getPaidAmount()));
-                previousAmountTextField.setText(Integer.toString(locker.getPupil().getPreviouslyPaidAmount()));
-
-                fromDateTextField.setText(locker.getPupil().getRentedFromDate());
-                untilDateTextField.setText(locker.getPupil().getRentedUntilDate());
-
-                Long months = locker.getPupil().getRemainingTimeInMonths();
-                remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
-            }
-
-            // Combobox initialization
-            if (dataManager.getCurrentUser() instanceof SuperUser) {
-                codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
-            } else {
-                codeTextField.setText("00-00-00");
-            }
-
-            lockTextField.setText(locker.getLockCode());
-            noteTextArea.setText(locker.getNote());
+        if (locker.isFree()) {
+            surnameTextField.setText("");
+            nameTextField.setText("");
+            classTextField.setText("");
+            sizeTextField.setText("");
+            hasContractCheckbox.setSelected(false);
+            moneyTextField.setText("");
+            previousAmountTextField.setText("");
+            fromDateTextField.setText("");
+            untilDateTextField.setText("");
+            remainingTimeInMonthsTextField.setText("");
         } else {
-            containerPanel.setVisible(false);
+            surnameTextField.setText(locker.getPupil().getLastName());
+            nameTextField.setText(locker.getPupil().getFirstName());
+            classTextField.setText(locker.getPupil().getSchoolClassName());
+            sizeTextField.setText(Integer.toString(locker.getPupil().getHeightInCm()));
+
+            hasContractCheckbox.setSelected(locker.getPupil().getHasContract());
+            outOfOrderCheckbox.setSelected(locker.isOutOfOrder());
+
+            moneyTextField.setText(Integer.toString(locker.getPupil().getPaidAmount()));
+            previousAmountTextField.setText(Integer.toString(locker.getPupil().getPreviouslyPaidAmount()));
+
+            fromDateTextField.setText(locker.getPupil().getRentedFromDate());
+            untilDateTextField.setText(locker.getPupil().getRentedUntilDate());
+
+            Long months = locker.getPupil().getRemainingTimeInMonths();
+            remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
         }
+
+        lockerIDTextField.setText(locker.getId());
+        outOfOrderCheckbox.setSelected(locker.isOutOfOrder());
+
+        // Combobox initialization
+        if (dataManager.getCurrentUser() instanceof SuperUser) {
+            codeTextField.setText(locker.getCurrentCode(dataManager.getSuperUserMasterKey()));
+        } else {
+            codeTextField.setText("00-00-00");
+        }
+
+        lockTextField.setText(locker.getLockCode());
+        noteTextArea.setText(locker.getNote());
     }
 
     private Pupil getOrCreatePupil(Locker locker) {
