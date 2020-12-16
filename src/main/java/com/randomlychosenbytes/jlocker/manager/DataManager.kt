@@ -254,7 +254,7 @@ object DataManager {
         get() = curManagmentUnitList.get(currentManagementUnitIndex)
     val curLockerList: List<Locker>
         get() = curManamentUnit.lockerCabinet.lockers
-    val curLocker: Locker
+    val currentLocker: Locker
         get() = curLockerList[currentLockerIndex]
     val curRoom: Room
         get() = curManamentUnit.room

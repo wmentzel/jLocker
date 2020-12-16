@@ -111,12 +111,12 @@ public class SearchFrame extends javax.swing.JFrame {
             // of the current locker itself and reset it after the call of this method.
             mainFrame.setComboBoxes2CurIndizes();
 
-            dataManager.getCurLocker().setAppropriateColor();
+            dataManager.getCurrentLocker().setAppropriateColor();
 
             // reset
             dataManager.setCurrentManagementUnitIndex(iMUnitIndex);
             dataManager.setCurrentLockerIndex(iLockerIndex);
-            dataManager.getCurLocker().setSelected();
+            dataManager.getCurrentLocker().setSelected();
 
             mainFrame.showLockerInformation();
             mainFrame.bringCurrentLockerInSight();

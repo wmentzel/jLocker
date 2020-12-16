@@ -16,9 +16,9 @@ class Pupil(
     @Expose var paidAmount: Int,
     @Expose var previouslyPaidAmount: Int,
 ) {
-    constructor(firstName: String, lastName: String) : this(
-        firstName = firstName,
-        lastName = lastName,
+    constructor() : this(
+        firstName = "",
+        lastName = "",
         heightInCm = 0,
         schoolClassName = "",
         rentedFromDate = "",

@@ -26,7 +26,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
         // focus in the middle
         setLocationRelativeTo(null);
 
-        iCurCodeIndex = dataManager.getCurLocker().getCurrentCodeIndex();
+        iCurCodeIndex = dataManager.getCurrentLocker().getCurrentCodeIndex();
 
         codeTextFields[0] = codeOneTextField;
         codeTextFields[1] = codeTwoTextField;
@@ -34,7 +34,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
         codeTextFields[3] = codeFourTextField;
         codeTextFields[4] = codeFiveTextField;
 
-        String codes[] = dataManager.getCurLocker().getCodes(dataManager.getSuperUserMasterKey());
+        String codes[] = dataManager.getCurrentLocker().getCodes(dataManager.getSuperUserMasterKey());
 
         for (int i = 0; i < 5; i++) {
             codeTextFields[i].setText(codes[i]);
@@ -158,7 +158,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
-        dataManager.getCurLocker().setCurrentCodeIndex(iCurCodeIndex);
+        dataManager.getCurrentLocker().setCurrentCodeIndex(iCurCodeIndex);
         String codes[] = new String[5];
 
         for (int i = 0; i < 5; i++) {
@@ -185,7 +185,7 @@ public class EditCodesDialog extends javax.swing.JDialog {
             codes[i] = code;
         }
 
-        dataManager.getCurLocker().setCodes(codes, dataManager.getSuperUserMasterKey());
+        dataManager.getCurrentLocker().setCodes(codes, dataManager.getSuperUserMasterKey());
 
         ((MainFrame) this.getParent()).showLockerInformation();
 

@@ -5,6 +5,7 @@ import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Pupil;
 import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
 
 import javax.swing.*;
@@ -23,7 +24,7 @@ import static com.randomlychosenbytes.jlocker.manager.UtilsKt.isDateValid;
  * This is the main windows of the application. It is displayed right after
  * the login-dialog/create new user dialog.i
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends JFrame {
     private SearchFrame searchFrame;
     private TasksFrame tasksFrame;
     Timer timer;
@@ -161,7 +162,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (!dataManager.getCurLockerList().isEmpty()) {
             containerPanel.setVisible(true);
 
-            Locker locker = dataManager.getCurLocker();
+            Locker locker = dataManager.getCurrentLocker();
 
             lockerIDTextField.setText(locker.getId());
 
@@ -179,7 +180,6 @@ public class MainFrame extends javax.swing.JFrame {
 
                 fromDateTextField.setText(locker.getPupil().getRentedFromDate());
                 untilDateTextField.setText(locker.getPupil().getRentedUntilDate());
-
 
                 Long months = locker.getPupil().getRemainingTimeInMonths();
                 remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
@@ -199,74 +199,93 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    private Pupil getOrCreatePupil(Locker locker) {
+        if (locker.isFree()) {
+            locker.moveInNewOwner(new Pupil());
+        }
+
+        return locker.getPupil();
+    }
+
     /**
      * When executed the data from the GUI components is written into the locker
      * object.
      */
-    private void setLockerInformation() {
-        Locker locker = dataManager.getCurLocker();
+    private void setLockerInformation(Locker locker) {
 
-        locker.getPupil().setLastName(surnameTextField.getText());
-        locker.getPupil().setFirstName(nameTextField.getText());
-        locker.getPupil().setSchoolClassName(classTextField.getText());
-        locker.getPupil().setHasContract(hasContractCheckbox.isSelected());
+        String id = lockerIDTextField.getText();
+
+        if (!dataManager.getCurrentLocker().getId().equals(id) && dataManager.isLockerIdUnique(id) && !id.isBlank()) {
+            locker.setId(id);
+        } else {
+            JOptionPane.showMessageDialog(null, "Diese Schließfach-ID existiert bereits! Wählen Sie eine andere.", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         locker.setOutOfOrder(outOfOrderCheckbox.isSelected());
         locker.setLockCode(lockTextField.getText());
         locker.setNote(noteTextArea.getText());
 
-        String id = lockerIDTextField.getText();
+        String lastName = surnameTextField.getText();
 
-        if (!dataManager.getCurLocker().getId().equals(id)) {
-            if (dataManager.isLockerIdUnique(id) && !id.equals("") && !id.equals(" ")) {
-                locker.setId(id);
-            } else {
-                JOptionPane.showMessageDialog(null, "Diese Schließfach-ID existiert bereits! Wählen Sie eine andere.", "Fehler", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        if (!lastName.isBlank()) {
+            getOrCreatePupil(locker).setLastName(lastName);
         }
 
-        int size = 0;
-        String sizeString = sizeTextField.getText();
+        String firstName = nameTextField.getText();
 
-        if (!sizeString.isEmpty()) {
+        if (!firstName.isBlank()) {
+            getOrCreatePupil(locker).setFirstName(firstName);
+        }
+
+        String heightString = sizeTextField.getText();
+
+        if (!heightString.isBlank()) {
             try {
-                size = Integer.parseInt(sizeString);
+                int height = Integer.parseInt(heightString);
+                getOrCreatePupil(locker).setHeightInCm(height);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Die eigegebene Größe ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
-        locker.getPupil().setHeightInCm(size);
-
         String from = fromDateTextField.getText();
 
-        if (from.length() != 0) {
-            if (!isDateValid(from)) {
+        if (!from.isBlank()) {
+            if (isDateValid(from)) {
+                getOrCreatePupil(locker).setRentedFromDate(from);
+            } else {
                 JOptionPane.showMessageDialog(null, "Das Anfangsdatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else {
-                locker.getPupil().setRentedFromDate(from);
             }
-        } else {
-            locker.getPupil().setRentedFromDate(from);
         }
 
         String until = untilDateTextField.getText();
 
-        if (until.length() != 0) {
-            if (!isDateValid(until)) {
+        if (!until.isBlank()) {
+            if (isDateValid(until)) {
+                getOrCreatePupil(locker).setRentedUntilDate(until);
+            } else {
                 JOptionPane.showMessageDialog(null, "Das Enddatum ist ungültig (Format DD.MM.YYYY)!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else {
-                locker.getPupil().setRentedUntilDate(until);
             }
-        } else {
-            locker.getPupil().setRentedUntilDate(until);
         }
 
-        long months = locker.getPupil().getRemainingTimeInMonths();
-        remainingTimeInMonthsTextField.setText(months + " " + (months == 1 ? "Monat" : "Monate"));
+        if (!locker.isFree()) {
+            long months = locker.getPupil().getRemainingTimeInMonths();
+            remainingTimeInMonthsTextField.setText(months + " " + (months == 1 ? "Monat" : "Monate"));
+        }
+
+        String schoolClassName = classTextField.getText();
+
+        if (!schoolClassName.isBlank()) {
+            getOrCreatePupil(locker).setSchoolClassName(schoolClassName);
+        }
+
+        if (hasContractCheckbox.isSelected()) {
+            getOrCreatePupil(locker).setHasContract(hasContractCheckbox.isSelected());
+        }
     }
 
     public void setStatusMessage(String message) {
@@ -286,7 +305,7 @@ public class MainFrame extends javax.swing.JFrame {
         Rectangle r = dataManager.getCurManamentUnit().getBounds();
 
         lockerOverviewScrollPane.getHorizontalScrollBar().setValue(r.x);
-        lockerOverviewScrollPane.getVerticalScrollBar().setValue(dataManager.getCurLocker().getBounds().y);
+        lockerOverviewScrollPane.getVerticalScrollBar().setValue(dataManager.getCurrentLocker().getBounds().y);
     }
 
     /**
@@ -1075,7 +1094,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveButtonActionPerformed
     {//GEN-HEADEREND:event_saveButtonActionPerformed
-        setLockerInformation();
+        setLockerInformation(dataManager.getCurrentLocker());
         dataManager.setHasDataChanged(true);
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -1106,7 +1125,7 @@ public class MainFrame extends javax.swing.JFrame {
             untilDateTextField.setText("");
             noteTextArea.setText("");
 
-            Locker locker = dataManager.getCurLocker();
+            Locker locker = dataManager.getCurrentLocker();
             locker.empty();
 
             // Combobox initialization
@@ -1191,9 +1210,9 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             int amount = new Integer(currentAmountTextField.getText());
 
-            dataManager.getCurLocker().getPupil().setPreviouslyPaidAmount(amount);
-            int iNewFullAmount = dataManager.getCurLocker().getPupil().getPaidAmount() + amount;
-            dataManager.getCurLocker().getPupil().setPaidAmount(iNewFullAmount);
+            dataManager.getCurrentLocker().getPupil().setPreviouslyPaidAmount(amount);
+            int iNewFullAmount = dataManager.getCurrentLocker().getPupil().getPaidAmount() + amount;
+            dataManager.getCurrentLocker().getPupil().setPaidAmount(iNewFullAmount);
 
             previousAmountTextField.setText(Integer.toString(amount));
             moneyTextField.setText(Integer.toString(iNewFullAmount));
