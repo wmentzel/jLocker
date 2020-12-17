@@ -32,6 +32,9 @@ public class MainFrame extends JFrame {
     DataManager dataManager = DataManager.INSTANCE;
 
     public MainFrame() {
+    }
+
+    private void initialize() {
         initComponents();
 
         // center on screen
@@ -1322,7 +1325,9 @@ public class MainFrame extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainFrame().setVisible(true);
+                MainFrame mainFrame = new MainFrame();
+                mainFrame.initialize();
+                mainFrame.setVisible(true);
             }
         });
     }
