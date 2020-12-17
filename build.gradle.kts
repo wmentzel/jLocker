@@ -22,7 +22,13 @@ dependencies {
     implementation("org.jgrapht:jgrapht-ext:0.9.0")
     implementation("org.jgrapht:jgrapht-core:0.9.0")
 
-    testImplementation("junit", "junit", "4.12")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+
+    testImplementation("org.mockito:mockito-core:3.6.28")
+    testImplementation("org.mockito:mockito-inline:3.6.28")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.4.6")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
 tasks {
