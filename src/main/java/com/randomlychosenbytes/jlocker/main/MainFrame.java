@@ -228,8 +228,9 @@ public class MainFrame extends JFrame {
      * When executed the data from the GUI components is written into the locker
      * object.
      */
-    private void setLockerInformation(Locker locker) {
+    private void setLockerInformation() {
 
+        Locker locker = dataManager.getCurrentLocker();
         String id = lockerIDTextField.getText();
 
         if (!dataManager.getCurrentLocker().getId().equals(id) && dataManager.isLockerIdUnique(id) && !id.isBlank()) {
@@ -1111,7 +1112,7 @@ public class MainFrame extends JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveButtonActionPerformed
     {//GEN-HEADEREND:event_saveButtonActionPerformed
-        setLockerInformation(dataManager.getCurrentLocker());
+        setLockerInformation();
         dataManager.setHasDataChanged(true);
     }//GEN-LAST:event_saveButtonActionPerformed
 
