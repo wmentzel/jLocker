@@ -9,7 +9,6 @@ application {
     mainClassName = "com.randomlychosenbytes.jlocker.main.MainFrame"
 }
 
-group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
