@@ -48,7 +48,6 @@ object DataManager {
     var currentManagementUnitIndex = 0
     var currentLockerIndex = 0
 
-
     lateinit var userMasterKey: SecretKey
     lateinit var superUserMasterKey: SecretKey
 
@@ -202,7 +201,7 @@ object DataManager {
     }
 
     fun updateAllCabinets() {
-        val mus: List<ManagementUnit> = curManagmentUnitList
+        val mus: List<ManagementUnit> = currentManagmentUnitList
         val maxRows = mus.map { mu: ManagementUnit -> mu.lockerCabinet.lockers.size }.maxOrNull() ?: 0
         mus.map { obj: ManagementUnit -> obj.lockerCabinet }.forEach { c: LockerCabinet -> c.updateCabinet(maxRows) }
     }
@@ -235,31 +234,38 @@ object DataManager {
         return getLockerById(id) == null
     }
 
-    val curFloorList: List<Floor>
-        get() = curBuilding.floors
+    val currentFloorList: List<Floor>
+        get() = currentBuilding.floors
 
-    val curWalkList: List<Walk>
-        get() = curFloor.walks
+    val currentWalkList: List<Walk>
+        get() = currentFloor.walks
 
-    val curManagmentUnitList: List<ManagementUnit>
-        get() = curWalk.managementUnits
+    val currentManagmentUnitList: List<ManagementUnit>
+        get() = currentWalk.managementUnits
 
-    val curBuilding: Building
+    val currentBuilding: Building
         get() = buildingList[currentBuildingIndex]
-    val curFloor: Floor
-        get() = curFloorList.get(currentFloorIndex)
-    val curWalk: Walk
-        get() = curWalkList.get(currentWalkIndex)
-    val curManamentUnit: ManagementUnit
-        get() = curManagmentUnitList.get(currentManagementUnitIndex)
-    val curLockerList: List<Locker>
-        get() = curManamentUnit.lockerCabinet.lockers
+
+    val currentFloor: Floor
+        get() = currentFloorList[currentFloorIndex]
+
+    val currentWalk: Walk
+        get() = currentWalkList[currentWalkIndex]
+
+    val currentManamentUnit: ManagementUnit
+        get() = currentManagmentUnitList[currentManagementUnitIndex]
+
+    val currentLockerList: List<Locker>
+        get() = currentManamentUnit.lockerCabinet.lockers
+
     val currentLocker: Locker
-        get() = curLockerList[currentLockerIndex]
-    val curRoom: Room
-        get() = curManamentUnit.room
-    val curLockerCabinet: LockerCabinet
-        get() = curManamentUnit.lockerCabinet
+        get() = currentLockerList[currentLockerIndex]
+
+    val currentRoom: Room
+        get() = currentManamentUnit.room
+
+    val currentLockerCabinet: LockerCabinet
+        get() = currentManamentUnit.lockerCabinet
 
     fun hasDataChanged(): Boolean {
         return hasDataChanged

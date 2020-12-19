@@ -29,7 +29,7 @@ public class FloorDialog extends javax.swing.JDialog {
 
         if (bMode == EDIT) {
             setTitle("Etagenname bearbeiten");
-            entityNameTextField.setText(dataManager.getCurFloor().getName());
+            entityNameTextField.setText(dataManager.getCurrentFloor().getName());
         } else {
             setTitle("Etage hinzufügen");
         }
@@ -96,16 +96,16 @@ public class FloorDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
         if (bMode == EDIT) {
-            dataManager.getCurFloor().setName(entityNameTextField.getText());
+            dataManager.getCurrentFloor().setName(entityNameTextField.getText());
         } else {
-            dataManager.getCurFloorList().add(new Floor(entityNameTextField.getText()));
-            dataManager.setCurrentFloorIndex(dataManager.getCurFloorList().size() - 1);
+            dataManager.getCurrentFloorList().add(new Floor(entityNameTextField.getText()));
+            dataManager.setCurrentFloorIndex(dataManager.getCurrentFloorList().size() - 1);
 
-            dataManager.getCurWalkList().add(new Walk("-"));
+            dataManager.getCurrentWalkList().add(new Walk("-"));
             dataManager.setCurrentWalkIndex(0);
 
-            dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurManagmentUnitList().size() - 1);
+            dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentManagmentUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }

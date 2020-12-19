@@ -139,11 +139,11 @@ class Locker(
      */
     private inner class MouseListener : MouseAdapter() {
         override fun mouseReleased(e: MouseEvent) {
-            if (DataManager.curLockerList.size > 0) {
+            if (DataManager.currentLockerList.size > 0) {
                 DataManager.currentLocker.setAppropriateColor()
             }
             val locker = e.source as Locker
-            DataManager.curWalk.setCurLockerIndex(locker)
+            DataManager.currentWalk.setCurLockerIndex(locker)
             locker.setSelected()
             DataManager.mainFrame.showLockerInformation()
         }

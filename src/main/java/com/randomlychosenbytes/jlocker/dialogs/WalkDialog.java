@@ -30,7 +30,7 @@ public class WalkDialog extends javax.swing.JDialog {
 
         if (bMode == EDIT) {
             setTitle("Gangname bearbeiten");
-            entityNameTextField.setText(dataManager.getCurWalk().getName());
+            entityNameTextField.setText(dataManager.getCurrentWalk().getName());
         } else {
             setTitle("Gang hinzufügen");
         }
@@ -102,7 +102,7 @@ public class WalkDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
         if (bMode == EDIT) {
-            dataManager.getCurWalk().setName(entityNameTextField.getText());
+            dataManager.getCurrentWalk().setName(entityNameTextField.getText());
         } else {
             String name = entityNameTextField.getText();
 
@@ -111,11 +111,11 @@ public class WalkDialog extends javax.swing.JDialog {
                 return;
             }
 
-            dataManager.getCurWalkList().add(new Walk(name));
-            dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
+            dataManager.getCurrentWalkList().add(new Walk(name));
+            dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
 
-            dataManager.getCurWalk().getManagementUnits().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurWalk().getManagementUnits().size() - 1);
+            dataManager.getCurrentWalk().getManagementUnits().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getManagementUnits().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }

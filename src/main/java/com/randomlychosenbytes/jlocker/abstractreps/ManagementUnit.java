@@ -180,7 +180,7 @@ public class ManagementUnit extends JPanel {
 
     private void addMUnitLeftLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addMUnitLeftLabelMouseReleased
     {//GEN-HEADEREND:event_addMUnitLeftLabelMouseReleased
-        List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
+        List<ManagementUnit> mus = DataManager.INSTANCE.getCurrentManagmentUnitList();
 
         int index = mus.indexOf(this);
         int iNewIndex;
@@ -208,13 +208,13 @@ public class ManagementUnit extends JPanel {
 
     private void removeThisMUnitLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     {//GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
-        if (DataManager.INSTANCE.getCurManagmentUnitList().size() > 1) {
+        if (DataManager.INSTANCE.getCurrentManagmentUnitList().size() > 1) {
             String type = getNameFromID(this.type);
 
             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen " + type + " wirklich löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (answer == JOptionPane.YES_OPTION) {
-                List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
+                List<ManagementUnit> mus = DataManager.INSTANCE.getCurrentManagmentUnitList();
                 mus.remove(this);
                 DataManager.INSTANCE.getMainFrame().drawLockerOverview();
             }
@@ -223,7 +223,7 @@ public class ManagementUnit extends JPanel {
 
     private void addMUnitRightLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_addMUnitRightLabelMouseReleased
     {//GEN-HEADEREND:event_addMUnitRightLabelMouseReleased
-        List<ManagementUnit> mus = DataManager.INSTANCE.getCurManagmentUnitList();
+        List<ManagementUnit> mus = DataManager.INSTANCE.getCurrentManagmentUnitList();
 
         int index = mus.indexOf(this);
 

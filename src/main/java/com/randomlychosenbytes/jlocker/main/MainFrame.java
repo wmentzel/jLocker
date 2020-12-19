@@ -117,9 +117,9 @@ public class MainFrame extends JFrame {
         // Remove old panels
         lockerOverviewPanel.removeAll();
 
-        List<ManagementUnit> mus = dataManager.reinstantiateManagementUnits(dataManager.getCurManagmentUnitList());
+        List<ManagementUnit> mus = dataManager.reinstantiateManagementUnits(dataManager.getCurrentManagmentUnitList());
 
-        dataManager.getCurWalk().setManagementUnits(mus);
+        dataManager.getCurrentWalk().setManagementUnits(mus);
 
         final int numManagementUnits = mus.size();
         boolean firstLockerFound = false;
@@ -160,7 +160,7 @@ public class MainFrame extends JFrame {
      */
     public void showLockerInformation() {
 
-        if (dataManager.getCurLockerList().isEmpty()) {
+        if (dataManager.getCurrentLockerList().isEmpty()) {
             containerPanel.setVisible(false);
             return;
         }
@@ -198,8 +198,8 @@ public class MainFrame extends JFrame {
             fromDateTextField.setText(locker.getPupil().getRentedFromDate());
             untilDateTextField.setText(locker.getPupil().getRentedUntilDate());
 
-            Long months = locker.getPupil().getRemainingTimeInMonths();
-            remainingTimeInMonthsTextField.setText(months.toString() + " " + (months == 1 ? "Monat" : "Monate"));
+            long months = locker.getPupil().getRemainingTimeInMonths();
+            remainingTimeInMonthsTextField.setText(Long.toString(months) + " " + (months == 1 ? "Monat" : "Monate"));
         }
 
         lockerIDTextField.setText(locker.getId());
@@ -320,7 +320,7 @@ public class MainFrame extends JFrame {
      * Determines the scroll position to bring a certain locker into sight.
      */
     public void bringCurrentLockerInSight() {
-        Rectangle r = dataManager.getCurManamentUnit().getBounds();
+        Rectangle r = dataManager.getCurrentManamentUnit().getBounds();
 
         lockerOverviewScrollPane.getHorizontalScrollBar().setValue(r.x);
         lockerOverviewScrollPane.getVerticalScrollBar().setValue(dataManager.getCurrentLocker().getBounds().y);
@@ -351,15 +351,15 @@ public class MainFrame extends JFrame {
         initializeComboBox(dataManager.getBuildingList(), buildingComboBox);
         buildingComboBox.setSelectedIndex(dataManager.getCurrentBuildingIndex());
 
-        initializeComboBox(dataManager.getCurFloorList(), floorComboBox);
+        initializeComboBox(dataManager.getCurrentFloorList(), floorComboBox);
         floorComboBox.setSelectedIndex(dataManager.getCurrentFloorIndex());
 
-        initializeComboBox(dataManager.getCurWalkList(), walkComboBox);
+        initializeComboBox(dataManager.getCurrentWalkList(), walkComboBox);
         walkComboBox.setSelectedIndex(dataManager.getCurrentWalkIndex());
 
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
-        removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);
-        removeWalkButton.setEnabled(dataManager.getCurWalkList().size() > 1);
+        removeFloorButton.setEnabled(dataManager.getCurrentFloorList().size() > 1);
+        removeWalkButton.setEnabled(dataManager.getCurrentWalkList().size() > 1);
 
         drawLockerOverview();
     }
@@ -1086,9 +1086,9 @@ public class MainFrame extends JFrame {
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diese Etage wirklich löschen?", "Etage löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.getCurFloorList().remove(dataManager.getCurrentFloorIndex());
+            dataManager.getCurrentFloorList().remove(dataManager.getCurrentFloorIndex());
 
-            dataManager.setCurrentFloorIndex(dataManager.getCurFloorList().size() - 1);
+            dataManager.setCurrentFloorIndex(dataManager.getCurrentFloorList().size() - 1);
             dataManager.setCurrentWalkIndex(0);
             dataManager.setCurrentManagementUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
@@ -1101,8 +1101,8 @@ public class MainFrame extends JFrame {
         int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie diesen Gang wirklich löschen?", "Gang löschen", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.getCurWalkList().remove(dataManager.getCurrentWalkIndex());
-            dataManager.setCurrentWalkIndex(dataManager.getCurWalkList().size() - 1);
+            dataManager.getCurrentWalkList().remove(dataManager.getCurrentWalkIndex());
+            dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
             dataManager.setCurrentManagementUnitIndex(0);
             dataManager.setCurrentLockerIndex(0);
 
@@ -1195,7 +1195,7 @@ public class MainFrame extends JFrame {
     {//GEN-HEADEREND:event_buildingComboBoxPopupMenuWillBecomeInvisible
         dataManager.setCurrentBuildingIndex(buildingComboBox.getSelectedIndex());
 
-        initializeComboBox(dataManager.getCurFloorList(), floorComboBox);
+        initializeComboBox(dataManager.getCurrentFloorList(), floorComboBox);
 
         // move on to next combobox
         floorComboBoxPopupMenuWillBecomeInvisible(null);
@@ -1205,7 +1205,7 @@ public class MainFrame extends JFrame {
     {//GEN-HEADEREND:event_floorComboBoxPopupMenuWillBecomeInvisible
         dataManager.setCurrentFloorIndex(floorComboBox.getSelectedIndex());
 
-        initializeComboBox(dataManager.getCurWalkList(), walkComboBox);
+        initializeComboBox(dataManager.getCurrentWalkList(), walkComboBox);
 
         // move on to next combobox
         walkComboBoxPopupMenuWillBecomeInvisible(null);
@@ -1217,8 +1217,8 @@ public class MainFrame extends JFrame {
         dataManager.setCurrentManagementUnitIndex(0);
 
         removeBuildingButton.setEnabled(dataManager.getBuildingList().size() > 1);
-        removeFloorButton.setEnabled(dataManager.getCurFloorList().size() > 1);
-        removeWalkButton.setEnabled(dataManager.getCurWalkList().size() > 1);
+        removeFloorButton.setEnabled(dataManager.getCurrentFloorList().size() > 1);
+        removeWalkButton.setEnabled(dataManager.getCurrentWalkList().size() > 1);
 
         drawLockerOverview();
     }//GEN-LAST:event_walkComboBoxPopupMenuWillBecomeInvisible

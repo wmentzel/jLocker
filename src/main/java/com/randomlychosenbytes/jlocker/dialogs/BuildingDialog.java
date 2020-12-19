@@ -29,7 +29,7 @@ public class BuildingDialog extends javax.swing.JDialog {
 
         if (this.mode == EDIT) {
             setTitle("Gebäudename bearbeiten");
-            entityNameTextField.setText(dataManager.getCurBuilding().getName());
+            entityNameTextField.setText(dataManager.getCurrentBuilding().getName());
         } else {
             setTitle("Gebäude hinzufügen");
         }
@@ -96,19 +96,19 @@ public class BuildingDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
         if (mode == EDIT) {
-            dataManager.getCurBuilding().setName(entityNameTextField.getText());
+            dataManager.getCurrentBuilding().setName(entityNameTextField.getText());
         } else {
             dataManager.getBuildingList().add(new Building(entityNameTextField.getText(), ""));
             dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
 
-            dataManager.getCurFloorList().add(new Floor("-"));
+            dataManager.getCurrentFloorList().add(new Floor("-"));
             dataManager.setCurrentFloorIndex(0);
 
-            dataManager.getCurWalkList().add(new Walk("-"));
+            dataManager.getCurrentWalkList().add(new Walk("-"));
             dataManager.setCurrentWalkIndex(0);
 
-            dataManager.getCurManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurManagmentUnitList().size() - 1);
+            dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentManagmentUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }
