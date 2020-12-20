@@ -17,7 +17,7 @@ public class LockerCabinet extends JPanel {
         initComponents();
         lockers = new LinkedList<>();
         cabinetPanel.setLayout(new GridLayout(0, 1, 0, 10));
-        updateCabinet(0);
+        updateDummyRows(0);
     }
 
     public void setLockers(List<Locker> lockers) {
@@ -28,17 +28,17 @@ public class LockerCabinet extends JPanel {
 
         lockers.add(0, locker);
 
-        DataManager.INSTANCE.updateAllCabinets();
+        DataManager.INSTANCE.updateDummyRowsOfAllCabinets();
 
         remLockerLabel.setEnabled(true);
     }
 
-    public void updateCabinet(int numRows) {
+    public void updateDummyRows(int numRowsOverall) {
 
         cabinetPanel.removeAll();
 
-        if (numRows > lockers.size()) {
-            for (int i = 0; i < numRows - lockers.size(); i++) {
+        if (numRowsOverall > lockers.size()) {
+            for (int i = 0; i < numRowsOverall - lockers.size(); i++) {
                 cabinetPanel.add(new JLabel());
             }
         }
@@ -131,7 +131,7 @@ public class LockerCabinet extends JPanel {
 
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.remove(0); // remove first
-                DataManager.INSTANCE.updateAllCabinets();
+                DataManager.INSTANCE.updateDummyRowsOfAllCabinets();
             }
         }
     }//GEN-LAST:event_remLockerLabelMouseReleased

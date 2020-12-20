@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
                 new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent winEvt) {
-                        if (dataManager.hasDataChanged()) {
+                        if (dataManager.getHasDataChanged()) {
                             int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie Ihre Änderungen speichern?", "Speichern und beenden", JOptionPane.YES_NO_CANCEL_OPTION);
 
                             if (answer == JOptionPane.CANCEL_OPTION) {
@@ -148,7 +148,7 @@ public class MainFrame extends JFrame {
 
         mus.stream()
                 .map(ManagementUnit::getLockerCabinet)
-                .forEach(c -> c.updateCabinet(maxRows));
+                .forEach(c -> c.updateDummyRows(maxRows));
 
         showLockerInformation();
         lockerOverviewPanel.updateUI();

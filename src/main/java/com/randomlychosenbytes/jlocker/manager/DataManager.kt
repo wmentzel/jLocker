@@ -200,39 +200,42 @@ object DataManager {
         sourceLocker.empty()
     }
 
-    fun updateAllCabinets() {
-        val mus: List<ManagementUnit> = currentManagmentUnitList
-        val maxRows = mus.map { mu: ManagementUnit -> mu.lockerCabinet.lockers.size }.maxOrNull() ?: 0
-        mus.map { obj: ManagementUnit -> obj.lockerCabinet }.forEach { c: LockerCabinet -> c.updateCabinet(maxRows) }
+    fun updateDummyRowsOfAllCabinets() {
+        val cabinets = currentManagmentUnitList.map { it.lockerCabinet }
+        val maxRows = cabinets.map { it.lockers.size }.maxOrNull() ?: 0
+        cabinets.forEach { it.updateDummyRows(maxRows) }
     }
 
     fun reinstantiateManagementUnits(
         managementUnits: List<ManagementUnit>
-    ) = managementUnits.map { mu: ManagementUnit ->
-        val newMu = ManagementUnit(mu.type)
-        when (mu.type) {
-            ManagementUnit.ROOM -> {
-                newMu.room.setCaption(mu.room.roomName, mu.room.schoolClassName)
-            }
-            ManagementUnit.LOCKER_CABINET -> {
-                val newLockers = mu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
-                newMu.lockerCabinet.lockers = newLockers
-            }
-            ManagementUnit.STAIRCASE -> {
-                newMu.staircase.setCaption(mu.staircase.staircaseName)
+    ) = managementUnits.map { it to ManagementUnit(it.type) }.map { (oldMu, newMu) ->
+        ManagementUnit(oldMu.type).also { newMu ->
+            when (oldMu.type) {
+                ManagementUnit.ROOM -> {
+                    newMu.room.setCaption(oldMu.room.roomName, oldMu.room.schoolClassName)
+                }
+                ManagementUnit.LOCKER_CABINET -> {
+                    val newLockers = oldMu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
+                    newMu.lockerCabinet.lockers = newLockers
+                }
+                ManagementUnit.STAIRCASE -> {
+                    newMu.staircase.setCaption(oldMu.staircase.staircaseName)
+                }
             }
         }
-        newMu
+    }
+
+    fun isLockerIdUnique(id: String) = getLockerById(id) == null
+
+    fun initBuildingObject() {
+        buildingList = unsealAndDeserializeBuildings(encryptedBuildingsBase64, userMasterKey)
     }
 
     val appTitle: String
         get() = bundle.getString("Application.title")
+
     val appVersion: String
         get() = bundle.getString("Application.version")
-
-    fun isLockerIdUnique(id: String): Boolean {
-        return getLockerById(id) == null
-    }
 
     val currentFloorList: List<Floor>
         get() = currentBuilding.floors
@@ -266,14 +269,6 @@ object DataManager {
 
     val currentLockerCabinet: LockerCabinet
         get() = currentManamentUnit.lockerCabinet
-
-    fun hasDataChanged(): Boolean {
-        return hasDataChanged
-    }
-
-    fun initBuildingObject() {
-        buildingList = unsealAndDeserializeBuildings(encryptedBuildingsBase64, userMasterKey)
-    }
 
     init {
         val url = MainFrame::class.java.protectionDomain.codeSource.location
