@@ -3,11 +3,12 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class RoomDialog extends javax.swing.JDialog {
+public class RoomDialog extends JDialog {
     private final Room room;
 
-    public RoomDialog(java.awt.Frame parent, boolean modal, Room room) {
+    public RoomDialog(Frame parent, boolean modal, Room room) {
         super(parent, modal);
         initComponents();
 

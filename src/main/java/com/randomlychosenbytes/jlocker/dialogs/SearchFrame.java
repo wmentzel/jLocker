@@ -19,14 +19,12 @@ public class SearchFrame extends javax.swing.JFrame {
     private final List<Class> dataTypes = new LinkedList<>();
 
     private final MainFrame mainFrame;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
-    public SearchFrame(MainFrame mainFrame, DataManager dataManager) {
+    public SearchFrame(MainFrame mainFrame) {
         initComponents();
 
         this.mainFrame = mainFrame;
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(searchButton);

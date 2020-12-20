@@ -11,13 +11,11 @@ public class FloorDialog extends javax.swing.JDialog {
     public static final int ADD = 1;
 
     private final int bMode;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
-    public FloorDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
+    public FloorDialog(java.awt.Frame parent, boolean modal, int mode) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);

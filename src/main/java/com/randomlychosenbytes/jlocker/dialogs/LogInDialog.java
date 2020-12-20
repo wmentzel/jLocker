@@ -9,13 +9,11 @@ import java.io.File;
 
 public class LogInDialog extends javax.swing.JDialog {
     File resPath = null;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
-    public LogInDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public LogInDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);

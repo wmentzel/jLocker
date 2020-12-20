@@ -2,16 +2,15 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 
+import java.awt.*;
 import java.util.List;
 
 public class SettingsDialog extends javax.swing.JDialog {
-    DataManager dataManager;
+    private DataManager dataManager = DataManager.INSTANCE;
 
-    public SettingsDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public SettingsDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
@@ -154,7 +153,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
     private void lockerMinSizesTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_lockerMinSizesTextFieldMouseClicked
     {//GEN-HEADEREND:event_lockerMinSizesTextFieldMouseClicked
-        new SetLockerMinimumSizesDialog(this, dataManager, true).setVisible(true);
+        new SetLockerMinimumSizesDialog(this, true).setVisible(true);
     }//GEN-LAST:event_lockerMinSizesTextFieldMouseClicked
 
 

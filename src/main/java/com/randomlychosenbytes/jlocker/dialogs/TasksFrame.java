@@ -13,12 +13,10 @@ public class TasksFrame extends javax.swing.JFrame {
     private final List<String> columnData;
     private final JTable table;
     private DefaultTableModel tablemodel;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
-    public TasksFrame(DataManager dataManager) {
+    public TasksFrame() {
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);

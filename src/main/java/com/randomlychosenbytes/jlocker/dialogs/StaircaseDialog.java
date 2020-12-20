@@ -2,10 +2,13 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 
-public class StaircaseDialog extends javax.swing.JDialog {
+import javax.swing.*;
+import java.awt.*;
+
+public class StaircaseDialog extends JDialog {
     private final Staircase staircase;
 
-    public StaircaseDialog(java.awt.Frame parent, boolean modal, Staircase staircase) {
+    public StaircaseDialog(Frame parent, boolean modal, Staircase staircase) {
         super(parent, modal);
         initComponents();
 

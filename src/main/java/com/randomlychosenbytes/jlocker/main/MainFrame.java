@@ -91,14 +91,14 @@ public class MainFrame extends JFrame {
         File newResFile = dataManager.getRessourceFile();
 
         if (!newResFile.exists()) {
-            CreateUsersDialog dialog = new CreateUsersDialog(this, dataManager, true);
+            CreateUsersDialog dialog = new CreateUsersDialog(this, true);
             dialog.setVisible(true);
         }
 
         //
         // LogIn
         //
-        LogInDialog dialog = new LogInDialog(this, dataManager, true);
+        LogInDialog dialog = new LogInDialog(this, true);
         dialog.setVisible(true);
 
         //
@@ -1119,7 +1119,7 @@ public class MainFrame extends JFrame {
     private void codeTextFieldMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_codeTextFieldMouseClicked
     {//GEN-HEADEREND:event_codeTextFieldMouseClicked
         if (dataManager.getCurrentUser() instanceof SuperUser) {
-            EditCodesDialog dialog = new EditCodesDialog(this, dataManager, true);
+            EditCodesDialog dialog = new EditCodesDialog(this, true);
             dialog.setVisible(true);
         }
     }//GEN-LAST:event_codeTextFieldMouseClicked
@@ -1157,37 +1157,37 @@ public class MainFrame extends JFrame {
 
     private void addBuildingButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addBuildingButtonActionPerformed
     {//GEN-HEADEREND:event_addBuildingButtonActionPerformed
-        BuildingDialog dialog = new BuildingDialog(this, true, dataManager, BuildingDialog.ADD);
+        BuildingDialog dialog = new BuildingDialog(this, true, BuildingDialog.ADD);
         dialog.setVisible(true);
     }//GEN-LAST:event_addBuildingButtonActionPerformed
 
     private void addFloorButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addFloorButtonActionPerformed
     {//GEN-HEADEREND:event_addFloorButtonActionPerformed
-        FloorDialog dialog = new FloorDialog(this, dataManager, true, FloorDialog.ADD);
+        FloorDialog dialog = new FloorDialog(this, true, FloorDialog.ADD);
         dialog.setVisible(true);
     }//GEN-LAST:event_addFloorButtonActionPerformed
 
     private void editFloorButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editFloorButtonActionPerformed
     {//GEN-HEADEREND:event_editFloorButtonActionPerformed
-        FloorDialog dialog = new FloorDialog(this, dataManager, true, FloorDialog.EDIT);
+        FloorDialog dialog = new FloorDialog(this, true, FloorDialog.EDIT);
         dialog.setVisible(true);
     }//GEN-LAST:event_editFloorButtonActionPerformed
 
     private void addWalkButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addWalkButtonActionPerformed
     {//GEN-HEADEREND:event_addWalkButtonActionPerformed
-        WalkDialog dialog = new WalkDialog(this, dataManager, true, WalkDialog.ADD);
+        WalkDialog dialog = new WalkDialog(this, true, WalkDialog.ADD);
         dialog.setVisible(true);
     }//GEN-LAST:event_addWalkButtonActionPerformed
 
     private void editWalkButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editWalkButtonActionPerformed
     {//GEN-HEADEREND:event_editWalkButtonActionPerformed
-        WalkDialog dialog = new WalkDialog(this, dataManager, true, WalkDialog.EDIT);
+        WalkDialog dialog = new WalkDialog(this, true, WalkDialog.EDIT);
         dialog.setVisible(true);
     }//GEN-LAST:event_editWalkButtonActionPerformed
 
     private void editBuildingButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editBuildingButtonActionPerformed
     {//GEN-HEADEREND:event_editBuildingButtonActionPerformed
-        BuildingDialog dialog = new BuildingDialog(this, true, dataManager, BuildingDialog.EDIT);
+        BuildingDialog dialog = new BuildingDialog(this, true, BuildingDialog.EDIT);
         dialog.setVisible(true);
     }//GEN-LAST:event_editBuildingButtonActionPerformed
 
@@ -1247,7 +1247,7 @@ public class MainFrame extends JFrame {
             tasksFrame.dispose();
         }
 
-        tasksFrame = new TasksFrame(dataManager);
+        tasksFrame = new TasksFrame();
         tasksFrame.setVisible(true);
     }//GEN-LAST:event_showTasksMenuItemActionPerformed
 
@@ -1276,19 +1276,19 @@ public class MainFrame extends JFrame {
 
     private void changeUserPWMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_changeUserPWMenuItemActionPerformed
     {//GEN-HEADEREND:event_changeUserPWMenuItemActionPerformed
-        CreateUsersDialog dialog = new CreateUsersDialog(this, dataManager, true);
+        CreateUsersDialog dialog = new CreateUsersDialog(this, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_changeUserPWMenuItemActionPerformed
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_settingsMenuItemActionPerformed
     {//GEN-HEADEREND:event_settingsMenuItemActionPerformed
-        SettingsDialog dialog = new SettingsDialog(this, dataManager, true);
+        SettingsDialog dialog = new SettingsDialog(this, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_settingsMenuItemActionPerformed
 
     private void changeClassMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_changeClassMenuItemActionPerformed
     {//GEN-HEADEREND:event_changeClassMenuItemActionPerformed
-        RenameClassDialog dialog = new RenameClassDialog(this, dataManager, true);
+        RenameClassDialog dialog = new RenameClassDialog(this, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_changeClassMenuItemActionPerformed
 
@@ -1298,20 +1298,20 @@ public class MainFrame extends JFrame {
             searchFrame.dispose();
         }
 
-        searchFrame = new SearchFrame(this, dataManager);
+        searchFrame = new SearchFrame(this);
         searchFrame.setVisible(true);
 
     }//GEN-LAST:event_searchMenuItemActionPerformed
 
     private void moveClassMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_moveClassMenuItemActionPerformed
     {//GEN-HEADEREND:event_moveClassMenuItemActionPerformed
-        MoveClassDialog dialog = new MoveClassDialog(this, dataManager, true);
+        MoveClassDialog dialog = new MoveClassDialog(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_moveClassMenuItemActionPerformed
 
     private void moveLockerMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_moveLockerMenuItemActionPerformed
     {//GEN-HEADEREND:event_moveLockerMenuItemActionPerformed
-        MoveLockerDialog dialog = new MoveLockerDialog(this, dataManager, true);
+        MoveLockerDialog dialog = new MoveLockerDialog(this, true);
         dialog.setVisible(true);
     }//GEN-LAST:event_moveLockerMenuItemActionPerformed
 

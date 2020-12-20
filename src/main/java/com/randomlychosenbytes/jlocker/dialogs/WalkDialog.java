@@ -6,19 +6,18 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class WalkDialog extends javax.swing.JDialog {
+public class WalkDialog extends JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
 
     final int bMode;
-    DataManager dataManager;
+    private DataManager dataManager = DataManager.INSTANCE;
 
-    public WalkDialog(java.awt.Frame parent, DataManager dataManager, boolean modal, int mode) {
+    public WalkDialog(Frame parent, boolean modal, int mode) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
@@ -124,7 +123,6 @@ public class WalkDialog extends javax.swing.JDialog {
 
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

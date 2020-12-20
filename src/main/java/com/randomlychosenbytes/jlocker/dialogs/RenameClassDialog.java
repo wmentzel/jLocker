@@ -8,16 +8,15 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class RenameClassDialog extends JDialog {
-    DataManager dataManager;
+    DataManager dataManager = DataManager.INSTANCE;
 
-    public RenameClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public RenameClassDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // center on screen
         setLocationRelativeTo(null);

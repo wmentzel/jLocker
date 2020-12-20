@@ -10,14 +10,12 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
 public class BuildingDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
     int mode;
 
-    public BuildingDialog(java.awt.Frame parent, boolean modal, DataManager dataManager, int mode) {
+    public BuildingDialog(java.awt.Frame parent, boolean modal, int mode) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // center dialog on screen
         setLocationRelativeTo(null);

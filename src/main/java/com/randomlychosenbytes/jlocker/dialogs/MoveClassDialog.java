@@ -6,6 +6,8 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -20,15 +22,13 @@ import java.util.*;
  * SimpleWeightedGraph
  */
 public class MoveClassDialog extends JDialog {
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
     private Map<String, String> classToClassRoomNodeId;
     private Set<String> lockerIdWithoutHeights;
 
-    public MoveClassDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public MoveClassDialog(Frame parent) {
         super(parent, false);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);

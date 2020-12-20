@@ -5,15 +5,14 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MoveLockerDialog extends javax.swing.JDialog {
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
-    public MoveLockerDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public MoveLockerDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);

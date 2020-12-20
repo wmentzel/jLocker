@@ -16,7 +16,7 @@ public class CreateUsersDialog extends JDialog {
     private int displayedCardIndex;
     private final CardLayout cardLayout;
     private boolean isFirstRun;
-    private final DataManager dataManager;
+    private final DataManager dataManager = DataManager.INSTANCE;
 
     private SuperUser superUser;
     private RestrictedUser restrictedUser;
@@ -24,11 +24,9 @@ public class CreateUsersDialog extends JDialog {
     private SecretKey superUserMasterKey;
     private SecretKey userMasterKey;
 
-    public CreateUsersDialog(final java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public CreateUsersDialog(final java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        this.dataManager = dataManager;
 
         // focus in the middle
         setLocationRelativeTo(null);

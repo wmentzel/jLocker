@@ -6,15 +6,15 @@ import com.randomlychosenbytes.jlocker.manager.DataManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class EditCodesDialog extends javax.swing.JDialog {
+public class EditCodesDialog extends JDialog {
     private final JTextField codeTextFields[] = new JTextField[5];
     private int iCurCodeIndex;
-    DataManager dataManager;
+    private DataManager dataManager = DataManager.INSTANCE;
 
     /**
      * Creates new form EditCodesDialog
      */
-    public EditCodesDialog(java.awt.Frame parent, DataManager dataManager, boolean modal) {
+    public EditCodesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
 
