@@ -27,7 +27,7 @@ object DataManager {
     val backupDirectory: File
 
     var hasDataChanged = false
-    var buildingList: List<Building> = mutableListOf()
+    var buildingList: MutableList<Building> = mutableListOf()
         private set
 
     private lateinit var restrictedUser: RestrictedUser
@@ -226,34 +226,34 @@ object DataManager {
     fun isLockerIdUnique(id: String) = getLockerById(id) == null
 
     fun initBuildingObject() {
-        buildingList = unsealAndDeserializeBuildings(encryptedBuildingsBase64, userMasterKey)
+        buildingList = unsealAndDeserializeBuildings(encryptedBuildingsBase64, userMasterKey).toMutableList()
     }
 
     val appTitle: String
     val appVersion: String
 
-    val currentFloorList: List<Floor>
+    val currentFloorList
         get() = currentBuilding.floors
 
-    val currentWalkList: List<Walk>
+    val currentWalkList
         get() = currentFloor.walks
 
-    val currentManagmentUnitList: List<ManagementUnit>
+    val currentManagmentUnitList
         get() = currentWalk.managementUnits
 
-    val currentBuilding: Building
+    val currentBuilding
         get() = buildingList[currentBuildingIndex]
 
-    val currentFloor: Floor
+    val currentFloor
         get() = currentFloorList[currentFloorIndex]
 
-    val currentWalk: Walk
+    val currentWalk
         get() = currentWalkList[currentWalkIndex]
 
-    val currentManamentUnit: ManagementUnit
+    val currentManamentUnit
         get() = currentManagmentUnitList[currentManagementUnitIndex]
 
-    val currentLockerList: List<Locker>
+    val currentLockerList
         get() = currentManamentUnit.lockerCabinet.lockers
 
     val currentLocker: Locker
