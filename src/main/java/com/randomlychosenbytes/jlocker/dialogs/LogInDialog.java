@@ -135,7 +135,7 @@ public class LogInDialog extends javax.swing.JDialog {
         // Loading...
         //
         if (resPath == null) {
-            dataManager.loadDefaultFile(isSuperUser);
+            dataManager.loadFromCustomFile(isSuperUser);
         } else {
             dataManager.loadFromCustomFile(resPath, isSuperUser); // backup loading
         }

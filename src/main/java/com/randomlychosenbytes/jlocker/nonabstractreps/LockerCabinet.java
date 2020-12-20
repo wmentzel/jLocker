@@ -10,6 +10,8 @@ import java.util.List;
 
 public class LockerCabinet extends JPanel {
 
+    private DataManager dataManager = DataManager.INSTANCE;
+
     @Expose
     private List<Locker> lockers;
 

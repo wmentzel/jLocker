@@ -86,9 +86,10 @@ object DataManager {
         //
         // Check if a buildings.dat file exists to copy it to the backup directory.
         //
-        val today: Calendar = GregorianCalendar()
-        today.isLenient = false
-        today.time
+        val today: Calendar = GregorianCalendar().apply {
+            isLenient = false
+        }
+
         val backupFile = File(
             backupDirectory, String.format(
                 "jlocker-%04d-%02d-%02d.dat",
@@ -109,7 +110,7 @@ object DataManager {
         if (backupDirectory.exists()) { // if there are not backups yet, we dont have to delete any files
 
             // This filter only returns files (and not directories)
-            val fileFilter = FileFilter { file: File -> !file.isDirectory }
+            val fileFilter = FileFilter { file -> !file.isDirectory }
             val files = backupDirectory.listFiles(fileFilter)
             for (i in 0 until files.size - settings.numOfBackups) {
                 print("* delete backup file: \"" + files[i].name + "\"...")
@@ -142,17 +143,14 @@ object DataManager {
         }
     }
 
-    fun loadDefaultFile(loadAsSuperUser: Boolean) {
-        loadFromCustomFile(ressourceFile, loadAsSuperUser)
-    }
-
     /**
      * Loads the data from an arbitry file path and initializes the users,
      * buildings, tasks and settings objects. When called directly this is used
      * to load backup files. If you want to load the current "jlocker.dat" file
      * please use loadData() method instead.
      */
-    fun loadFromCustomFile(file: File, loadAsSuperUser: Boolean) {
+    @JvmOverloads
+    fun loadFromCustomFile(file: File = ressourceFile, loadAsSuperUser: Boolean) {
         print("* reading " + file.name + "... ")
         val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
