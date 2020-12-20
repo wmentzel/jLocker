@@ -48,8 +48,22 @@ object DataManager {
     var currentManagementUnitIndex = 0
     var currentLockerIndex = 0
 
-    lateinit var userMasterKey: SecretKey
+    private lateinit var userMasterKey: SecretKey
+
     lateinit var superUserMasterKey: SecretKey
+        private set
+
+    fun initMasterKeys(currentUserPassword: String) {
+
+        userMasterKey = decryptKeyWithString(
+            currentUser.encryptedUserMasterKeyBase64,
+            currentUserPassword
+        )
+
+        (currentUser as? SuperUser)?.let {
+            superUserMasterKey = decryptKeyWithString(it.encryptedSuperUMasterKeyBase64, currentUserPassword)
+        }
+    }
 
     private val bundle = ResourceBundle.getBundle("App")
 
