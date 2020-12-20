@@ -204,12 +204,6 @@ object DataManager {
         sourceLocker.empty()
     }
 
-    fun updateDummyRowsOfAllCabinets() {
-        val cabinets = currentManagmentUnitList.map { it.lockerCabinet }
-        val maxRows = cabinets.map { it.lockers.size }.maxOrNull() ?: 0
-        cabinets.forEach { it.updateDummyRows(maxRows) }
-    }
-
     fun reinstantiateManagementUnits(
         managementUnits: List<ManagementUnit>
     ) = managementUnits.map { it to ManagementUnit(it.type) }.map { (oldMu, newMu) ->
@@ -220,7 +214,7 @@ object DataManager {
                 }
                 ManagementUnit.LOCKER_CABINET -> {
                     val newLockers = oldMu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
-                    newMu.lockerCabinet.lockers = newLockers
+                    newMu.lockerCabinet.lockers = newLockers.toMutableList()
                 }
                 ManagementUnit.STAIRCASE -> {
                     newMu.staircase.setCaption(oldMu.staircase.staircaseName)

@@ -3,10 +3,7 @@ package com.randomlychosenbytes.jlocker.main;
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
 import com.randomlychosenbytes.jlocker.dialogs.*;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Entity;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Pupil;
-import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser;
+import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.randomlychosenbytes.jlocker.manager.UtilsKt.isDateValid;
 
@@ -144,11 +142,7 @@ public class MainFrame extends JFrame {
             }
         }
 
-        int maxRows = mus.stream().mapToInt(mu -> mu.getLockerCabinet().getLockers().size()).max().orElse(0);
-
-        mus.stream()
-                .map(ManagementUnit::getLockerCabinet)
-                .forEach(c -> c.updateDummyRows(maxRows));
+        LockerCabinet.updateDummyRows(mus.stream().map(ManagementUnit::getLockerCabinet).collect(Collectors.toList()));
 
         showLockerInformation();
         lockerOverviewPanel.updateUI();
