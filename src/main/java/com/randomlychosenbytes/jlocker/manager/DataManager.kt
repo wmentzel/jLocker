@@ -204,25 +204,6 @@ object DataManager {
         sourceLocker.empty()
     }
 
-    fun reinstantiateManagementUnits(
-        managementUnits: List<ManagementUnit>
-    ) = managementUnits.map { it to ManagementUnit(it.type) }.map { (oldMu, newMu) ->
-        ManagementUnit(oldMu.type).also { newMu ->
-            when (oldMu.type) {
-                ManagementUnit.ROOM -> {
-                    newMu.room.setCaption(oldMu.room.roomName, oldMu.room.schoolClassName)
-                }
-                ManagementUnit.LOCKER_CABINET -> {
-                    val newLockers = oldMu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
-                    newMu.lockerCabinet.lockers = newLockers.toMutableList()
-                }
-                ManagementUnit.STAIRCASE -> {
-                    newMu.staircase.setCaption(oldMu.staircase.staircaseName)
-                }
-            }
-        }
-    }
-
     fun isLockerIdUnique(id: String) = getLockerById(id) == null
 
     fun initBuildingObject() {
