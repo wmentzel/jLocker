@@ -299,7 +299,7 @@ public class CreateUsersDialog extends JDialog {
             case 2: {
                 String password = userPasswordTextField.getText();
 
-                if (password.equals("") || password.length() < 8) {
+                if (password.isBlank() || password.length() < 8) {
                     JOptionPane.showMessageDialog(this, "Bitte geben Sie ein Passwort mit\nmindestens 8 Zeichen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                     return;
                 }

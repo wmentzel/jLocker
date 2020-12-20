@@ -105,7 +105,7 @@ public class WalkDialog extends JDialog {
         } else {
             String name = entityNameTextField.getText();
 
-            if (name.equals("")) {
+            if (name.isBlank()) {
                 JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Namen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
                 return;
             }

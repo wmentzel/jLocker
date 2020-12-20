@@ -232,7 +232,7 @@ public class TasksFrame extends javax.swing.JFrame {
         String description = descriptionTextField.getText();
         List<Task> tasks = dataManager.getTasks();
 
-        if (description.equals("")) {
+        if (description.isBlank()) {
             JOptionPane.showMessageDialog(null, "Sie müssen eine Beschreibung eingeben!", "Fehler", JOptionPane.ERROR_MESSAGE);
         } else {
             tasks.add(new Task(description));

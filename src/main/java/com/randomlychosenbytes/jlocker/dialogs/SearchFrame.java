@@ -373,7 +373,7 @@ public class SearchFrame extends javax.swing.JFrame {
                             Locker locker = lockers.get(l);
 
                             if (!emptyCheckbox.isSelected()) {
-                                if (!id.equals("")) {
+                                if (!id.isBlank()) {
                                     if (!locker.getId().equals(id)) {
                                         continue;
                                     }
@@ -385,13 +385,13 @@ public class SearchFrame extends javax.swing.JFrame {
                                     }
                                 }
 
-                                if (!name.equals("")) {
+                                if (!name.isBlank()) {
                                     if (!name.equals(locker.getPupil().getFirstName())) {
                                         continue;
                                     }
                                 }
 
-                                if (!_class.equals("")) {
+                                if (!_class.isBlank()) {
                                     String cl = locker.getPupil().getFirstName();
 
                                     if (!_class.contains(".") && !_class.equals("Kurs")) {
@@ -426,19 +426,19 @@ public class SearchFrame extends javax.swing.JFrame {
                                     }
                                 }
 
-                                if (!fromdate.equals("")) {
+                                if (!fromdate.isBlank()) {
                                     if (!fromdate.equals(locker.getPupil().getRentedFromDate())) {
                                         continue;
                                     }
                                 }
 
-                                if (!untildate.equals("")) {
+                                if (!untildate.isBlank()) {
                                     if (!untildate.equals(locker.getPupil().getRentedUntilDate())) {
                                         continue;
                                     }
                                 }
 
-                                if (!lock.equals("")) {
+                                if (!lock.isBlank()) {
                                     if (!lock.equals(locker.getLockCode())) {
                                         continue;
                                     }

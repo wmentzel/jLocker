@@ -100,7 +100,7 @@ public class RoomDialog extends JDialog {
     {//GEN-HEADEREND:event_okButtonActionPerformed
         String name = roomNameTextField.getText();
 
-        if (name.equals("")) {
+        if (name.isBlank()) {
             JOptionPane.showMessageDialog(null, "Sie müssen einen Raumnamen angeben!", "Fehler", JOptionPane.OK_OPTION);
         }
 
