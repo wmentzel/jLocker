@@ -20,7 +20,7 @@ class Locker(
     @Expose var note: String,
     @Expose var currentCodeIndex: Int,
     encryptedCodes: Array<String>?
-) : JLabel(), Cloneable {
+) : JLabel() {
 
     @SerializedName("pupil")
     @Expose
@@ -129,10 +129,6 @@ class Locker(
     fun getCurrentCode(sukey: SecretKey): String {
         return getCode(currentCodeIndex, sukey)
     }
-
-    @get:Throws(CloneNotSupportedException::class)
-    val copy: Locker
-        get() = clone() as Locker
 
     /**
      * TODO move to MainFrame
