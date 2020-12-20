@@ -33,7 +33,7 @@ object DataManager {
     private lateinit var restrictedUser: RestrictedUser
     private lateinit var superUser: SuperUser
     lateinit var currentUser: User
-        private set;
+        private set
 
     lateinit var tasks: MutableList<Task>
 
@@ -41,12 +41,6 @@ object DataManager {
         private set
 
     private lateinit var encryptedBuildingsBase64: String
-
-    var currentBuildingIndex = 0
-    var currentFloorIndex = 0
-    var currentWalkIndex = 0
-    var currentManagementUnitIndex = 0
-    var currentLockerIndex = 0
 
     private lateinit var userMasterKey: SecretKey
 
@@ -64,8 +58,6 @@ object DataManager {
             superUserMasterKey = decryptKeyWithString(it.encryptedSuperUMasterKeyBase64, currentUserPassword)
         }
     }
-
-    private val bundle = ResourceBundle.getBundle("App")
 
     fun setNewUsers(
         superUser: SuperUser,
@@ -246,10 +238,7 @@ object DataManager {
     }
 
     val appTitle: String
-        get() = bundle.getString("Application.title")
-
     val appVersion: String
-        get() = bundle.getString("Application.version")
 
     val currentFloorList: List<Floor>
         get() = currentBuilding.floors
@@ -284,7 +273,17 @@ object DataManager {
     val currentLockerCabinet: LockerCabinet
         get() = currentManamentUnit.lockerCabinet
 
+    var currentBuildingIndex = 0
+    var currentFloorIndex = 0
+    var currentWalkIndex = 0
+    var currentManagementUnitIndex = 0
+    var currentLockerIndex = 0
+
     init {
+        val bundle = ResourceBundle.getBundle("App")
+        appTitle = bundle.getString("Application.title")
+        appVersion = bundle.getString("Application.version")
+
         val url = MainFrame::class.java.protectionDomain.codeSource.location
         var homeDirectory = File(url.file)
 
