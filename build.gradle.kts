@@ -24,6 +24,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23")
     testImplementation("org.mockito:mockito-core:3.6.28")
     testImplementation("org.mockito:mockito-inline:3.6.28")
     testImplementation("org.mockito:mockito-junit-jupiter:3.4.6")
