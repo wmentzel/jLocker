@@ -4,15 +4,18 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.randomlychosenbytes.jlocker.manager.DataManager
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
+import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import javax.crypto.KeyGenerator
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JTextField
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MainFrameTest {
@@ -24,19 +27,37 @@ class MainFrameTest {
 
     @Test
     fun shouldHidePanelWhenThereAreNoLockersToShow() {
-        whenever(dataManager.currentLockerList).thenReturn(listOf())
+        whenever(dataManager.currentLockerList).thenReturn(mutableListOf())
         mainFrame.showLockerInformation()
         verify(containerPanel).isVisible = false
     }
 
     @Test
-    fun shouldShowLockerInformation() {
-        whenever(dataManager.currentLockerList).thenReturn(listOf(Locker()))
+    fun shouldShowCorrectDataWhenLockerIsEmpty() {
+        whenever(dataManager.currentLockerList).thenReturn(mutableListOf(Locker()))
         whenever(dataManager.currentLocker).thenReturn(Locker())
-
+        whenever(dataManager.currentUser).thenReturn(SuperUser("11111111"))
+        whenever(dataManager.superUserMasterKey).thenReturn(KeyGenerator.getInstance("DES").generateKey())
         mainFrame.showLockerInformation()
 
         verify(containerPanel).isVisible = true
+        verify(surnameTextField).text = ""
+        verify(nameTextField).text = ""
+        verify(classTextField).text = ""
+        verify(sizeTextField).text = ""
+        verify(hasContractCheckbox).isSelected = false
+        verify(moneyTextField).text = ""
+        verify(previousAmountTextField).text = ""
+        verify(fromDateTextField).text = ""
+        verify(untilDateTextField).text = ""
+        verify(remainingTimeInMonthsTextField).text = ""
+
+        verify(lockerIDTextField).text = ""
+        verify(outOfOrderCheckbox).isSelected = false
+
+        verify(codeTextField).text = "00-00-00"
+        verify(lockTextField).text = ""
+        verify(noteTextArea).text = ""
     }
 
     @Mock

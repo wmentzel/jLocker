@@ -112,8 +112,8 @@ class Locker(
         setColor(SELECTED_COLOR)
     }
 
-    fun setUpMouseListener() {
-        if (this.mouseListeners.size == 0) {
+    private fun setUpMouseListener() {
+        if (this.mouseListeners.isEmpty()) {
             addMouseListener(MouseListener())
         }
     }

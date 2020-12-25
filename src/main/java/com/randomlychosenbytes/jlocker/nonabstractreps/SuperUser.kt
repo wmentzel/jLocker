@@ -8,5 +8,4 @@ class SuperUser(password: String) : User(
 ) {
     @Expose
     val encryptedSuperUMasterKeyBase64: String = generateAndEncryptKey(password)
-
 }
