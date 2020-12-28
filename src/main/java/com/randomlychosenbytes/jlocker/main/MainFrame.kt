@@ -215,12 +215,22 @@ class MainFrame : JFrame() {
     private fun setLockerInformation() {
         val locker = dataManager.currentLocker
         val id = lockerIDTextField.text
-        if (dataManager.currentLocker.id != id && dataManager.isLockerIdUnique(id) && !id.isBlank()) {
+        if (dataManager.currentLocker.id == id || dataManager.isLockerIdUnique(id)) {
             locker.id = id
         } else {
             JOptionPane.showMessageDialog(
                 null,
                 "Diese Schließfach-ID existiert bereits! Wählen Sie eine andere.",
+                "Fehler",
+                JOptionPane.ERROR_MESSAGE
+            )
+            return
+        }
+
+        if (id.isBlank()) {
+            JOptionPane.showMessageDialog(
+                null,
+                "Bitte geben Sie eine gültige Schließfach-ID ein.",
                 "Fehler",
                 JOptionPane.ERROR_MESSAGE
             )
