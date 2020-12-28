@@ -85,6 +85,11 @@ public class MoveClassDialog extends JDialog {
                         List<Locker> lockers = munit.getLockerCabinet().getLockers();
 
                         for (Locker locker : lockers) {
+
+                            if (locker.isFree()) {
+                                continue;
+                            }
+
                             String className = locker.getPupil().getSchoolClassName();
 
                             if (!className.isEmpty()) {
