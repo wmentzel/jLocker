@@ -22,20 +22,19 @@ class ShortenClassRoomDistances(
     //
     // Calibration for the algorithm: edge weights
     //
-    private val weightedGraph: SimpleWeightedGraph<String?, DefaultWeightedEdge> =
-        SimpleWeightedGraph(DefaultWeightedEdge::class.java)
+    private val weightedGraph = SimpleWeightedGraph<String?, DefaultWeightedEdge>(DefaultWeightedEdge::class.java)
 
-    private val allLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
-    private val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
-    private val classLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
-    private val classLockerToDistancePairList: MutableList<Pair<EntityCoordinates<Locker>, Int>> = mutableListOf()
-    private val freeLockerToDistancePairList: MutableList<Pair<EntityCoordinates<Locker>, Int>> = mutableListOf()
-    private var unreachableLockers: MutableList<String> = mutableListOf()
+    private lateinit var classLockerToDistancePairList: List<Pair<EntityCoordinates<Locker>, Int>>
+    private lateinit var freeLockerToDistancePairList: List<Pair<EntityCoordinates<Locker>, Int>>
+    private lateinit var unreachableLockers: MutableList<String>
 
     fun check(): Int {
 
+        val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+        val classLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+
         // creates a weighted graph
-        connectManagementUnitsAndLockers()
+        val allLockersEntityCoordinatesList = connectManagementUnitsAndLockers()
         connectWalksOnFloor()
         connectFloorsByStaircases()
         connectBuildinsByStaircases()
@@ -47,7 +46,7 @@ class ShortenClassRoomDistances(
                 freeLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
 
-            if (lockerEntityCoordinates.entity.pupil.schoolClassName == className) {
+            if (!lockerEntityCoordinates.entity.isFree && lockerEntityCoordinates.entity.pupil.schoolClassName == className) {
                 classLockersEntityCoordinatesList.add(lockerEntityCoordinates)
             }
         }
@@ -63,7 +62,9 @@ class ShortenClassRoomDistances(
         //
         // Sort free lockers, beginning with the one that is the closest one
         //
-        unreachableLockers = mutableListOf()
+        val unreachableLockers = mutableListOf<String>()
+
+        val freeLockerToDistancePairList = mutableListOf<Pair<EntityCoordinates<Locker>, Int>>()
         for (freeLockerECoord in freeLockersEntityCoordinatesList) {
             val dist = getDistance(freeLockerECoord, classRoomNodeId)
             if (dist == -1) {
@@ -71,15 +72,20 @@ class ShortenClassRoomDistances(
                 // be reached from the classroom
                 unreachableLockers.add(freeLockerECoord.entity.id)
             } else {
-                freeLockerToDistancePairList.add(Pair(freeLockerECoord, dist))
+                freeLockerToDistancePairList.add(freeLockerECoord to dist)
             }
         }
-        freeLockerToDistancePairList.sortWith(EntityDistanceComparator())
+
+        this.freeLockerToDistancePairList =
+            freeLockerToDistancePairList.sortedWith(EntityDistanceComparator(reversed = false))
 
         //
         // Sort class lockers, beginning with the one that is the farthest 
         // distance to the class room
         //
+
+        val classLockerToDistancePairList = mutableListOf<Pair<EntityCoordinates<Locker>, Int>>()
+
         for (classLockerECoord in classLockersEntityCoordinatesList) {
             val distance = getDistance(classLockerECoord, classRoomNodeId)
             if (distance == -1) {
@@ -87,11 +93,13 @@ class ShortenClassRoomDistances(
                 // be reached from the classroom
                 unreachableLockers.add(classLockerECoord.entity.id)
             } else {
-                classLockerToDistancePairList.add(Pair(classLockerECoord, distance))
+                classLockerToDistancePairList.add(classLockerECoord to distance)
             }
         }
-        classLockerToDistancePairList.sortWith(EntityDistanceComparator())
-        classLockerToDistancePairList.reverse()
+
+        this.classLockerToDistancePairList =
+            classLockerToDistancePairList.sortedWith(EntityDistanceComparator(reversed = true))
+        this.unreachableLockers = unreachableLockers
 
         // Output how many lockers cant be reached
         return if (unreachableLockers.isEmpty()) {
@@ -120,12 +128,12 @@ class ShortenClassRoomDistances(
             statusMessage.append("$size ")
         }
 
+        val freeLockerToDistancePairList = this.freeLockerToDistancePairList.toMutableList()
+
         statusMessage.append("\n\n")
         for (classLockerToDistancePair in classLockerToDistancePairList) {
             // search until you find a free locker that is nearer and suits the pupils size
-            for (freeLockerIndex in freeLockerToDistancePairList.indices) {
-                val freeLockerToDistancePair = freeLockerToDistancePairList[freeLockerIndex]
-
+            for (freeLockerToDistancePair in freeLockerToDistancePairList) {
                 // Is distance of the new locker shorter to the classroom?
                 if (classLockerToDistancePair.second > freeLockerToDistancePair.second) {
                     val srcLocker = classLockerToDistancePair.first.entity
@@ -160,7 +168,7 @@ class ShortenClassRoomDistances(
 
                     moveLocker(srcLocker, destLocker);
 
-                    freeLockerToDistancePairList.removeAt(freeLockerIndex) // this one is now occupied, so remove it
+                    freeLockerToDistancePairList.remove(freeLockerToDistancePair) // this one is now occupied, so remove it
                     val taskText = "Klassenumzug (${destLocker.pupil.schoolClassName} ): ${srcLocker.id} -> "
                     "${destLocker.id} Inhaber(in) ${destLocker.pupil.firstName} ${destLocker.pupil.lastName}"
 
@@ -185,7 +193,10 @@ class ShortenClassRoomDistances(
      * Connects MangementUnits on a floor with each other and each ManamentUnit
      * with its lockers.
      */
-    private fun connectManagementUnitsAndLockers() {
+    private fun connectManagementUnitsAndLockers(): MutableList<EntityCoordinates<Locker>> {
+
+        val allLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
+
         for (b in buildings.indices) {
             val floors = buildings[b].floors
             for (f in floors.indices) {
@@ -242,6 +253,8 @@ class ShortenClassRoomDistances(
                 }
             }
         }
+
+        return allLockersEntityCoordinatesList
     }
 
     /**
@@ -375,13 +388,10 @@ class ShortenClassRoomDistances(
     /**
      * Returns a value of distance between a locker and a class room.
      */
-    private fun getDistance(locker: EntityCoordinates<Locker>, classRoomNodeId: String): Int {
-        val lockerID = locker.entity.id
-        val shortest = DijkstraShortestPath(weightedGraph, lockerID, classRoomNodeId)
-        val path = shortest.path
-        return path?.weight?.toInt() ?: -1
-        // not reachable
-    }
+    private fun getDistance(
+        locker: EntityCoordinates<Locker>,
+        classRoomNodeId: String
+    ) = DijkstraShortestPath(weightedGraph, locker.entity.id, classRoomNodeId).path?.weight?.toInt() ?: -1
 
     private fun createNodeId(b: Int, f: Int, w: Int, m: Int) = "$b-$f-$w-$m"
 
@@ -389,7 +399,9 @@ class ShortenClassRoomDistances(
      * Compares the Y value of a pair containing an EntityCoordintes object
      * and distance as integer
      */
-    private class EntityDistanceComparator : Comparator<Pair<EntityCoordinates<Locker>, Int>> {
+    private class EntityDistanceComparator(val reversed: Boolean = false) :
+        Comparator<Pair<EntityCoordinates<Locker>, Int>> {
+
         override fun compare(p1: Pair<EntityCoordinates<Locker>, Int>, p2: Pair<EntityCoordinates<Locker>, Int>): Int {
             val dist1 = p1.second
             val dist2 = p2.second
@@ -397,7 +409,19 @@ class ShortenClassRoomDistances(
             if (dist1 == dist2) {
                 return 0
             }
-            return if (dist1 > dist2) +1 else -1
+            return if (dist1 > dist2) {
+                if (reversed) {
+                    -1
+                } else {
+                    +1
+                }
+            } else {
+                if (reversed) {
+                    +1
+                } else {
+                    -1
+                }
+            }
         }
     }
 
