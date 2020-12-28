@@ -177,17 +177,17 @@ class MainFrame : JFrame() {
             surnameTextField.text = locker.pupil.lastName
             nameTextField.text = locker.pupil.firstName
             classTextField.text = locker.pupil.schoolClassName
-            sizeTextField.text = Integer.toString(locker.pupil.heightInCm)
+            sizeTextField.text = locker.pupil.heightInCm.toString()
             hasContractCheckbox.isSelected = locker.pupil.hasContract
-            outOfOrderCheckbox.isSelected = locker.isOutOfOrder
-            moneyTextField.text = Integer.toString(locker.pupil.paidAmount)
-            previousAmountTextField.text = Integer.toString(locker.pupil.previouslyPaidAmount)
+            moneyTextField.text = locker.pupil.paidAmount.toString()
+            previousAmountTextField.text = locker.pupil.previouslyPaidAmount.toString()
             fromDateTextField.text = locker.pupil.rentedFromDate
             untilDateTextField.text = locker.pupil.rentedUntilDate
-            val months = locker.pupil.remainingTimeInMonths
-            remainingTimeInMonthsTextField.text =
-                months.toString() + " " + if (months == 1L) "Monat" else "Monate"
+            remainingTimeInMonthsTextField.text = locker.pupil.remainingTimeInMonths.let {
+                "$it ${if (it == 1L) "Monat" else "Monate"}"
+            }
         }
+
         lockerIDTextField.text = locker.id
         outOfOrderCheckbox.isSelected = locker.isOutOfOrder
 

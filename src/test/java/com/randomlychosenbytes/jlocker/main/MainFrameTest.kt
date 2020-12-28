@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.randomlychosenbytes.jlocker.manager.DataManager
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
+import com.randomlychosenbytes.jlocker.nonabstractreps.Pupil
 import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.TestInstance
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.crypto.KeyGenerator
 import javax.swing.JCheckBox
 import javax.swing.JPanel
@@ -57,6 +60,57 @@ class MainFrameTest {
 
         verify(codeTextField).text = "00-00-00"
         verify(lockTextField).text = ""
+        verify(noteTextArea).text = ""
+    }
+
+    @Test
+    fun shouldShowCorrectDataWhenLockerIsNotEmpty() {
+
+        val now = LocalDate.now()
+        val inThreeMonths = now.plusMonths(3)
+
+        val format = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+        val pupil = Pupil().apply {
+            firstName = "Don"
+            lastName = "Draper"
+            paidAmount = 50
+            previouslyPaidAmount = 50
+            schoolClassName = "10"
+            rentedFromDate = now.format(format)
+            rentedUntilDate = inThreeMonths.format(format)
+            heightInCm = 150
+            hasContract = true
+        }
+
+        val locker = Locker().apply {
+            lockCode = "99-99-99"
+            moveInNewOwner(pupil)
+        }
+
+        whenever(dataManager.currentLockerList).thenReturn(mutableListOf(Locker()))
+        whenever(dataManager.currentLocker).thenReturn(locker)
+        whenever(dataManager.currentUser).thenReturn(SuperUser("11111111"))
+        whenever(dataManager.superUserMasterKey).thenReturn(KeyGenerator.getInstance("DES").generateKey())
+        mainFrame.showLockerInformation()
+
+        verify(containerPanel).isVisible = true
+        verify(surnameTextField).text = "Draper"
+        verify(nameTextField).text = "Don"
+        verify(classTextField).text = "10"
+        verify(sizeTextField).text = "150"
+        verify(hasContractCheckbox).isSelected = true
+        verify(moneyTextField).text = "50"
+        verify(previousAmountTextField).text = "50"
+        verify(fromDateTextField).text = now.format(format)
+        verify(untilDateTextField).text = inThreeMonths.format(format)
+        verify(remainingTimeInMonthsTextField).text = "3 Monate"
+
+        verify(lockerIDTextField).text = ""
+        verify(outOfOrderCheckbox).isSelected = false
+
+        verify(codeTextField).text = "00-00-00"
+        verify(lockTextField).text = "99-99-99"
         verify(noteTextArea).text = ""
     }
 
