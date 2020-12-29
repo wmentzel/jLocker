@@ -96,7 +96,7 @@ public class BuildingDialog extends javax.swing.JDialog {
         if (mode == EDIT) {
             dataManager.getCurrentBuilding().setName(entityNameTextField.getText());
         } else {
-            dataManager.getBuildingList().add(new Building(entityNameTextField.getText(), ""));
+            dataManager.getBuildingList().add(new Building(entityNameTextField.getText()));
             dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
 
             dataManager.getCurrentFloorList().add(new Floor("-"));

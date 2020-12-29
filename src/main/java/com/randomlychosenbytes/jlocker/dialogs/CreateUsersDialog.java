@@ -315,7 +315,7 @@ public class CreateUsersDialog extends JDialog {
                     //
                     // Create initial data
                     //
-                    dataManager.getBuildingList().add(new Building("-", ""));
+                    dataManager.getBuildingList().add(new Building("-"));
                     dataManager.getCurrentFloorList().add(new Floor("-"));
                     dataManager.getCurrentWalkList().add(new Walk("-"));
                     dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));

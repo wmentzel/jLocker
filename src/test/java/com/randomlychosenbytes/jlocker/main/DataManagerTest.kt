@@ -28,7 +28,7 @@ class DataManagerTest {
         // create test file
 
         val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
-        val buildings = listOf(Building("Main Building", ""))
+        val buildings = listOf(Building("Main Building"))
         val encryptedUserMasterKey = generateAndEncryptKey("test")
         val userMasterKey = decryptKeyWithString(encryptedUserMasterKey, "test")
 
