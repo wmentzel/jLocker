@@ -4,6 +4,7 @@ import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building
 import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
+import com.randomlychosenbytes.jlocker.nonabstractreps.Walk
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph
@@ -128,7 +129,7 @@ class ShortenClassRoomDistances(
             statusMessage.append("$size ")
         }
 
-        val freeLockerToDistancePairList = this.freeLockerToDistancePairList.toMutableList()
+        val freeLockerToDistancePairList = freeLockerToDistancePairList.toMutableList()
 
         statusMessage.append("\n\n")
         for (classLockerToDistancePair in classLockerToDistancePairList) {
@@ -293,11 +294,14 @@ class ShortenClassRoomDistances(
 
                         // connect every managementUnit with the munits above that have the same name
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
-                            val currentMUnitID = createNodeId(b, f, w, m)
-                            val ids = findStaircasesOnFloor(b, f + 1, munit.staircase.staircaseName)
-                            for (id in ids) {
-                                val edge = weightedGraph.addEdge(currentMUnitID, id)
-                                weightedGraph.setEdgeWeight(edge, floorToFloorEdgeWeight.toDouble())
+
+                            if (buildings[b].floors.size - 1 >= f + 1) {
+                                val currentMUnitID = createNodeId(b, f, w, m)
+                                val ids = findStaircasesOnFloor(b, f + 1, munit.staircase.staircaseName)
+                                for (id in ids) {
+                                    val edge = weightedGraph.addEdge(currentMUnitID, id)
+                                    weightedGraph.setEdgeWeight(edge, floorToFloorEdgeWeight.toDouble())
+                                }
                             }
                         }
                     }
@@ -310,25 +314,29 @@ class ShortenClassRoomDistances(
      * Returns the IDs of all ManagementUnits on the given floor with the given name
      */
     private fun findStaircasesOnFloor(b: Int, f: Int, name: String): List<String> {
-        val floors = buildings[b].floors
-        val entityIds: MutableList<String> = mutableListOf()
+        val walks = buildings[b].floors[f].walks
+        return findStaircasesWithName(name, walks).map { (w, m) ->
+            createNodeId(b, f, w, m)
+        }
+    }
 
-        // does the floor exist?
-        if (floors.size > f) {
-            val walks = floors[f].walks
-            for (w in walks.indices) {
-                val managementUnits = walks[w].managementUnits
-                for (m in managementUnits.indices) {
-                    val managementUnit = managementUnits[m]
-                    if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.staircase.staircaseName == name) {
-                            entityIds.add(createNodeId(b, f, w, m))
-                        }
+    private fun findStaircasesWithName(name: String, walks: List<Walk>): List<Pair<Int, Int>> {
+
+        val walkToManagementUnit: MutableList<Pair<Int, Int>> = mutableListOf()
+
+        for (w in walks.indices) {
+            val managementUnits = walks[w].managementUnits
+            for (m in managementUnits.indices) {
+                val managementUnit = managementUnits[m]
+                if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
+                    if (managementUnit.staircase.staircaseName == name) {
+                        walkToManagementUnit.add(w to m)
                     }
                 }
             }
         }
-        return entityIds
+
+        return walkToManagementUnit
     }
 
     /**
@@ -347,8 +355,7 @@ class ShortenClassRoomDistances(
 
                         // connect every managementUnit with the munits above that have the same name
                         if (munit.getType() == ManagementUnit.STAIRCASE) {
-                            val staircaseName = munit.staircase.staircaseName
-                            val staircaseIds = findStaircasesForBuilding(b - 1, staircaseName)
+                            val staircaseIds = findStaircasesForBuilding(b - 1, munit.staircase.staircaseName)
                             val currentStaircaseId = createNodeId(b, f, w, m)
                             for (staircaseId in staircaseIds) {
                                 val edge = weightedGraph.addEdge(currentStaircaseId, staircaseId)
@@ -366,23 +373,14 @@ class ShortenClassRoomDistances(
      */
     private fun findStaircasesForBuilding(b: Int, name: String): List<String> {
         val building = buildings[b]
-        val entityIds: MutableList<String> = mutableListOf()
         val floors = building.floors
-        for (f in floors.indices) {
+
+        return floors.indices.flatMap { f ->
             val walks = floors[f].walks
-            for (w in walks.indices) {
-                val managementUnits = walks[w].managementUnits
-                for (m in managementUnits.indices) {
-                    val managementUnit = managementUnits[m]
-                    if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
-                        if (managementUnit.staircase.staircaseName == name) {
-                            entityIds.add(createNodeId(b, f, w, m))
-                        }
-                    }
-                }
+            findStaircasesWithName(name, walks).map { (w, m) ->
+                createNodeId(b, f, w, m)
             }
         }
-        return entityIds
     }
 
     /**
