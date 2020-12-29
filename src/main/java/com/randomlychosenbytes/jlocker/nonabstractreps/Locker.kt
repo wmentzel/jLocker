@@ -145,6 +145,16 @@ class Locker(
         }
     }
 
+    constructor(id: String) : this(
+        id = id,
+        pupil = null,
+        currentCodeIndex = 0,
+        lockCode = "",
+        isOutOfOrder = false,
+        note = "",
+        encryptedCodes = null
+    )
+
     constructor() : this(
         id = "",
         pupil = null,
