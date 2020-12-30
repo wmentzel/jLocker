@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class ShortenClassRoomDistancesTest {
 
     @Test
-    fun shouldReportIfLockerCannotBeReached() {
+    fun shouldReportIfNonReachableLockersExist() {
         val building = Building("main building")
         val groundFloor = Floor("ground floor")
         val firstFloor = Floor("first floor")
@@ -27,7 +27,16 @@ class ShortenClassRoomDistancesTest {
 
         walk1.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(createLockerCabinetOf(
+                    Locker(id = "1").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Don"
+                            lastName = "Draper"
+                            heightInCm = 175
+                            schoolClassName = "12"
+                        })
+                    }
+                )),
                 ModuleWrapper(Room("", "12")),
                 ModuleWrapper(Staircase("main staircase"))
             )
@@ -39,17 +48,8 @@ class ShortenClassRoomDistancesTest {
             )
         )
 
-        walk1.moduleWrappers[0].lockerCabinet.lockers.addAll(
-            listOf(
-                Locker(id = "1").apply {
-                    moveInNewOwner(Pupil().apply {
-                        firstName = "Don"
-                        lastName = "Draper"
-                        heightInCm = 175
-                        schoolClassName = "12"
-                    })
-                }
-            )
+        walk2.moduleWrappers[0].lockerCabinet.lockers.addAll(
+            listOf(Locker(id = "2")),
         )
 
         val scd = ShortenClassRoomDistances(
@@ -68,6 +68,58 @@ class ShortenClassRoomDistancesTest {
     }
 
     @Test
+    fun shouldReportIfNoLockersAreFree() {
+        val building = Building("main building")
+        val groundFloor = Floor("ground floor")
+        val firstFloor = Floor("first floor")
+
+        building.floors.addAll(listOf(groundFloor, firstFloor))
+        val walk = Walk("main walk")
+        groundFloor.walks.add(walk)
+
+
+        walk.moduleWrappers.addAll(
+            listOf(
+                ModuleWrapper(
+                    createLockerCabinetOf(
+                        Locker(id = "1").apply {
+                            moveInNewOwner(Pupil().apply {
+                                firstName = "Don"
+                                lastName = "Draper"
+                                heightInCm = 175
+                                schoolClassName = "12"
+                            })
+                        },
+                        Locker(id = "2").apply {
+                            moveInNewOwner(Pupil().apply {
+                                firstName = "Peggy"
+                                lastName = "Olsen"
+                                heightInCm = 150
+                                schoolClassName = "12"
+                            })
+                        },
+                    )
+                ),
+                ModuleWrapper(Room("", "12"))
+            )
+        )
+
+        val scd = ShortenClassRoomDistances(
+            buildings = listOf(building),
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            classRoomNodeId = "0-0-0-3",
+            className = "12",
+            createTask = { /* no-op */ },
+            moveLocker = { l1, l2 ->
+                moveLockers(l1, l2)
+            }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.NoFreeLockersAvailable)
+    }
+
+    @Test
     fun shouldMovePupilsAcrossWalks() {
     }
 
@@ -79,6 +131,7 @@ class ShortenClassRoomDistancesTest {
     fun shouldMovePupilsAcrossBuildings() {
     }
 
+
     @Test
     fun shouldMovePupilToCorrectFreeLocker() {
         val building = Building("main building")
@@ -86,68 +139,53 @@ class ShortenClassRoomDistancesTest {
         building.floors += floor
         val walk = Walk("main walk")
         floor.walks.add(walk)
+
         walk.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(LockerCabinet()),
-                ModuleWrapper(LockerCabinet()),
-                ModuleWrapper(LockerCabinet()),
-                ModuleWrapper(Room()),
-                ModuleWrapper(Staircase())
+                ModuleWrapper(createLockerCabinetOf(
+                    Locker(id = "1").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Don"
+                            lastName = "Draper"
+                            heightInCm = 175
+                            schoolClassName = "12"
+                        })
+                    },
+                    Locker(id = "2").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Peggy"
+                            lastName = "Olsen"
+                            heightInCm = 150
+                            schoolClassName = "12"
+                        })
+                    },
+                    Locker(id = "3").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Peter"
+                            lastName = "Campbell"
+                            heightInCm = 150
+                            schoolClassName = "11"
+                        })
+                    }
+                )),
+                ModuleWrapper(
+                    createLockerCabinetOf(
+                        Locker(id = "4"),
+                        Locker(id = "5"),
+                        Locker(id = "6")
+                    )
+                ),
+                ModuleWrapper(
+                    createLockerCabinetOf(
+                        Locker(id = "7"),
+                        Locker(id = "8"),
+                        Locker(id = "9")
+                    )
+                ),
+                ModuleWrapper(Room("some classroom", "12")),
+                ModuleWrapper(Staircase("main staircase"))
             )
         )
-
-        walk.moduleWrappers[0].lockerCabinet.lockers.addAll(
-            listOf(
-                Locker(id = "1").apply {
-                    moveInNewOwner(Pupil().apply {
-                        firstName = "Don"
-                        lastName = "Draper"
-                        heightInCm = 175
-                        schoolClassName = "12"
-                    })
-                },
-                Locker(id = "2").apply {
-                    moveInNewOwner(Pupil().apply {
-                        firstName = "Peggy"
-                        lastName = "Olsen"
-                        heightInCm = 150
-                        schoolClassName = "12"
-                    })
-                },
-                Locker(id = "3").apply {
-                    moveInNewOwner(Pupil().apply {
-                        firstName = "Peter"
-                        lastName = "Campbell"
-                        heightInCm = 150
-                        schoolClassName = "11"
-                    })
-                }
-            ),
-        )
-
-        walk.moduleWrappers[1].lockerCabinet.lockers.addAll(
-            listOf(
-                Locker(id = "4"),
-                Locker(id = "5"),
-                Locker(id = "6")
-            ),
-        )
-
-        walk.moduleWrappers[2].lockerCabinet.lockers.addAll(
-            listOf(
-                Locker(id = "7"),
-                Locker(id = "8"),
-                Locker(id = "9")
-            ),
-        )
-
-        walk.moduleWrappers[3].room.apply {
-            setCaption("Some Classroom", "12")
-        }
-
-        walk.moduleWrappers[4].staircase.apply {
-            setCaption("MainStaircase")
-        }
 
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
@@ -178,6 +216,10 @@ class ShortenClassRoomDistancesTest {
         assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[2].isFree).isFalse()
         assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[2].pupil.lastName).isEqualTo("Campbell")
 
+    }
+
+    fun createLockerCabinetOf(vararg lockers: Locker) = LockerCabinet().apply {
+        this.lockers.addAll(lockers)
     }
 
     private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
