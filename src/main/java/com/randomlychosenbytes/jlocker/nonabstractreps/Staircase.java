@@ -9,8 +9,8 @@ public class Staircase extends Module {
     private String name;
 
     public Staircase(String name) {
-        setCaption(name);
         initComponents();
+        setCaption(name);
     }
 
     public Staircase() {
