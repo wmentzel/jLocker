@@ -19,12 +19,14 @@ class ShortenClassRoomDistancesTest {
         building.floors += floor
         val walk = Walk("main walk")
         floor.walks.add(walk)
-        walk.managementUnits += listOf(
-            ManagementUnit(ManagementUnit.LOCKER_CABINET),
-            ManagementUnit(ManagementUnit.LOCKER_CABINET),
-            ManagementUnit(ManagementUnit.LOCKER_CABINET),
-            ManagementUnit(ManagementUnit.ROOM),
-            ManagementUnit(ManagementUnit.STAIRCASE)
+        walk.managementUnits.addAll(
+            listOf(
+                ManagementUnit(LockerCabinet()),
+                ManagementUnit(LockerCabinet()),
+                ManagementUnit(LockerCabinet()),
+                ManagementUnit(Room()),
+                ManagementUnit(Staircase())
+            )
         )
 
         walk.managementUnits[0].lockerCabinet.lockers.addAll(
