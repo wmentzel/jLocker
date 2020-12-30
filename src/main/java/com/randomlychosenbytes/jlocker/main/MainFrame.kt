@@ -102,7 +102,7 @@ class MainFrame : JFrame() {
         // Remove old panels
         lockerOverviewPanel.removeAll()
 
-        val mus = dataManager.currentManagmentUnitList.map { oldMu ->
+        val moduleWrappers = dataManager.currentManagmentUnitList.map { oldMu ->
             when (oldMu.module) {
                 is Room -> {
                     ModuleWrapper(Room(oldMu.room.roomName, oldMu.room.schoolClassName))
@@ -120,33 +120,33 @@ class MainFrame : JFrame() {
             }
         }
 
-        dataManager.currentWalk.moduleWrappers = mus.toMutableList()
+        dataManager.currentWalk.moduleWrappers = moduleWrappers.toMutableList()
 
-        val numManagementUnits = mus.size
-        var firstLockerFound = false
+        val lockerCabinets = moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>()
 
-        for (i in 0 until numManagementUnits) {
-            val mu = mus[i]
-            lockerOverviewPanel.add(mu)
-
-            if (mu.module !is LockerCabinet) {
-                continue
-            }
-
-            val lockers = mu.lockerCabinet.lockers
-            for (locker in lockers) {
-                // always set a standard locker as selected
-                if (lockers.isNotEmpty() && !firstLockerFound) {
-                    lockers[0].setSelected()
-                    dataManager.currentManagementUnitIndex = i
-                    dataManager.currentLockerIndex = 0
-                    firstLockerFound = true
-                } else {
-                    locker.setAppropriateColor()
-                }
-            }
+        lockerCabinets.flatMap {
+            it.lockers
+        }.forEach {
+            it.setAppropriateColor()
         }
-        updateDummyRows(mus.map { it.module }.filterIsInstance<LockerCabinet>())
+
+        // add each ModuleWrapper to the lockerOverviewPanel
+        moduleWrappers.forEach { moduleWrapper ->
+            lockerOverviewPanel.add(moduleWrapper)
+        }
+
+        // set selected locker
+        moduleWrappers.asSequence().mapIndexed { index, moduleWrapper ->
+            index to moduleWrapper
+        }.firstOrNull { (index, moduleWrapper) ->
+            moduleWrapper.module is LockerCabinet
+        }?.let { (moduleWrapperIndex, moduleWrapper) ->
+            (moduleWrapper.module as? LockerCabinet)?.lockers?.firstOrNull()?.setSelected()
+            dataManager.currentManagementUnitIndex = moduleWrapperIndex
+            dataManager.currentLockerIndex = 0
+        }
+
+        updateDummyRows(lockerCabinets)
         showLockerInformation()
         lockerOverviewPanel.updateUI()
     }
