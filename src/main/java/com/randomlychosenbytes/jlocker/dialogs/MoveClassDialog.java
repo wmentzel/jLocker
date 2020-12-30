@@ -237,40 +237,43 @@ public class MoveClassDialog extends JDialog {
                 }
         );
 
-        final int status = scrd.check();
+        final ShortenClassRoomDistances.Status status = scrd.check();
         String statusMessage = "";
 
+        okButton.setEnabled(false);
+
         switch (status) {
-            case ShortenClassRoomDistances.CLASS_HAS_NO_ROOM: {
+            case ClassHasNoClassRoom: {
                 statusMessage = "Die Klasse " + className + " hat keinen noch keinen Raum. Bitte fügen Sie diesen erst hinzu!";
                 break;
             }
-            case ShortenClassRoomDistances.NO_EMPTY_LOCKERS_AVAILABLE: {
+            case NoFreeLockersAvailable: {
                 statusMessage = "Es gibt momentan keine leeren Schließfächer im Gebäude des Klassenraums!";
                 break;
             }
-            case ShortenClassRoomDistances.CLASS_HAS_NO_PUPILS: {
+            case ClassHasNoPupils: {
                 statusMessage = "Kein Schüler der Klasse " + className + " hat momentan  ein Schließfach gemietet!";
                 break;
             }
-            case ShortenClassRoomDistances.NON_REACHABLE_LOCKERS_EXIST: {
+            case NonReachableLockersExist: {
                 statusMessage = "Folgende Schließfächer können vom Klassenraum nicht erreicht werden: " + scrd.getIdsOfUnreachableLockers();
                 break;
             }
-        }
+            case Success: {
+                int answer = JOptionPane.showConfirmDialog(null, "Soll der Klassenumzug ausgeführt werden?", "Klassenumzug", JOptionPane.YES_NO_OPTION);
 
-        if (status == ShortenClassRoomDistances.SUCCESS) {
-            int answer = JOptionPane.showConfirmDialog(null, "Soll der Klassenumzug ausgeführt werden?", "Klassenumzug", JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    textArea.setText(scrd.execute());
+                }
+                okButton.setEnabled(true);
 
-            if (answer == JOptionPane.YES_OPTION) {
-                textArea.setText(scrd.execute());
+                return;
             }
-        } else {
-            JOptionPane.showMessageDialog(null, statusMessage, "Fehler", JOptionPane.OK_OPTION);
-            this.dispose();
         }
 
-        okButton.setEnabled(false);
+        JOptionPane.showMessageDialog(null, statusMessage, "Fehler", JOptionPane.OK_OPTION);
+        this.dispose();
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     // new DisplayGraphFrame(scrd.getWeightedGraph()).setVisible(true);

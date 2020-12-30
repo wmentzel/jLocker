@@ -29,7 +29,7 @@ class ShortenClassRoomDistances(
     private lateinit var freeLockerToDistancePairList: List<Pair<EntityCoordinates<Locker>, Int>>
     private lateinit var unreachableLockers: MutableList<String>
 
-    fun check(): Int {
+    fun check(): Status {
 
         val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
         val classLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
@@ -53,11 +53,11 @@ class ShortenClassRoomDistances(
         }
 
         if (freeLockersEntityCoordinatesList.isEmpty()) {
-            return NO_EMPTY_LOCKERS_AVAILABLE
+            return Status.NoFreeLockersAvailable
         }
 
         if (classLockersEntityCoordinatesList.isEmpty()) {
-            return CLASS_HAS_NO_PUPILS
+            return Status.ClassHasNoPupils
         }
 
         //
@@ -104,9 +104,9 @@ class ShortenClassRoomDistances(
 
         // Output how many lockers cant be reached
         return if (unreachableLockers.isEmpty()) {
-            SUCCESS
+            Status.Success
         } else {
-            NON_REACHABLE_LOCKERS_EXIST
+            Status.NonReachableLockersExist
         }
     }
 
@@ -423,21 +423,20 @@ class ShortenClassRoomDistances(
         }
     }
 
+    enum class Status {
+        ClassHasNoClassRoom,
+        NoFreeLockersAvailable,
+        ClassHasNoPupils,
+        NonReachableLockersExist,
+        NoMinimumSizeDefinedForRow,
+        Success,
+    }
+
     companion object {
         private const val buildingToBuildingEdgeWeight = 100.0f
         private const val walkToWalkEdgeWeight = 5.0f
         private const val floorToFloorEdgeWeight = 20.0f
         private const val managementUnitToMUEdgeWeight = 2.0f
         private const val managementUnitToLockerEdgeWeight = 1.0f
-
-        //
-        // Status codes
-        //
-        const val CLASS_HAS_NO_ROOM = 0
-        const val NO_EMPTY_LOCKERS_AVAILABLE = 1
-        const val CLASS_HAS_NO_PUPILS = 2
-        const val NON_REACHABLE_LOCKERS_EXIST = 3
-        const val NO_MINIMUM_SIZE_DEFINED_FOR_ROW = 4
-        const val SUCCESS = 5
     }
 }

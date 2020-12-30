@@ -78,7 +78,7 @@ class ShortenClassRoomDistancesTest {
         )
 
         val status = scd.check()
-        assertThat(status).isEqualTo(ShortenClassRoomDistances.SUCCESS)
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
         scd.execute()
 
         assertThat(walk.managementUnits[2].lockerCabinet.lockers[1].pupil).isNotNull()
