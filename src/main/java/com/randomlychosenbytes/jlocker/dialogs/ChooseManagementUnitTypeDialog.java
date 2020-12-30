@@ -29,15 +29,15 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
 
         // Deactivate the radio button that represents the current type
 
-        if (munit.module instanceof LockerCabinet) {
+        if (munit.getModule() instanceof LockerCabinet) {
             lockerButton.setEnabled(false);
         }
 
-        if (munit.module instanceof Room) {
+        if (munit.getModule() instanceof Room) {
             roomButton.setEnabled(false);
         }
 
-        if (munit.module instanceof Staircase) {
+        if (munit.getModule() instanceof Staircase) {
             staircaseButton.setEnabled(false);
         }
     }
@@ -131,7 +131,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         }
 
         String text = "Wollen Sie diesen "
-                + munit.module
+                + munit.getModule()
                 + " in einen "
                 + module
                 + " transformieren?";
@@ -139,7 +139,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            munit.setAs(module);
+            munit.setModule(module);
         }
 
         // close after the selection

@@ -234,16 +234,10 @@ object DataManager {
         get() = currentManagmentUnitList[currentManagementUnitIndex]
 
     val currentLockerList
-        get() = currentManamentUnit.lockerCabinet.lockers
+        get() = (currentManamentUnit.module as? LockerCabinet)?.lockers ?: emptyList()
 
     val currentLocker: Locker
         get() = currentLockerList[currentLockerIndex]
-
-    val currentRoom: Room
-        get() = currentManamentUnit.room
-
-    val currentLockerCabinet: LockerCabinet
-        get() = currentManamentUnit.lockerCabinet
 
     var currentBuildingIndex = 0
     var currentFloorIndex = 0

@@ -21,7 +21,19 @@ import javax.swing.JPanel
 class ModuleWrapper(module: Module) : JPanel() {
 
     @Expose
-    lateinit var module: Module
+    var module: Module = module
+        set(value) {
+            field = value
+            updatePanel()
+        }
+
+    private fun updatePanel() {
+        centerPanel.apply {
+            removeAll()
+            add(module)
+            updateUI()
+        }
+    }
 
     val room: Room
         get() = module as Room
@@ -31,15 +43,6 @@ class ModuleWrapper(module: Module) : JPanel() {
 
     val lockerCabinet: LockerCabinet
         get() = module as LockerCabinet
-
-    fun setAs(module: Module) {
-        this.module = module
-        centerPanel.apply {
-            removeAll()
-            add(module)
-            updateUI()
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -170,6 +173,6 @@ class ModuleWrapper(module: Module) : JPanel() {
 
     init {
         initComponents()
-        setAs(module)
+        updatePanel()
     }
 }

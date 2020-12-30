@@ -70,7 +70,7 @@ public class MoveClassDialog extends JDialog {
                     for (int m = 0; m < moduleWrappers.size(); m++) {
                         ModuleWrapper munit = moduleWrappers.get(m);
 
-                        if (munit.module instanceof Room) {
+                        if (munit.getModule() instanceof Room) {
                             String className = munit.getRoom().getSchoolClassName();
 
                             if (!className.isEmpty()) {
