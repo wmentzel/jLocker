@@ -16,7 +16,7 @@ import javax.swing.event.PopupMenuListener
  * This is the main windows of the application. It is displayed right after
  * the login-dialog/create new user dialog.i
  */
-class MainFrame : JFrame() {
+object MainFrame : JFrame() {
 
     private var searchFrame: SearchFrame? = null
     private var tasksFrame: TasksFrame? = null
@@ -149,6 +149,31 @@ class MainFrame : JFrame() {
         updateDummyRows(lockerCabinets)
         showLockerInformation()
         lockerOverviewPanel.updateUI()
+    }
+
+    fun selectLocker(locker: Locker) {
+        if (DataManager.currentLockerList.isNotEmpty()) {
+            DataManager.currentLocker.setAppropriateColor()
+        }
+
+        val (mwIndex, lockerIndex) = DataManager.currentWalk.moduleWrappers.asSequence()
+            .mapIndexed { index, moduleWrapper ->
+                index to moduleWrapper
+            }.mapNotNull { (index, moduleWrapper) ->
+            (moduleWrapper.module as? LockerCabinet)?.let {
+                index to it
+            }
+        }.mapNotNull { (index, lockerCabinet) ->
+            lockerCabinet.lockers.indexOfFirst { it === locker }.takeIf { it != -1 }?.let {
+                index to it
+            }
+        }.single()
+
+        DataManager.currentLockerIndex = lockerIndex
+        DataManager.currentManagementUnitIndex = mwIndex
+
+        locker.setSelected()
+        showLockerInformation()
     }
 
     /**
@@ -1180,8 +1205,7 @@ fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     // Create and display the form
     EventQueue.invokeLater {
-        val mainFrame = MainFrame()
-        mainFrame.initialize()
-        mainFrame.isVisible = true
+        MainFrame.initialize()
+        MainFrame.isVisible = true
     }
 }

@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.randomlychosenbytes.jlocker.manager.DataManager
+import com.randomlychosenbytes.jlocker.main.MainFrame
 import com.randomlychosenbytes.jlocker.manager.decrypt
 import com.randomlychosenbytes.jlocker.manager.encrypt
 import java.awt.Font
@@ -129,18 +129,9 @@ class Locker(
         return getCode(currentCodeIndex, sukey)
     }
 
-    /**
-     * TODO move to MainFrame
-     */
     private inner class MouseListener : MouseAdapter() {
         override fun mouseReleased(e: MouseEvent) {
-            if (DataManager.currentLockerList.size > 0) {
-                DataManager.currentLocker.setAppropriateColor()
-            }
-            val locker = e.source as Locker
-            DataManager.currentWalk.setCurLockerIndex(locker)
-            locker.setSelected()
-            DataManager.mainFrame.showLockerInformation()
+            MainFrame.selectLocker(e.source as Locker)
         }
     }
 
