@@ -32,8 +32,9 @@ class ManagementUnit(module: Module) : JPanel() {
     val lockerCabinet: LockerCabinet
         get() = module as LockerCabinet
 
-    fun setAs(kind: Module) {
+    fun setAs(module: Module) {
         centerPanel.removeAll() // remove previous child
+        this.module = module
         centerPanel.add(module)
         centerPanel.updateUI()
     }
