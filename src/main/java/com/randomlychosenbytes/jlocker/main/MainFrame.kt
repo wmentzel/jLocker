@@ -8,7 +8,6 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet.Companion.updateDummyRows
 import java.awt.*
 import java.awt.event.*
-import java.util.stream.Collectors
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -125,10 +124,16 @@ class MainFrame : JFrame() {
 
         val numManagementUnits = mus.size
         var firstLockerFound = false
+
         for (i in 0 until numManagementUnits) {
             val mu = mus[i]
             lockerOverviewPanel.add(mu)
-            val lockers: List<Locker> = mu.lockerCabinet.lockers
+
+            if (mu.module !is LockerCabinet) {
+                continue
+            }
+
+            val lockers = mu.lockerCabinet.lockers
             for (locker in lockers) {
                 // always set a standard locker as selected
                 if (lockers.isNotEmpty() && !firstLockerFound) {
@@ -141,7 +146,7 @@ class MainFrame : JFrame() {
                 }
             }
         }
-        updateDummyRows(mus.stream().map { obj: ModuleWrapper -> obj.lockerCabinet }.collect(Collectors.toList()))
+        updateDummyRows(mus.map { it.module }.filterIsInstance<LockerCabinet>())
         showLockerInformation()
         lockerOverviewPanel.updateUI()
     }
