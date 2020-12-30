@@ -7,6 +7,8 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.randomlychosenbytes.jlocker.UtilsKt.moveLockers;
+
 public class MoveLockerDialog extends javax.swing.JDialog {
     private final DataManager dataManager = DataManager.INSTANCE;
 
@@ -114,7 +116,7 @@ public class MoveLockerDialog extends javax.swing.JDialog {
             return;
         }
 
-        dataManager.moveLockers(sourceLocker, destLocker);
+        moveLockers(sourceLocker, destLocker);
 
         if (!sourceLocker.isFree()) {
             // TODO check null pointer dereferencing getSurname()

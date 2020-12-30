@@ -6,7 +6,6 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances
-import com.randomlychosenbytes.jlocker.manager.DataManager.moveLockers
 import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import org.junit.jupiter.api.Test
 
@@ -57,10 +56,7 @@ class ShortenClassRoomDistancesTest {
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
             classRoomNodeId = "0-0-0-3",
             className = "12",
-            createTask = { /* no-op */ },
-            moveLocker = { l1, l2 ->
-                moveLockers(l1, l2)
-            }
+            createTask = { /* no-op */ }
         )
 
         val status = scd.check()
@@ -109,10 +105,7 @@ class ShortenClassRoomDistancesTest {
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
             classRoomNodeId = "0-0-0-3",
             className = "12",
-            createTask = { /* no-op */ },
-            moveLocker = { l1, l2 ->
-                moveLockers(l1, l2)
-            }
+            createTask = { /* no-op */ }
         )
 
         val status = scd.check()
@@ -192,10 +185,7 @@ class ShortenClassRoomDistancesTest {
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
             classRoomNodeId = "0-0-0-3",
             className = "12",
-            createTask = { /* no-op */ },
-            moveLocker = { l1, l2 ->
-                moveLockers(l1, l2)
-            }
+            createTask = { /* no-op */ }
         )
 
         val status = scd.check()
