@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
@@ -103,7 +103,7 @@ public class FloorDialog extends javax.swing.JDialog {
             dataManager.getCurrentWalkList().add(new Walk("-"));
             dataManager.setCurrentWalkIndex(0);
 
-            dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(new LockerCabinet()));
+            dataManager.getCurrentManagmentUnitList().add(new ModuleWrapper(new LockerCabinet()));
             dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentManagmentUnitList().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);

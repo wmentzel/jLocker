@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
@@ -65,10 +65,10 @@ public class MoveClassDialog extends JDialog {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> managementUnits = walks.get(w).getManagementUnits();
+                    List<ModuleWrapper> moduleWrappers = walks.get(w).getModuleWrappers();
 
-                    for (int m = 0; m < managementUnits.size(); m++) {
-                        ManagementUnit munit = managementUnits.get(m);
+                    for (int m = 0; m < moduleWrappers.size(); m++) {
+                        ModuleWrapper munit = moduleWrappers.get(m);
 
                         if (munit.module instanceof Room) {
                             String className = munit.getRoom().getSchoolClassName();

@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
@@ -318,7 +318,7 @@ public class CreateUsersDialog extends JDialog {
                     dataManager.getBuildingList().add(new Building("-"));
                     dataManager.getCurrentFloorList().add(new Floor("-"));
                     dataManager.getCurrentWalkList().add(new Walk("-"));
-                    dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(new LockerCabinet()));
+                    dataManager.getCurrentManagmentUnitList().add(new ModuleWrapper(new LockerCabinet()));
                 } else {
                     List<Building> buildings = dataManager.getBuildingList();
 
@@ -329,9 +329,9 @@ public class CreateUsersDialog extends JDialog {
                             List<Walk> walks = floor.getWalks();
 
                             for (Walk walk : walks) {
-                                List<ManagementUnit> mus = walk.getManagementUnits();
+                                List<ModuleWrapper> mus = walk.getModuleWrappers();
 
-                                for (ManagementUnit mu : mus) {
+                                for (ModuleWrapper mu : mus) {
                                     List<Locker> lockers = mu.getLockerCabinet().getLockers();
 
                                     for (Locker locker : lockers) {

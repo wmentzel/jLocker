@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.main
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 import com.randomlychosenbytes.jlocker.dialogs.*
 import com.randomlychosenbytes.jlocker.manager.DataManager
 import com.randomlychosenbytes.jlocker.manager.isDateValid
@@ -106,22 +106,22 @@ class MainFrame : JFrame() {
         val mus = dataManager.currentManagmentUnitList.map { oldMu ->
             when (oldMu.module) {
                 is Room -> {
-                    ManagementUnit(Room(oldMu.room.roomName, oldMu.room.schoolClassName))
+                    ModuleWrapper(Room(oldMu.room.roomName, oldMu.room.schoolClassName))
                 }
                 is LockerCabinet -> {
                     val newLockers = oldMu.lockerCabinet.lockers.map { Locker(it) }
-                    ManagementUnit(LockerCabinet()).apply {
+                    ModuleWrapper(LockerCabinet()).apply {
                         lockerCabinet.lockers = newLockers.toMutableList()
                     }
                 }
                 is Staircase -> {
-                    ManagementUnit(Staircase(oldMu.staircase.staircaseName))
+                    ModuleWrapper(Staircase(oldMu.staircase.staircaseName))
                 }
                 else -> TODO("There is a new module type ${oldMu.module::class.simpleName} which was not considered.")
             }
         }
 
-        dataManager.currentWalk.managementUnits = mus.toMutableList()
+        dataManager.currentWalk.moduleWrappers = mus.toMutableList()
 
         val numManagementUnits = mus.size
         var firstLockerFound = false
@@ -141,7 +141,7 @@ class MainFrame : JFrame() {
                 }
             }
         }
-        updateDummyRows(mus.stream().map { obj: ManagementUnit -> obj.lockerCabinet }.collect(Collectors.toList()))
+        updateDummyRows(mus.stream().map { obj: ModuleWrapper -> obj.lockerCabinet }.collect(Collectors.toList()))
         showLockerInformation()
         lockerOverviewPanel.updateUI()
     }

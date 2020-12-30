@@ -200,7 +200,7 @@ class ShortenClassRoomDistances(
             for (f in floors.indices) {
                 val walks = floors[f].walks
                 for (w in walks.indices) {
-                    val managementUnits = walks[w].managementUnits
+                    val managementUnits = walks[w].moduleWrappers
                     var previousMUnitId: String? = null
 
                     // Connect ManagementUnits with each other
@@ -267,7 +267,7 @@ class ShortenClassRoomDistances(
                 // we start with w = 1 because we connect every walk with the
                 // walks before
                 for (w in 1 until walks.size) {
-                    val lastMUnitIndex = walks[w - 1].managementUnits.size - 1
+                    val lastMUnitIndex = walks[w - 1].moduleWrappers.size - 1
                     val edge =
                         weightedGraph.addEdge(createNodeId(b, f, w - 1, lastMUnitIndex), createNodeId(b, f, w, 0))
                     weightedGraph.setEdgeWeight(edge, walkToWalkEdgeWeight.toDouble())
@@ -285,7 +285,7 @@ class ShortenClassRoomDistances(
             for (f in floors.indices) {
                 val walks = floors[f].walks
                 for (w in walks.indices) {
-                    val managementUnits = walks[w].managementUnits
+                    val managementUnits = walks[w].moduleWrappers
                     for (m in managementUnits.indices) {
                         val munit = managementUnits[m]
 
@@ -322,7 +322,7 @@ class ShortenClassRoomDistances(
         val walkToManagementUnit: MutableList<Pair<Int, Int>> = mutableListOf()
 
         for (w in walks.indices) {
-            val managementUnits = walks[w].managementUnits
+            val managementUnits = walks[w].moduleWrappers
             for (m in managementUnits.indices) {
                 val managementUnit = managementUnits[m]
                 if (managementUnit.module is Staircase) {
@@ -346,7 +346,7 @@ class ShortenClassRoomDistances(
             for (f in floors.indices) {
                 val walks = floors[f].walks
                 for (w in walks.indices) {
-                    val managementUnits = walks[w].managementUnits
+                    val managementUnits = walks[w].moduleWrappers
                     for (m in managementUnits.indices) {
                         val munit = managementUnits[m]
 

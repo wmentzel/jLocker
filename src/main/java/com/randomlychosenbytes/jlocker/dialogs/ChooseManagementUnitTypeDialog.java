@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
@@ -10,12 +10,12 @@ import javax.swing.*;
 
 public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
 
-    ManagementUnit munit;
+    ModuleWrapper munit;
 
     /**
      * Creates new form ChooseMUnitTypeDialog
      */
-    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ManagementUnit mu) {
+    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ModuleWrapper mu) {
         super(parent, modal);
         initComponents();
 

@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances
 import com.randomlychosenbytes.jlocker.manager.DataManager.moveLockers
 import com.randomlychosenbytes.jlocker.nonabstractreps.*
@@ -19,17 +19,17 @@ class ShortenClassRoomDistancesTest {
         building.floors += floor
         val walk = Walk("main walk")
         floor.walks.add(walk)
-        walk.managementUnits.addAll(
+        walk.moduleWrappers.addAll(
             listOf(
-                ManagementUnit(LockerCabinet()),
-                ManagementUnit(LockerCabinet()),
-                ManagementUnit(LockerCabinet()),
-                ManagementUnit(Room()),
-                ManagementUnit(Staircase())
+                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(Room()),
+                ModuleWrapper(Staircase())
             )
         )
 
-        walk.managementUnits[0].lockerCabinet.lockers.addAll(
+        walk.moduleWrappers[0].lockerCabinet.lockers.addAll(
             listOf(
                 Locker(id = "1").apply {
                     moveInNewOwner(Pupil().apply {
@@ -44,7 +44,7 @@ class ShortenClassRoomDistancesTest {
             ),
         )
 
-        walk.managementUnits[1].lockerCabinet.lockers.addAll(
+        walk.moduleWrappers[1].lockerCabinet.lockers.addAll(
             listOf(
                 Locker(id = "4"),
                 Locker(id = "5"),
@@ -52,7 +52,7 @@ class ShortenClassRoomDistancesTest {
             ),
         )
 
-        walk.managementUnits[2].lockerCabinet.lockers.addAll(
+        walk.moduleWrappers[2].lockerCabinet.lockers.addAll(
             listOf(
                 Locker(id = "7"),
                 Locker(id = "8"),
@@ -60,11 +60,11 @@ class ShortenClassRoomDistancesTest {
             ),
         )
 
-        walk.managementUnits[3].room!!.apply {
+        walk.moduleWrappers[3].room!!.apply {
             setCaption("Some Classroom", "12")
         }
 
-        walk.managementUnits[4].staircase!!.apply {
+        walk.moduleWrappers[4].staircase!!.apply {
             setCaption("MainStaircase")
         }
 
@@ -83,7 +83,7 @@ class ShortenClassRoomDistancesTest {
         assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
         scd.execute()
 
-        assertThat(walk.managementUnits[2].lockerCabinet.lockers[1].pupil).isNotNull()
-        assertThat(walk.managementUnits[0].lockerCabinet.lockers[0].isFree).isTrue()
+        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[1].pupil).isNotNull()
+        assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[0].isFree).isTrue()
     }
 }

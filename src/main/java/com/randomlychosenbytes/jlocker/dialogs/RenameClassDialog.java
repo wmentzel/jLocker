@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
 import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
@@ -103,9 +103,9 @@ public class RenameClassDialog extends JDialog {
                 List<Walk> walks = floor.getWalks();
 
                 for (Walk walk : walks) {
-                    List<ManagementUnit> cols = walk.getManagementUnits();
+                    List<ModuleWrapper> cols = walk.getModuleWrappers();
 
-                    for (ManagementUnit col : cols) {
+                    for (ModuleWrapper col : cols) {
                         List<Locker> lockers = col.getLockerCabinet().getLockers();
                         String sSubClass;
 

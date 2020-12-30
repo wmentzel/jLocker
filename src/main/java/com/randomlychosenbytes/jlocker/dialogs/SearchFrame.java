@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
@@ -364,7 +364,7 @@ public class SearchFrame extends javax.swing.JFrame {
                 List<Walk> walks = floors.get(f).getWalks();
 
                 for (int w = 0; w < walks.size(); w++) {
-                    List<ManagementUnit> cols = walks.get(w).getManagementUnits();
+                    List<ModuleWrapper> cols = walks.get(w).getModuleWrappers();
 
                     for (int c = 0; c < cols.size(); c++) {
                         List<Locker> lockers = cols.get(c).getLockerCabinet().getLockers();

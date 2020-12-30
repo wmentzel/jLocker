@@ -175,7 +175,7 @@ object DataManager {
     fun getLockerById(id: String) = buildingList.asSequence()
         .flatMap(Building::floors)
         .flatMap(Floor::walks)
-        .flatMap(Walk::managementUnits)
+        .flatMap(Walk::moduleWrappers)
         .filter {
             it.module is LockerCabinet
         }.map {
@@ -219,7 +219,7 @@ object DataManager {
         get() = currentFloor.walks
 
     val currentManagmentUnitList
-        get() = currentWalk.managementUnits
+        get() = currentWalk.moduleWrappers
 
     val currentBuilding
         get() = buildingList[currentBuildingIndex]

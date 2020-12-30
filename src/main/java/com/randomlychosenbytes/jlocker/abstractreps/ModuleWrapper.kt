@@ -18,7 +18,7 @@ import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 
-class ManagementUnit(module: Module) : JPanel() {
+class ModuleWrapper(module: Module) : JPanel() {
 
     @Expose
     lateinit var module: Module
@@ -111,10 +111,10 @@ class ManagementUnit(module: Module) : JPanel() {
         val mus = currentManagmentUnitList
         val index = mus.indexOf(this)
         val iNewIndex: Int = if (index == mus.size - 1) {
-            mus.add(ManagementUnit(LockerCabinet()))
+            mus.add(ModuleWrapper(LockerCabinet()))
             mus.size - 1
         } else {
-            mus.add(index + 1, ManagementUnit(LockerCabinet()))
+            mus.add(index + 1, ModuleWrapper(LockerCabinet()))
             index + 1
         }
         currentManagementUnitIndex = iNewIndex
@@ -152,7 +152,7 @@ class ManagementUnit(module: Module) : JPanel() {
     { //GEN-HEADEREND:event_addMUnitRightLabelMouseReleased
         val mus = currentManagmentUnitList
         val index = mus.indexOf(this)
-        mus.add(index, ManagementUnit(LockerCabinet()))
+        mus.add(index, ModuleWrapper(LockerCabinet()))
         currentManagementUnitIndex = index
         currentLockerIndex = 0
         mainFrame.drawLockerOverview()

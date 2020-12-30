@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.main.MainFrame;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
@@ -114,8 +114,8 @@ public class WalkDialog extends JDialog {
             dataManager.getCurrentWalkList().add(new Walk(name));
             dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
 
-            dataManager.getCurrentWalk().getManagementUnits().add(new ManagementUnit(new LockerCabinet()));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getManagementUnits().size() - 1);
+            dataManager.getCurrentWalk().getModuleWrappers().add(new ModuleWrapper(new LockerCabinet()));
+            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getModuleWrappers().size() - 1);
 
             dataManager.setCurrentLockerIndex(0);
         }
