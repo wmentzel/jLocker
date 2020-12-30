@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 import com.randomlychosenbytes.jlocker.manager.DataManager
 import com.randomlychosenbytes.jlocker.manager.decrypt
 import com.randomlychosenbytes.jlocker.manager.encrypt
-import java.awt.Color
 import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -75,21 +74,21 @@ class Locker(
     fun setAppropriateColor() {
 
         if (isFree) {
-            setColor(FREE_COLOR)
+            setColor(Color.Free)
         } else {
             if (pupil.hasContract) {
-                setColor(RENTED_COLOR)
+                setColor(Color.Rented)
             } else {
-                setColor(NOCONTRACT_COLOR)
+                setColor(Color.NoContract)
             }
 
             if (pupil.remainingTimeInMonths <= 1) {
-                setColor(ONEMONTHREMAINING_COLOR)
+                setColor(Color.OneMonthRentRemaining)
             }
         }
 
         if (isOutOfOrder) {
-            setColor(OUTOFORDER_COLOR)
+            setColor(Color.OutOfOrder)
         }
     }
 
@@ -109,7 +108,7 @@ class Locker(
 
     fun setSelected() {
         isSelected = true
-        setColor(SELECTED_COLOR)
+        setColor(Color.Selected)
     }
 
     private fun setUpMouseListener() {
@@ -118,9 +117,9 @@ class Locker(
         }
     }
 
-    fun setColor(index: Int) {
-        background = BACKGROUND_COLORS[index]
-        foreground = FOREGROUND_COLORS[index]
+    fun setColor(color: Color) {
+        background = color.background
+        foreground = color.foreground
     }
 
     val isFree: Boolean
@@ -179,7 +178,7 @@ class Locker(
         this.id = id
 
         // standard color
-        setColor(FREE_COLOR)
+        setColor(Color.Free)
         text = id
 
         // If true the component paints every pixel within its bounds.
@@ -195,32 +194,33 @@ class Locker(
         setUpMouseListener()
     }
 
-    companion object {
-        const val OUTOFORDER_COLOR = 0
-        const val RENTED_COLOR = 1
-        const val FREE_COLOR = 2
-        const val SELECTED_COLOR = 3
-        const val NOCONTRACT_COLOR = 4
-        const val ONEMONTHREMAINING_COLOR = 5
-
-        // TODO: use enum
-        private val BACKGROUND_COLORS = arrayOf(
-            Color(255, 0, 0),
-            Color(0, 102, 0),
-            Color(255, 255, 255),
-            Color(255, 255, 0),
-            Color(0, 0, 255),
-            Color(255, 153, 0)
-        )
-
-        // TODO: use enum
-        private val FOREGROUND_COLORS = arrayOf(
-            Color(255, 255, 255),
-            Color(255, 255, 255),
-            Color(0, 0, 0),
-            Color(0, 0, 0),
-            Color(255, 255, 255),
-            Color(0, 0, 0)
+    enum class Color(
+        val background: java.awt.Color,
+        val foreground: java.awt.Color
+    ) {
+        OutOfOrder(
+            java.awt.Color(255, 0, 0),
+            java.awt.Color(255, 255, 255),
+        ),
+        Rented(
+            java.awt.Color(0, 102, 0),
+            java.awt.Color(255, 255, 255),
+        ),
+        Free(
+            java.awt.Color(255, 255, 255),
+            java.awt.Color(0, 0, 0),
+        ),
+        Selected(
+            java.awt.Color(255, 255, 0),
+            java.awt.Color(0, 0, 0),
+        ),
+        NoContract(
+            java.awt.Color(0, 0, 255),
+            java.awt.Color(255, 255, 255),
+        ),
+        OneMonthRentRemaining(
+            java.awt.Color(255, 153, 0),
+            java.awt.Color(0, 0, 0)
         )
     }
 }
