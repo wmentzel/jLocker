@@ -60,11 +60,11 @@ class ShortenClassRoomDistancesTest {
             ),
         )
 
-        walk.moduleWrappers[3].room!!.apply {
+        walk.moduleWrappers[3].room.apply {
             setCaption("Some Classroom", "12")
         }
 
-        walk.moduleWrappers[4].staircase!!.apply {
+        walk.moduleWrappers[4].staircase.apply {
             setCaption("MainStaircase")
         }
 
@@ -86,4 +86,8 @@ class ShortenClassRoomDistancesTest {
         assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[1].pupil).isNotNull()
         assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[0].isFree).isTrue()
     }
+
+    private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
+    private val ModuleWrapper.room get() = module as Room
+    private val ModuleWrapper.staircase get() = module as Staircase
 }
