@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.manager
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.randomlychosenbytes.jlocker.ModuleDeserializer
 import com.randomlychosenbytes.jlocker.nonabstractreps.Building
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -76,7 +77,10 @@ fun decrypt(base64: String, key: SecretKey?): String {
  */
 fun unsealAndDeserializeBuildings(encryptedBuildingsBase64: String, key: SecretKey?): List<Building> {
     val json = decrypt(encryptedBuildingsBase64, key)
-    val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+    val gson = GsonBuilder().registerTypeAdapter(
+        com.randomlychosenbytes.jlocker.nonabstractreps.Module::class.java,
+        ModuleDeserializer<com.randomlychosenbytes.jlocker.nonabstractreps.Module>()
+    ).excludeFieldsWithoutExposeAnnotation().create()
     return gson.fromJson(json, object : TypeToken<List<Building?>?>() {}.type)
 }
 
