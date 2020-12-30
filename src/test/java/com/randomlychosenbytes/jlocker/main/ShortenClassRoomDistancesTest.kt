@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.main
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
+import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances
@@ -35,12 +35,26 @@ class ShortenClassRoomDistancesTest {
                     moveInNewOwner(Pupil().apply {
                         firstName = "Don"
                         lastName = "Draper"
+                        heightInCm = 175
+                        schoolClassName = "12"
+                    })
+                },
+                Locker(id = "2").apply {
+                    moveInNewOwner(Pupil().apply {
+                        firstName = "Peggy"
+                        lastName = "Olsen"
                         heightInCm = 150
                         schoolClassName = "12"
                     })
                 },
-                Locker(id = "2"),
-                Locker(id = "3")
+                Locker(id = "3").apply {
+                    moveInNewOwner(Pupil().apply {
+                        firstName = "Peter"
+                        lastName = "Campbell"
+                        heightInCm = 150
+                        schoolClassName = "11"
+                    })
+                }
             ),
         )
 
@@ -83,8 +97,20 @@ class ShortenClassRoomDistancesTest {
         assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
         scd.execute()
 
-        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[1].pupil).isNotNull()
+        // should be moved to highest locker
+        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[0].isFree).isFalse()
+        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[0].pupil.lastName).isEqualTo("Draper")
+        assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[1].isFree).isTrue()
+
+        // should be moved to second highest locker
+        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[1].isFree).isFalse()
+        assertThat(walk.moduleWrappers[2].lockerCabinet.lockers[1].pupil.lastName).isEqualTo("Olsen")
         assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[0].isFree).isTrue()
+
+        // should not have been moved
+        assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[2].isFree).isFalse()
+        assertThat(walk.moduleWrappers[0].lockerCabinet.lockers[2].pupil.lastName).isEqualTo("Campbell")
+
     }
 
     private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
