@@ -33,10 +33,12 @@ class ModuleWrapper(module: Module) : JPanel() {
         get() = module as LockerCabinet
 
     fun setAs(module: Module) {
-        centerPanel.removeAll() // remove previous child
         this.module = module
-        centerPanel.add(module)
-        centerPanel.updateUI()
+        centerPanel.apply {
+            removeAll()
+            add(module)
+            updateUI()
+        }
     }
 
     /**
