@@ -217,8 +217,7 @@ class ShortenClassRoomDistances(
 
                         // vertices have been connected, set prevMUnitID for next run
                         previousMUnitId = currentMUnitID
-                        if (munit.module is LockerCabinet) {
-                            val lockers = managementUnits[m].lockerCabinet.lockers
+                        (munit.module as? LockerCabinet)?.lockers?.let { lockers ->
 
                             // connect each locker with its ManagementUnit
                             for (l in lockers.indices) {
@@ -290,11 +289,11 @@ class ShortenClassRoomDistances(
                         val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
-                        if (munit.module is Staircase) {
+                        (munit.module as? Staircase)?.let { staircase ->
 
                             if (buildings[b].floors.size - 1 >= f + 1) {
                                 val currentMUnitID = createNodeId(b, f, w, m)
-                                val ids = findStaircasesOnFloor(b, f + 1, munit.staircase.staircaseName)
+                                val ids = findStaircasesOnFloor(b, f + 1, staircase.staircaseName)
                                 for (id in ids) {
                                     val edge = weightedGraph.addEdge(currentMUnitID, id)
                                     weightedGraph.setEdgeWeight(edge, floorToFloorEdgeWeight.toDouble())
@@ -326,7 +325,7 @@ class ShortenClassRoomDistances(
             for (m in managementUnits.indices) {
                 val managementUnit = managementUnits[m]
                 if (managementUnit.module is Staircase) {
-                    if (managementUnit.staircase.staircaseName == name) {
+                    if ((managementUnit.module as? Staircase)?.staircaseName == name) {
                         walkToManagementUnit.add(w to m)
                     }
                 }
@@ -351,8 +350,8 @@ class ShortenClassRoomDistances(
                         val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
-                        if (munit.module is Staircase) {
-                            val staircaseIds = findStaircasesForBuilding(b - 1, munit.staircase.staircaseName)
+                        (munit.module as? Staircase)?.let { staircase ->
+                            val staircaseIds = findStaircasesForBuilding(b - 1, staircase.staircaseName)
                             val currentStaircaseId = createNodeId(b, f, w, m)
                             for (staircaseId in staircaseIds) {
                                 val edge = weightedGraph.addEdge(currentStaircaseId, staircaseId)

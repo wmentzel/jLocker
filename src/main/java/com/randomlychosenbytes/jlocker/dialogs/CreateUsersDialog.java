@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.crypto.SecretKey;
@@ -332,7 +333,14 @@ public class CreateUsersDialog extends JDialog {
                                 List<ModuleWrapper> mus = walk.getModuleWrappers();
 
                                 for (ModuleWrapper mu : mus) {
-                                    List<Locker> lockers = mu.getLockerCabinet().getLockers();
+
+                                    Module module = mu.getModule();
+
+                                    if (!(module instanceof LockerCabinet)) {
+                                        continue;
+                                    }
+
+                                    List<Locker> lockers = ((LockerCabinet) module).getLockers();
 
                                     for (Locker locker : lockers) {
                                         String[] codes = locker.getCodes(dataManager.getSuperUserMasterKey());

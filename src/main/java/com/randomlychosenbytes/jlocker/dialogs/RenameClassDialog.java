@@ -2,10 +2,8 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
+import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,7 +104,14 @@ public class RenameClassDialog extends JDialog {
                     List<ModuleWrapper> cols = walk.getModuleWrappers();
 
                     for (ModuleWrapper col : cols) {
-                        List<Locker> lockers = col.getLockerCabinet().getLockers();
+
+                        Module module = col.getModule();
+
+                        if (!(module instanceof LockerCabinet)) {
+                            continue;
+                        }
+
+                        List<Locker> lockers = ((LockerCabinet) module).getLockers();
                         String sSubClass;
 
                         for (Locker locker : lockers) {

@@ -91,7 +91,7 @@ class LockerCabinet : Module() {
     private fun addLockerLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_addLockerLabelMouseReleased
     { //GEN-HEADEREND:event_addLockerLabelMouseReleased
         lockers.add(0, Locker())
-        updateDummyRows(dataManager.currentManagmentUnitList.map { it.lockerCabinet })
+        updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }.filterIsInstance<LockerCabinet>())
         remLockerLabel.isEnabled = true
     } //GEN-LAST:event_addLockerLabelMouseReleased
 
@@ -106,7 +106,8 @@ class LockerCabinet : Module() {
             )
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.removeAt(0) // remove first
-                updateDummyRows(dataManager.currentManagmentUnitList.map { it.lockerCabinet })
+                updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }
+                    .filterIsInstance<LockerCabinet>())
             }
         }
     } //GEN-LAST:event_remLockerLabelMouseReleased

@@ -179,8 +179,8 @@ object DataManager {
         .filter {
             it.module is LockerCabinet
         }.map {
-            it.lockerCabinet
-        }.flatMap {
+            it.module
+        }.filterIsInstance<LockerCabinet>().flatMap {
             it.lockers
         }.firstOrNull {
             it.id == id

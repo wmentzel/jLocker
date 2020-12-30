@@ -102,21 +102,22 @@ object MainFrame : JFrame() {
         // Remove old panels
         lockerOverviewPanel.removeAll()
 
-        val moduleWrappers = dataManager.currentManagmentUnitList.map { oldMu ->
-            when (oldMu.module) {
+        val moduleWrappers = dataManager.currentManagmentUnitList.map { oldModuleWrapper ->
+
+            when (val oldModule = oldModuleWrapper.module) {
                 is Room -> {
-                    ModuleWrapper(Room(oldMu.room.roomName, oldMu.room.schoolClassName))
+                    ModuleWrapper(Room(oldModule.roomName, oldModule.schoolClassName))
                 }
                 is LockerCabinet -> {
-                    val newLockers = oldMu.lockerCabinet.lockers.map { Locker(it) }
+                    val newLockers = oldModule.lockers.map { Locker(it) }
                     ModuleWrapper(LockerCabinet()).apply {
-                        lockerCabinet.lockers = newLockers.toMutableList()
+                        (module as LockerCabinet).lockers = newLockers.toMutableList()
                     }
                 }
                 is Staircase -> {
-                    ModuleWrapper(Staircase(oldMu.staircase.staircaseName))
+                    ModuleWrapper(Staircase(oldModule.staircaseName))
                 }
-                else -> TODO("There is a new module type ${oldMu.module::class.simpleName} which was not considered.")
+                else -> TODO("There is a new module type ${oldModuleWrapper.module::class.simpleName} which was not considered.")
             }
         }
 

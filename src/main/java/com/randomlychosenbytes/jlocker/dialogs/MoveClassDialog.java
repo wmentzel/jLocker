@@ -3,6 +3,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances;
 import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
 import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
@@ -71,19 +72,25 @@ public class MoveClassDialog extends JDialog {
                         ModuleWrapper munit = moduleWrappers.get(m);
 
                         if (munit.getModule() instanceof Room) {
-                            String className = munit.getRoom().getSchoolClassName();
+                            String className = ((Room) munit.getModule()).getSchoolClassName();
 
                             if (!className.isEmpty()) {
                                 classToClassRoomNodeId.put(className, b + "-" + f + "-" + w + "-" + m);
                             }
                         }
 
+                        Module module = munit.getModule();
+
+                        if (!(module instanceof LockerCabinet)) {
+                            continue;
+                        }
+
+                        List<Locker> lockers = ((LockerCabinet) module).getLockers();
+
                         //
                         // Find classes assigned to pupils and gather lockers of pupils with an invalid height
                         // The height is needed in order to know up to which lockers a pupil can reach.
                         //
-                        List<Locker> lockers = munit.getLockerCabinet().getLockers();
-
                         for (Locker locker : lockers) {
 
                             if (locker.isFree()) {

@@ -8,8 +8,6 @@ import com.randomlychosenbytes.jlocker.manager.DataManager.currentManagmentUnitL
 import com.randomlychosenbytes.jlocker.manager.DataManager.mainFrame
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet
 import com.randomlychosenbytes.jlocker.nonabstractreps.Module
-import com.randomlychosenbytes.jlocker.nonabstractreps.Room
-import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -34,15 +32,6 @@ class ModuleWrapper(module: Module) : JPanel() {
             updateUI()
         }
     }
-
-    val room: Room
-        get() = module as Room
-
-    val staircase: Staircase
-        get() = module as Staircase
-
-    val lockerCabinet: LockerCabinet
-        get() = module as LockerCabinet
 
     /**
      * This method is called from within the constructor to initialize the form.
