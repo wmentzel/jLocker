@@ -318,7 +318,7 @@ public class CreateUsersDialog extends JDialog {
                     dataManager.getBuildingList().add(new Building("-"));
                     dataManager.getCurrentFloorList().add(new Floor("-"));
                     dataManager.getCurrentWalkList().add(new Walk("-"));
-                    dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(ManagementUnit.LOCKER_CABINET));
+                    dataManager.getCurrentManagmentUnitList().add(new ManagementUnit(new LockerCabinet()));
                 } else {
                     List<Building> buildings = dataManager.getBuildingList();
 

@@ -1,11 +1,14 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit;
+import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
+import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
 
 import javax.swing.*;
 
 public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
-    int chosenType;
 
     ManagementUnit munit;
 
@@ -25,26 +28,20 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         munit = mu;
 
         // Deactivate the radio button that represents the current type
-        switch (munit.getType()) {
-            case ManagementUnit.LOCKER_CABINET: {
-                lockerButton.setEnabled(false);
-                break;
-            }
-            case ManagementUnit.ROOM: {
-                roomButton.setEnabled(false);
-                break;
-            }
-            case ManagementUnit.STAIRCASE: {
-                staircaseButton.setEnabled(false);
-                break;
-            }
+
+        if (munit.module instanceof LockerCabinet) {
+            lockerButton.setEnabled(false);
+        }
+
+        if (munit.module instanceof Room) {
+            roomButton.setEnabled(false);
+        }
+
+        if (munit.module instanceof Staircase) {
+            staircaseButton.setEnabled(false);
         }
     }
 
-
-    public int getChosenType() {
-        return chosenType;
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -123,24 +120,26 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_okButtonActionPerformed
     {//GEN-HEADEREND:event_okButtonActionPerformed
 
+        Module module;
+
         if (lockerButton.isSelected()) {
-            chosenType = ManagementUnit.LOCKER_CABINET;
+            module = new LockerCabinet();
         } else if (roomButton.isSelected()) {
-            chosenType = ManagementUnit.ROOM;
+            module = new Room();
         } else {
-            chosenType = ManagementUnit.STAIRCASE;
+            module = new Staircase();
         }
 
         String text = "Wollen Sie diesen "
-                + ManagementUnit.getNameFromID(munit.getType())
+                + munit.module
                 + " in einen "
-                + ManagementUnit.getNameFromID(chosenType)
+                + module
                 + " transformieren?";
 
         int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            munit.setAs(chosenType);
+            munit.setAs(module);
         }
 
         // close after the selection

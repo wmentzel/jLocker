@@ -8,7 +8,7 @@ import com.randomlychosenbytes.jlocker.manager.DataManager.currentManagementUnit
 
 class Walk(name: String) : Entity(name) {
     @Expose
-    var managementUnits: List<ManagementUnit> = mutableListOf()
+    var managementUnits: MutableList<ManagementUnit> = mutableListOf()
 
     fun setCurLockerIndex(locker: Locker) {
 

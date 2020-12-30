@@ -3,12 +3,15 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
-import javax.swing.*;
-
-public class Staircase extends JPanel {
+public class Staircase extends Module {
 
     @Expose
     private String name;
+
+    public Staircase(String name) {
+        setCaption(name);
+        initComponents();
+    }
 
     public Staircase() {
         initComponents();
@@ -21,6 +24,11 @@ public class Staircase extends JPanel {
     public void setCaption(String name) {
         this.name = name;
         captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>");
+    }
+
+    @Override
+    public String toString() {
+        return "Treppenhaus";
     }
 
     /**

@@ -1,10 +1,7 @@
 package com.randomlychosenbytes.jlocker.algorithms
 
 import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk
+import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph
@@ -220,7 +217,7 @@ class ShortenClassRoomDistances(
 
                         // vertices have been connected, set prevMUnitID for next run
                         previousMUnitId = currentMUnitID
-                        if (munit.getType() == ManagementUnit.LOCKER_CABINET) {
+                        if (munit.module is LockerCabinet) {
                             val lockers = managementUnits[m].lockerCabinet.lockers
 
                             // connect each locker with its ManagementUnit
@@ -293,7 +290,7 @@ class ShortenClassRoomDistances(
                         val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
-                        if (munit.getType() == ManagementUnit.STAIRCASE) {
+                        if (munit.module is Staircase) {
 
                             if (buildings[b].floors.size - 1 >= f + 1) {
                                 val currentMUnitID = createNodeId(b, f, w, m)
@@ -328,7 +325,7 @@ class ShortenClassRoomDistances(
             val managementUnits = walks[w].managementUnits
             for (m in managementUnits.indices) {
                 val managementUnit = managementUnits[m]
-                if (managementUnit.getType() == ManagementUnit.STAIRCASE) {
+                if (managementUnit.module is Staircase) {
                     if (managementUnit.staircase.staircaseName == name) {
                         walkToManagementUnit.add(w to m)
                     }
@@ -354,7 +351,7 @@ class ShortenClassRoomDistances(
                         val munit = managementUnits[m]
 
                         // connect every managementUnit with the munits above that have the same name
-                        if (munit.getType() == ManagementUnit.STAIRCASE) {
+                        if (munit.module is Staircase) {
                             val staircaseIds = findStaircasesForBuilding(b - 1, munit.staircase.staircaseName)
                             val currentStaircaseId = createNodeId(b, f, w, m)
                             for (staircaseId in staircaseIds) {

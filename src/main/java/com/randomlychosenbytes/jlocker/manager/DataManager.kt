@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.manager
 
 import com.google.gson.GsonBuilder
-import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
 import com.randomlychosenbytes.jlocker.main.MainFrame
 import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import java.io.File
@@ -178,7 +177,7 @@ object DataManager {
         .flatMap(Floor::walks)
         .flatMap(Walk::managementUnits)
         .filter {
-            it.type == ManagementUnit.LOCKER_CABINET
+            it.module is LockerCabinet
         }.map {
             it.lockerCabinet
         }.flatMap {

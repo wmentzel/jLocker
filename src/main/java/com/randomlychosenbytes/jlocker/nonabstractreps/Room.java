@@ -3,9 +3,7 @@ package com.randomlychosenbytes.jlocker.nonabstractreps;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
-import javax.swing.*;
-
-public class Room extends JPanel {
+public class Room extends Module {
 
     @Expose
     private String schoolClassName;
@@ -16,6 +14,11 @@ public class Room extends JPanel {
     public Room(String name, String classname) {
         initComponents();
         setCaption(name, classname);
+    }
+
+    public Room() {
+        initComponents();
+        setCaption("", "");
     }
 
     public final void setCaption(String name, String schoolClassName) {
@@ -39,6 +42,11 @@ public class Room extends JPanel {
 
     public String getSchoolClassName() {
         return schoolClassName;
+    }
+
+    @Override
+    public String toString() {
+        return "Raum";
     }
 
     /**

@@ -14,8 +14,7 @@ import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 
-class LockerCabinet : JPanel() {
-
+class LockerCabinet : Module() {
 
     @Expose
     var lockers: MutableList<Locker>
@@ -117,6 +116,8 @@ class LockerCabinet : JPanel() {
     private lateinit var buttonPanel: JPanel
     private lateinit var cabinetPanel: JPanel
     private lateinit var remLockerLabel: JLabel
+
+    override fun toString() = "Schließfachschrank"
 
     init {
         initComponents()

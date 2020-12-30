@@ -4,11 +4,8 @@ import com.randomlychosenbytes.jlocker.abstractreps.ManagementUnit
 import com.randomlychosenbytes.jlocker.dialogs.*
 import com.randomlychosenbytes.jlocker.manager.DataManager
 import com.randomlychosenbytes.jlocker.manager.isDateValid
-import com.randomlychosenbytes.jlocker.nonabstractreps.Entity
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
+import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet.Companion.updateDummyRows
-import com.randomlychosenbytes.jlocker.nonabstractreps.Pupil
-import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser
 import java.awt.*
 import java.awt.event.*
 import java.util.stream.Collectors
@@ -106,24 +103,26 @@ class MainFrame : JFrame() {
         // Remove old panels
         lockerOverviewPanel.removeAll()
 
-        val mus = dataManager.currentManagmentUnitList.map { it to ManagementUnit(it.type) }.map { (oldMu, newMu) ->
-            ManagementUnit(oldMu.type).also { newMu ->
-                when (oldMu.type) {
-                    ManagementUnit.ROOM -> {
-                        newMu.room.setCaption(oldMu.room.roomName, oldMu.room.schoolClassName)
-                    }
-                    ManagementUnit.LOCKER_CABINET -> {
-                        val newLockers = oldMu.lockerCabinet.lockers.map { locker: Locker -> Locker(locker) }
-                        newMu.lockerCabinet.lockers = newLockers.toMutableList()
-                    }
-                    ManagementUnit.STAIRCASE -> {
-                        newMu.staircase.setCaption(oldMu.staircase.staircaseName)
+        val mus = dataManager.currentManagmentUnitList.map { oldMu ->
+            when (oldMu.module) {
+                is Room -> {
+                    ManagementUnit(Room(oldMu.room.roomName, oldMu.room.schoolClassName))
+                }
+                is LockerCabinet -> {
+                    val newLockers = oldMu.lockerCabinet.lockers.map { Locker(it) }
+                    ManagementUnit(LockerCabinet()).apply {
+                        lockerCabinet.lockers = newLockers.toMutableList()
                     }
                 }
+                is Staircase -> {
+                    ManagementUnit(Staircase(oldMu.staircase.staircaseName))
+                }
+                else -> TODO("There is a new module type ${oldMu.module::class.simpleName} which was not considered.")
             }
         }
 
-        dataManager.currentWalk.managementUnits = mus
+        dataManager.currentWalk.managementUnits = mus.toMutableList()
+
         val numManagementUnits = mus.size
         var firstLockerFound = false
         for (i in 0 until numManagementUnits) {
@@ -132,7 +131,7 @@ class MainFrame : JFrame() {
             val lockers: List<Locker> = mu.lockerCabinet.lockers
             for (locker in lockers) {
                 // always set a standard locker as selected
-                if (!lockers.isEmpty() && !firstLockerFound) {
+                if (lockers.isNotEmpty() && !firstLockerFound) {
                     lockers[0].setSelected()
                     dataManager.currentManagementUnitIndex = i
                     dataManager.currentLockerIndex = 0
