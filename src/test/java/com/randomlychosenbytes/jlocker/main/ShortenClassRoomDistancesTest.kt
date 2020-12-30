@@ -13,6 +13,73 @@ import org.junit.jupiter.api.Test
 class ShortenClassRoomDistancesTest {
 
     @Test
+    fun shouldReportIfLockerCannotBeReached() {
+        val building = Building("main building")
+        val groundFloor = Floor("ground floor")
+        val firstFloor = Floor("first floor")
+
+        building.floors.addAll(listOf(groundFloor, firstFloor))
+        val walk1 = Walk("main walk")
+        groundFloor.walks.add(walk1)
+
+        val walk2 = Walk("main walk")
+        firstFloor.walks.add(walk2)
+
+        walk1.moduleWrappers.addAll(
+            listOf(
+                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(Room("", "12")),
+                ModuleWrapper(Staircase("main staircase"))
+            )
+        )
+
+        walk2.moduleWrappers.addAll(
+            listOf(
+                ModuleWrapper(LockerCabinet()),
+            )
+        )
+
+        walk1.moduleWrappers[0].lockerCabinet.lockers.addAll(
+            listOf(
+                Locker(id = "1").apply {
+                    moveInNewOwner(Pupil().apply {
+                        firstName = "Don"
+                        lastName = "Draper"
+                        heightInCm = 175
+                        schoolClassName = "12"
+                    })
+                }
+            )
+        )
+
+        val scd = ShortenClassRoomDistances(
+            buildings = listOf(building),
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            classRoomNodeId = "0-0-0-3",
+            className = "12",
+            createTask = { /* no-op */ },
+            moveLocker = { l1, l2 ->
+                moveLockers(l1, l2)
+            }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.NonReachableLockersExist)
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossWalks() {
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossFloors() {
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossBuildings() {
+    }
+
+    @Test
     fun shouldMovePupilToCorrectFreeLocker() {
         val building = Building("main building")
         val floor = Floor("ground floor")
