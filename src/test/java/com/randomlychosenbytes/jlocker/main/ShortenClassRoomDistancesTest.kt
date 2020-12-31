@@ -22,18 +22,17 @@ class ShortenClassRoomDistancesTest {
 
         walk.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(
-                    createLockerCabinetOf(
-                        Locker(id = "1").apply {
-                            moveInNewOwner(Pupil().apply {
-                                firstName = "Don"
-                                lastName = "Draper"
-                                heightInCm = 175
-                                schoolClassName = "12"
-                            })
-                        },
-                        Locker(id = "2")
-                    )
+
+                createModuleWrapperWithLockerCabinetOf(
+                    Locker(id = "1").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Don"
+                            lastName = "Draper"
+                            heightInCm = 175
+                            schoolClassName = "12"
+                        })
+                    },
+                    Locker(id = "2")
                 )
             )
         )
@@ -65,7 +64,7 @@ class ShortenClassRoomDistancesTest {
 
         walk1.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(createLockerCabinetOf(
+                createModuleWrapperWithLockerCabinetOf(
                     Locker(id = "1").apply {
                         moveInNewOwner(Pupil().apply {
                             firstName = "Don"
@@ -74,7 +73,7 @@ class ShortenClassRoomDistancesTest {
                             schoolClassName = "12"
                         })
                     }
-                )),
+                ),
                 ModuleWrapper(Room("", "12")),
                 ModuleWrapper(Staircase("main staircase"))
             )
@@ -82,10 +81,9 @@ class ShortenClassRoomDistancesTest {
 
         walk2.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(
-                    createLockerCabinetOf(
-                        Locker(id = "2") // unreachable locker
-                    )
+
+                createModuleWrapperWithLockerCabinetOf(
+                    Locker(id = "2") // unreachable locker
                 ),
             )
         )
@@ -115,25 +113,23 @@ class ShortenClassRoomDistancesTest {
 
         walk.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(
-                    createLockerCabinetOf(
-                        Locker(id = "1").apply {
-                            moveInNewOwner(Pupil().apply {
-                                firstName = "Don"
-                                lastName = "Draper"
-                                heightInCm = 175
-                                schoolClassName = "12"
-                            })
-                        },
-                        Locker(id = "2").apply {
-                            moveInNewOwner(Pupil().apply {
-                                firstName = "Peggy"
-                                lastName = "Olsen"
-                                heightInCm = 150
-                                schoolClassName = "12"
-                            })
-                        },
-                    )
+                createModuleWrapperWithLockerCabinetOf(
+                    Locker(id = "1").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Don"
+                            lastName = "Draper"
+                            heightInCm = 175
+                            schoolClassName = "12"
+                        })
+                    },
+                    Locker(id = "2").apply {
+                        moveInNewOwner(Pupil().apply {
+                            firstName = "Peggy"
+                            lastName = "Olsen"
+                            heightInCm = 150
+                            schoolClassName = "12"
+                        })
+                    },
                 ),
                 ModuleWrapper(Room("", "12"))
             )
@@ -174,7 +170,7 @@ class ShortenClassRoomDistancesTest {
 
         walk.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(createLockerCabinetOf(
+                createModuleWrapperWithLockerCabinetOf(
                     Locker(id = "1").apply {
                         moveInNewOwner(Pupil().apply {
                             firstName = "Don"
@@ -199,20 +195,17 @@ class ShortenClassRoomDistancesTest {
                             schoolClassName = "11"
                         })
                     }
-                )),
-                ModuleWrapper(
-                    createLockerCabinetOf(
-                        Locker(id = "4"),
-                        Locker(id = "5"),
-                        Locker(id = "6")
-                    )
                 ),
-                ModuleWrapper(
-                    createLockerCabinetOf(
-                        Locker(id = "7"),
-                        Locker(id = "8"),
-                        Locker(id = "9")
-                    )
+                createModuleWrapperWithLockerCabinetOf(
+                    Locker(id = "4"),
+                    Locker(id = "5"),
+                    Locker(id = "6")
+                ),
+
+                createModuleWrapperWithLockerCabinetOf(
+                    Locker(id = "7"),
+                    Locker(id = "8"),
+                    Locker(id = "9")
                 ),
                 ModuleWrapper(Room("some classroom", "12")),
                 ModuleWrapper(Staircase("main staircase"))
@@ -247,9 +240,9 @@ class ShortenClassRoomDistancesTest {
 
     }
 
-    fun createLockerCabinetOf(vararg lockers: Locker) = LockerCabinet().apply {
+    private fun createModuleWrapperWithLockerCabinetOf(vararg lockers: Locker) = ModuleWrapper(LockerCabinet().apply {
         this.lockers.addAll(lockers)
-    }
+    })
 
     private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
     private val ModuleWrapper.room get() = module as Room
