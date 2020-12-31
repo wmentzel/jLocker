@@ -37,6 +37,12 @@ class ShortenClassRoomDistances(
         connectFloorsByStaircases()
         connectBuildinsByStaircases()
 
+        try {
+            DijkstraShortestPath(weightedGraph, classRoomNodeId, classRoomNodeId)
+        } catch (e: IllegalArgumentException) {
+            return Status.SpecifiedClassRoomDoesNotExist
+        }
+
         // create a list of all free lockers
         // and all the lockers that belong to people of that class
         for (lockerEntityCoordinates in allLockersEntityCoordinatesList) {
@@ -385,7 +391,11 @@ class ShortenClassRoomDistances(
     private fun getDistance(
         locker: EntityCoordinates<Locker>,
         classRoomNodeId: String
-    ) = DijkstraShortestPath(weightedGraph, locker.entity.id, classRoomNodeId).path?.weight?.toInt() ?: -1
+    ) = try {
+        DijkstraShortestPath(weightedGraph, locker.entity.id, classRoomNodeId).path?.weight?.toInt() ?: -1
+    } catch (e: Exception) {
+        -1
+    }
 
     private fun createNodeId(b: Int, f: Int, w: Int, m: Int) = "$b-$f-$w-$m"
 
@@ -420,7 +430,7 @@ class ShortenClassRoomDistances(
     }
 
     enum class Status {
-        ClassHasNoClassRoom,
+        SpecifiedClassRoomDoesNotExist,
         NoFreeLockersAvailable,
         ClassHasNoPupils,
         NonReachableLockersExist,

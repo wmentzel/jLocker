@@ -246,7 +246,7 @@ public class MoveClassDialog extends JDialog {
         okButton.setEnabled(false);
 
         switch (status) {
-            case ClassHasNoClassRoom: {
+            case SpecifiedClassRoomDoesNotExist: {
                 statusMessage = "Die Klasse " + className + " hat keinen noch keinen Raum. Bitte fügen Sie diesen erst hinzu!";
                 break;
             }

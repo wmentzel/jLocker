@@ -12,6 +12,45 @@ import org.junit.jupiter.api.Test
 class ShortenClassRoomDistancesTest {
 
     @Test
+    fun shouldReportIfClassRoomDoesNotExist() {
+        val building = Building("main building")
+        val groundFloor = Floor("ground floor")
+
+        building.floors.addAll(listOf(groundFloor))
+        val walk = Walk("main walk")
+        groundFloor.walks.add(walk)
+
+        walk.moduleWrappers.addAll(
+            listOf(
+                ModuleWrapper(
+                    createLockerCabinetOf(
+                        Locker(id = "1").apply {
+                            moveInNewOwner(Pupil().apply {
+                                firstName = "Don"
+                                lastName = "Draper"
+                                heightInCm = 175
+                                schoolClassName = "12"
+                            })
+                        },
+                        Locker(id = "2")
+                    )
+                )
+            )
+        )
+
+        val scd = ShortenClassRoomDistances(
+            buildings = listOf(building),
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            classRoomNodeId = "0-0-0-3",
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.SpecifiedClassRoomDoesNotExist)
+    }
+
+    @Test
     fun shouldReportIfNonReachableLockersExist() {
         val building = Building("main building")
         val groundFloor = Floor("ground floor")
@@ -54,7 +93,7 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-3",
+            classRoomNodeId = "0-0-0-1",
             className = "12",
             createTask = { /* no-op */ }
         )
@@ -103,7 +142,7 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-3",
+            classRoomNodeId = "0-0-0-1",
             className = "12",
             createTask = { /* no-op */ }
         )
