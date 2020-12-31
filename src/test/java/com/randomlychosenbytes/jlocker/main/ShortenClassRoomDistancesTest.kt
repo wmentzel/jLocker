@@ -43,12 +43,12 @@ class ShortenClassRoomDistancesTest {
 
         walk2.moduleWrappers.addAll(
             listOf(
-                ModuleWrapper(LockerCabinet()),
+                ModuleWrapper(
+                    createLockerCabinetOf(
+                        Locker(id = "2") // unreachable locker
+                    )
+                ),
             )
-        )
-
-        walk2.moduleWrappers[0].lockerCabinet.lockers.addAll(
-            listOf(Locker(id = "2")),
         )
 
         val scd = ShortenClassRoomDistances(
