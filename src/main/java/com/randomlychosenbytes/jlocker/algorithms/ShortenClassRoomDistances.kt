@@ -13,7 +13,7 @@ import kotlin.math.abs
 class ShortenClassRoomDistances(
     private val buildings: List<Building>,
     private val lockerMinSizes: List<Int>,
-    private val classRoomNodeId: String,
+
     private val className: String,
     private val createTask: (String) -> Unit
 ) {
@@ -25,8 +25,29 @@ class ShortenClassRoomDistances(
     private lateinit var classLockerToDistancePairList: List<Pair<EntityCoordinates<Locker>, Int>>
     private lateinit var freeLockerToDistancePairList: List<Pair<EntityCoordinates<Locker>, Int>>
     private lateinit var unreachableLockers: MutableList<String>
+    private lateinit var classRoomNodeId: String
 
     fun check(): Status {
+
+        var classRoomNodeId: String? = null
+
+        buildings.forEachIndexed { bIndex, building ->
+            building.floors.forEachIndexed { fIndex, floor ->
+                floor.walks.forEachIndexed { wIndex, walk ->
+                    walk.moduleWrappers.forEachIndexed { mwIndex, moduleWrapper ->
+                        if ((moduleWrapper.module as? Room)?.schoolClassName == className) {
+                            classRoomNodeId = "$bIndex-$fIndex-$wIndex-$mwIndex"
+                        }
+                    }
+                }
+            }
+        }
+
+        classRoomNodeId?.let {
+            this.classRoomNodeId = it
+        } ?: kotlin.run {
+            return Status.SpecifiedClassRoomDoesNotExist
+        }
 
         val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
         val classLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
@@ -36,12 +57,6 @@ class ShortenClassRoomDistances(
         connectWalksOnFloor()
         connectFloorsByStaircases()
         connectBuildinsByStaircases()
-
-        try {
-            DijkstraShortestPath(weightedGraph, classRoomNodeId, classRoomNodeId)
-        } catch (e: IllegalArgumentException) {
-            return Status.SpecifiedClassRoomDoesNotExist
-        }
 
         // create a list of all free lockers
         // and all the lockers that belong to people of that class
@@ -70,7 +85,7 @@ class ShortenClassRoomDistances(
 
         val freeLockerToDistancePairList = mutableListOf<Pair<EntityCoordinates<Locker>, Int>>()
         for (freeLockerECoord in freeLockersEntityCoordinatesList) {
-            val dist = getDistance(freeLockerECoord, classRoomNodeId)
+            val dist = getDistance(freeLockerECoord, this.classRoomNodeId)
             if (dist == -1) {
                 // Create list that contains the ids of all lockers that cant
                 // be reached from the classroom
@@ -91,7 +106,7 @@ class ShortenClassRoomDistances(
         val classLockerToDistancePairList = mutableListOf<Pair<EntityCoordinates<Locker>, Int>>()
 
         for (classLockerECoord in classLockersEntityCoordinatesList) {
-            val distance = getDistance(classLockerECoord, classRoomNodeId)
+            val distance = getDistance(classLockerECoord, this.classRoomNodeId)
             if (distance == -1) {
                 // Create a list that contains the ids of all lockers that can't
                 // be reached from the classroom
@@ -391,11 +406,7 @@ class ShortenClassRoomDistances(
     private fun getDistance(
         locker: EntityCoordinates<Locker>,
         classRoomNodeId: String
-    ) = try {
-        DijkstraShortestPath(weightedGraph, locker.entity.id, classRoomNodeId).path?.weight?.toInt() ?: -1
-    } catch (e: Exception) {
-        -1
-    }
+    ) = DijkstraShortestPath(weightedGraph, locker.entity.id, classRoomNodeId).path?.weight?.toInt() ?: -1
 
     private fun createNodeId(b: Int, f: Int, w: Int, m: Int) = "$b-$f-$w-$m"
 

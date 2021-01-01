@@ -40,7 +40,6 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-3",
             className = "12",
             createTask = { /* no-op */ }
         )
@@ -91,7 +90,6 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-1",
             className = "12",
             createTask = { /* no-op */ }
         )
@@ -138,7 +136,6 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-1",
             className = "12",
             createTask = { /* no-op */ }
         )
@@ -215,7 +212,6 @@ class ShortenClassRoomDistancesTest {
         val scd = ShortenClassRoomDistances(
             buildings = listOf(building),
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
-            classRoomNodeId = "0-0-0-3",
             className = "12",
             createTask = { /* no-op */ }
         )

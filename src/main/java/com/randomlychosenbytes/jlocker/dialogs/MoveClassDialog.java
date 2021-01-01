@@ -8,8 +8,9 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 
 /**
  * This dialog looks simple when you look at the two row GUI, but under the hood
@@ -24,7 +25,7 @@ import java.util.*;
  */
 public class MoveClassDialog extends JDialog {
     private final DataManager dataManager = DataManager.INSTANCE;
-    private Map<String, String> classToClassRoomNodeId;
+    private Set<String> schoolClasses = new HashSet<>();
     private Set<String> lockerIdWithoutHeights;
 
     public MoveClassDialog(Frame parent) {
@@ -37,15 +38,11 @@ public class MoveClassDialog extends JDialog {
         // focus in the middle
         setLocationRelativeTo(null);
 
-        classToClassRoomNodeId = new HashMap<>();
         lockerIdWithoutHeights = new HashSet<>();
 
         findClassesAndClassRooms();
 
-        List<String> classNames = new LinkedList<>(classToClassRoomNodeId.keySet());
-        Collections.sort(classNames);
-
-        classComboBox.setModel(new DefaultComboBoxModel(classNames.toArray()));
+        classComboBox.setModel(new DefaultComboBoxModel(schoolClasses.stream().sorted().toArray()));
     }
 
     /**
@@ -56,7 +53,6 @@ public class MoveClassDialog extends JDialog {
      * Requires a classroom to be unique! (test to be implemented)
      */
     private void findClassesAndClassRooms() {
-        Set<String> assignedClasses = new HashSet<>();
         List<Building> buildings = dataManager.getBuildingList();
 
         for (int b = 0; b < buildings.size(); b++) {
@@ -75,7 +71,7 @@ public class MoveClassDialog extends JDialog {
                             String className = ((Room) munit.getModule()).getSchoolClassName();
 
                             if (!className.isEmpty()) {
-                                classToClassRoomNodeId.put(className, b + "-" + f + "-" + w + "-" + m);
+                                schoolClasses.add(className);
                             }
                         }
 
@@ -92,16 +88,7 @@ public class MoveClassDialog extends JDialog {
                         // The height is needed in order to know up to which lockers a pupil can reach.
                         //
                         for (Locker locker : lockers) {
-
-                            if (locker.isFree()) {
-                                continue;
-                            }
-
-                            String className = locker.getPupil().getSchoolClassName();
-
-                            if (!className.isEmpty()) {
-                                assignedClasses.add(className);
-
+                            if (!locker.isFree()) {
                                 if (locker.getPupil().getHeightInCm() == 0) {
                                     lockerIdWithoutHeights.add(locker.getId());
                                 }
@@ -110,19 +97,6 @@ public class MoveClassDialog extends JDialog {
                     }
                 }
             }
-
-            Map<String, String> map = new HashMap<>();
-
-            //
-            // Remove the class from the map that are not assigned to a pupil
-            //
-            for (String className : classToClassRoomNodeId.keySet()) {
-                if (assignedClasses.contains(className)) {
-                    map.put(className, classToClassRoomNodeId.get(className));
-                }
-            }
-
-            classToClassRoomNodeId = map;
         }
     }
 
@@ -210,7 +184,6 @@ public class MoveClassDialog extends JDialog {
     {//GEN-HEADEREND:event_okButtonActionPerformed
         // TODO gather info from drop down menu
         String className = (String) classComboBox.getSelectedItem();
-        String classRoomNodeId = classToClassRoomNodeId.get(className);
 
         if (!lockerIdWithoutHeights.isEmpty()) {
             StringBuilder ids = new StringBuilder();
@@ -232,7 +205,6 @@ public class MoveClassDialog extends JDialog {
         ShortenClassRoomDistances scrd = new ShortenClassRoomDistances(
                 dataManager.getBuildingList(),
                 dataManager.getSettings().getLockerMinSizes(),
-                classRoomNodeId,
                 className,
                 (taskText) -> {
                     dataManager.getTasks().add(new Task(taskText));
