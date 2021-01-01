@@ -1,10 +1,10 @@
 package com.randomlychosenbytes.jlocker.main
 
 import com.google.gson.GsonBuilder
-import com.randomlychosenbytes.jlocker.manager.DataManager
-import com.randomlychosenbytes.jlocker.manager.decryptKeyWithString
-import com.randomlychosenbytes.jlocker.manager.generateAndEncryptKey
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building
+import com.randomlychosenbytes.jlocker.DataManager
+import com.randomlychosenbytes.jlocker.decryptKeyWithString
+import com.randomlychosenbytes.jlocker.generateAndEncryptKey
+import com.randomlychosenbytes.jlocker.model.Building
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

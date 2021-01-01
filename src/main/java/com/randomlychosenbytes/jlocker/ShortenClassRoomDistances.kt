@@ -1,8 +1,6 @@
-package com.randomlychosenbytes.jlocker.algorithms
+package com.randomlychosenbytes.jlocker
 
-import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
-import com.randomlychosenbytes.jlocker.moveOwner
-import com.randomlychosenbytes.jlocker.nonabstractreps.*
+import com.randomlychosenbytes.jlocker.model.*
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph

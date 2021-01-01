@@ -1,34 +1,52 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps;
+package com.randomlychosenbytes.jlocker.model;
 
 import com.google.gson.annotations.Expose;
-import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
+import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
-public class Staircase extends Module {
+public class Room extends Module {
+
+    @Expose
+    private String schoolClassName;
 
     @Expose
     private String name;
 
-    public Staircase(String name) {
+    public Room(String name, String classname) {
         initComponents();
-        setCaption(name);
+        setCaption(name, classname);
     }
 
-    public Staircase() {
+    public Room() {
         initComponents();
+        setCaption("", "");
     }
 
-    public String getStaircaseName() {
+    public final void setCaption(String name, String schoolClassName) {
+        this.name = name;
+        this.schoolClassName = schoolClassName;
+
+        String caption = "<html><div align=\"center\">" + this.name;
+
+        // if there was a class name specified
+        if (!this.schoolClassName.isEmpty()) {
+            caption += "<br><br><div style='font-size:12pt;'>Klasse<br>" + this.schoolClassName + "</div>";
+        }
+
+        caption += "</div></html>";
+        captionLabel.setText(caption);
+    }
+
+    public String getRoomName() {
         return name;
     }
 
-    public void setCaption(String name) {
-        this.name = name;
-        captionLabel.setText("<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>");
+    public String getSchoolClassName() {
+        return schoolClassName;
     }
 
     @Override
     public String toString() {
-        return "Treppenhaus";
+        return "Raum";
     }
 
     /**
@@ -42,7 +60,7 @@ public class Staircase extends Module {
 
         captionLabel = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(153, 153, 153));
+        setBackground(new java.awt.Color(160, 116, 52));
         setLayout(new java.awt.BorderLayout());
 
         captionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -59,7 +77,7 @@ public class Staircase extends Module {
     private void captionLabelMouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_captionLabelMouseReleased
     {//GEN-HEADEREND:event_captionLabelMouseReleased
         // TODO mainframe as first argument
-        StaircaseDialog dialog = new StaircaseDialog(null, true, this);
+        RoomDialog dialog = new RoomDialog(null, true, this);
         dialog.setVisible(true);
     }//GEN-LAST:event_captionLabelMouseReleased
 

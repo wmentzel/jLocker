@@ -1,12 +1,8 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.main.MainFrame;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Floor;
-import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Walk;
+import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.model.*;
 
 public class BuildingDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;

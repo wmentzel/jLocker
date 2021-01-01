@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
+import com.randomlychosenbytes.jlocker.model.Room;
 
 import javax.swing.*;
 import java.awt.*;

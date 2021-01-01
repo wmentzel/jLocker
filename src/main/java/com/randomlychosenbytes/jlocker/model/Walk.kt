@@ -1,7 +1,6 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 
 class Walk(name: String) : Entity(name) {
     @Expose

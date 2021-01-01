@@ -1,11 +1,10 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates;
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.main.MainFrame;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
-import com.randomlychosenbytes.jlocker.nonabstractreps.*;
+import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.EntityCoordinates;
+import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.model.Module;
+import com.randomlychosenbytes.jlocker.model.*;
 
 import javax.swing.*;
 import java.awt.print.PrinterException;

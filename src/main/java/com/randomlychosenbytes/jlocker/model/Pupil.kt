@@ -1,8 +1,8 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.manager.getCalendarFromString
-import com.randomlychosenbytes.jlocker.manager.getDifferenceInMonths
+import com.randomlychosenbytes.jlocker.getCalendarFromString
+import com.randomlychosenbytes.jlocker.getDifferenceInMonths
 import java.util.*
 
 class Pupil(

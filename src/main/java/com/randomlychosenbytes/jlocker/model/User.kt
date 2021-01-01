@@ -1,7 +1,7 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.manager.getHash
+import com.randomlychosenbytes.jlocker.getHash
 
 /**
  * Represents a User of the program. There are two different kinds a the moment

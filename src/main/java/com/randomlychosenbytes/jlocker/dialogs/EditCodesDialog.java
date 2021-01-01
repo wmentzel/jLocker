@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.main.MainFrame;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
+import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;

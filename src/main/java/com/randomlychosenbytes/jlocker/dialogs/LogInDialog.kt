@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.manager.DataManager
-import com.randomlychosenbytes.jlocker.manager.DataManager.backupDirectory
+import com.randomlychosenbytes.jlocker.DataManager
+import com.randomlychosenbytes.jlocker.DataManager.backupDirectory
 import java.awt.Frame
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout

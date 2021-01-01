@@ -1,8 +1,7 @@
-package com.randomlychosenbytes.jlocker.manager
+package com.randomlychosenbytes.jlocker
 
 import com.google.gson.GsonBuilder
-import com.randomlychosenbytes.jlocker.main.MainFrame
-import com.randomlychosenbytes.jlocker.nonabstractreps.*
+import com.randomlychosenbytes.jlocker.model.*
 import java.io.File
 import java.io.FileFilter
 import java.io.FileReader
@@ -64,10 +63,10 @@ object DataManager {
         userMasterKey: SecretKey,
         superUserMasterKey: SecretKey
     ) {
-        this.superUser = superUser
-        this.restrictedUser = restrictedUser
-        this.userMasterKey = userMasterKey
-        this.superUserMasterKey = superUserMasterKey
+        DataManager.superUser = superUser
+        DataManager.restrictedUser = restrictedUser
+        DataManager.userMasterKey = userMasterKey
+        DataManager.superUserMasterKey = superUserMasterKey
         currentUser = superUser
     }
 

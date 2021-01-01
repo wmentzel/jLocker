@@ -1,4 +1,4 @@
-package com.randomlychosenbytes.jlocker.abstractreps
+package com.randomlychosenbytes.jlocker
 
 /**
  * Every Entity (ManamgentUnit, Locker, Room etc.) has a unique sequence of numbers.

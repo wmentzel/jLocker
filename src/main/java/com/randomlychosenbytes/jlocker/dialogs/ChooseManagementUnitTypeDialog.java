@@ -1,10 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Room;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
+import com.randomlychosenbytes.jlocker.model.Module;
+import com.randomlychosenbytes.jlocker.model.*;
 
 import javax.swing.*;
 

@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.nonabstractreps.Staircase;
+import com.randomlychosenbytes.jlocker.model.Staircase;
 
 import javax.swing.*;
 import java.awt.*;

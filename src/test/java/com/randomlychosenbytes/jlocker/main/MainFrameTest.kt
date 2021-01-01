@@ -2,10 +2,11 @@ package com.randomlychosenbytes.jlocker.main
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.randomlychosenbytes.jlocker.manager.DataManager
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
-import com.randomlychosenbytes.jlocker.nonabstractreps.Pupil
-import com.randomlychosenbytes.jlocker.nonabstractreps.SuperUser
+import com.randomlychosenbytes.jlocker.DataManager
+import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.model.Locker
+import com.randomlychosenbytes.jlocker.model.Pupil
+import com.randomlychosenbytes.jlocker.model.SuperUser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

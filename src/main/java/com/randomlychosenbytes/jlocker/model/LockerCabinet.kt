@@ -1,7 +1,7 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.manager.DataManager
+import com.randomlychosenbytes.jlocker.DataManager
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Font

@@ -1,8 +1,8 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Locker;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Task;
+import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.model.Locker;
+import com.randomlychosenbytes.jlocker.model.Task;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,11 +1,8 @@
-package com.randomlychosenbytes.jlocker.main
+package com.randomlychosenbytes.jlocker
 
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
 import com.randomlychosenbytes.jlocker.dialogs.*
-import com.randomlychosenbytes.jlocker.manager.DataManager
-import com.randomlychosenbytes.jlocker.manager.isDateValid
-import com.randomlychosenbytes.jlocker.nonabstractreps.*
-import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet.Companion.updateDummyRows
+import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.model.LockerCabinet.Companion.updateDummyRows
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
@@ -382,7 +379,6 @@ object MainFrame : JFrame() {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private fun initComponents() {
-        var gridBagConstraints: GridBagConstraints
         centerPanel = JPanel()
         comboBoxPanel = JPanel()
         buildingsPanel = JPanel()
@@ -660,7 +656,7 @@ object MainFrame : JFrame() {
         )
         oneMonthRemainingPanel.add(oneMonthRemainingColorPanel)
         legendPanel.add(oneMonthRemainingPanel)
-        gridBagConstraints = GridBagConstraints()
+        var gridBagConstraints: GridBagConstraints = GridBagConstraints()
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
         gridBagConstraints.anchor = GridBagConstraints.WEST
         leftFlowLayout.add(legendPanel, gridBagConstraints)

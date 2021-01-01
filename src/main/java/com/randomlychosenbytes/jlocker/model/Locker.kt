@@ -1,10 +1,10 @@
-package com.randomlychosenbytes.jlocker.nonabstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.randomlychosenbytes.jlocker.main.MainFrame
-import com.randomlychosenbytes.jlocker.manager.decrypt
-import com.randomlychosenbytes.jlocker.manager.encrypt
+import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.decrypt
+import com.randomlychosenbytes.jlocker.encrypt
 import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

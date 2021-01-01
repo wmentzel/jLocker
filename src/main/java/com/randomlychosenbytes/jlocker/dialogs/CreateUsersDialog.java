@@ -1,9 +1,8 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.manager.DataManager;
-import com.randomlychosenbytes.jlocker.nonabstractreps.Module;
-import com.randomlychosenbytes.jlocker.nonabstractreps.*;
+import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.model.Module;
+import com.randomlychosenbytes.jlocker.model.*;
 
 import javax.crypto.SecretKey;
 import javax.swing.*;
@@ -11,7 +10,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import static com.randomlychosenbytes.jlocker.manager.UtilsKt.decryptKeyWithString;
+import static com.randomlychosenbytes.jlocker.UtilsKt.decryptKeyWithString;
 
 public class CreateUsersDialog extends JDialog {
     private int displayedCardIndex;

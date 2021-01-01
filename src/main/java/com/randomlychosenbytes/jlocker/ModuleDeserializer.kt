@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker
 
 import com.google.gson.*
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building
+import com.randomlychosenbytes.jlocker.model.Building
 import java.lang.reflect.Type
 
 class ModuleDeserializer<T> : JsonDeserializer<T> {

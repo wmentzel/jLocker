@@ -4,9 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import com.randomlychosenbytes.jlocker.abstractreps.ModuleWrapper
-import com.randomlychosenbytes.jlocker.algorithms.ShortenClassRoomDistances
-import com.randomlychosenbytes.jlocker.nonabstractreps.*
+import com.randomlychosenbytes.jlocker.ShortenClassRoomDistances
+import com.randomlychosenbytes.jlocker.model.*
 import org.junit.jupiter.api.Test
 
 class ShortenClassRoomDistancesTest {

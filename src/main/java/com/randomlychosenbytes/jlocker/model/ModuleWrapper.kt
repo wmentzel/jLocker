@@ -1,13 +1,11 @@
-package com.randomlychosenbytes.jlocker.abstractreps
+package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
+import com.randomlychosenbytes.jlocker.DataManager.currentLockerIndex
+import com.randomlychosenbytes.jlocker.DataManager.currentManagementUnitIndex
+import com.randomlychosenbytes.jlocker.DataManager.currentManagmentUnitList
+import com.randomlychosenbytes.jlocker.DataManager.mainFrame
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog
-import com.randomlychosenbytes.jlocker.manager.DataManager.currentLockerIndex
-import com.randomlychosenbytes.jlocker.manager.DataManager.currentManagementUnitIndex
-import com.randomlychosenbytes.jlocker.manager.DataManager.currentManagmentUnitList
-import com.randomlychosenbytes.jlocker.manager.DataManager.mainFrame
-import com.randomlychosenbytes.jlocker.nonabstractreps.LockerCabinet
-import com.randomlychosenbytes.jlocker.nonabstractreps.Module
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

@@ -1,9 +1,9 @@
-package com.randomlychosenbytes.jlocker.manager
+package com.randomlychosenbytes.jlocker
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.randomlychosenbytes.jlocker.ModuleDeserializer
-import com.randomlychosenbytes.jlocker.nonabstractreps.Building
+import com.randomlychosenbytes.jlocker.model.Building
+import com.randomlychosenbytes.jlocker.model.Locker
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -78,8 +78,8 @@ fun decrypt(base64: String, key: SecretKey?): String {
 fun unsealAndDeserializeBuildings(encryptedBuildingsBase64: String, key: SecretKey?): List<Building> {
     val json = decrypt(encryptedBuildingsBase64, key)
     val gson = GsonBuilder().registerTypeAdapter(
-        com.randomlychosenbytes.jlocker.nonabstractreps.Module::class.java,
-        ModuleDeserializer<com.randomlychosenbytes.jlocker.nonabstractreps.Module>()
+        com.randomlychosenbytes.jlocker.model.Module::class.java,
+        ModuleDeserializer<com.randomlychosenbytes.jlocker.model.Module>()
     ).excludeFieldsWithoutExposeAnnotation().create()
     return gson.fromJson(json, object : TypeToken<List<Building?>?>() {}.type)
 }
@@ -143,4 +143,18 @@ fun isDateValid(dateStr: String): Boolean {
 
 fun getDifferenceInMonths(start: Calendar, end: Calendar): Long {
     return Math.round((end.timeInMillis.toDouble() - start.timeInMillis) / 2592000000.0) // 2592000000.0 = 24 * 60 * 60 * 1000 * 30
+}
+
+fun moveOwner(sourceLocker: Locker, destLocker: Locker) {
+
+    if (sourceLocker.isFree) {
+        throw IllegalStateException("The source locker does not have an owner who could be moved to a new locker.")
+    }
+
+    if (!destLocker.isFree) {
+        throw IllegalStateException("The destination locker still has an owner who has to be unassigned before a new owner can be assigned.")
+    }
+
+    destLocker.moveInNewOwner(sourceLocker.pupil)
+    sourceLocker.empty()
 }
