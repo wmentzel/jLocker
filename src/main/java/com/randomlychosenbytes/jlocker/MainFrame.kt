@@ -19,7 +19,7 @@ class MainFrame : JFrame() {
     private var tasksFrame: TasksFrame? = null
 
     private lateinit var timer: Timer
-    private lateinit var dataManager: DataManager
+    private val dataManager = DataManager
 
     fun initialize() {
         initComponents()
