@@ -2,7 +2,7 @@ package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.DataManager
 import com.randomlychosenbytes.jlocker.decrypt
 import com.randomlychosenbytes.jlocker.encrypt
 import java.awt.Font
@@ -131,7 +131,7 @@ class Locker(
 
     private inner class MouseListener : MouseAdapter() {
         override fun mouseReleased(e: MouseEvent) {
-            MainFrame.selectLocker(e.source as Locker)
+            DataManager.mainFrame.selectLocker(e.source as Locker)
         }
     }
 

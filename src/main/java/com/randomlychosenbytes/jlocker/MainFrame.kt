@@ -13,13 +13,13 @@ import javax.swing.event.PopupMenuListener
  * This is the main windows of the application. It is displayed right after
  * the login-dialog/create new user dialog.i
  */
-object MainFrame : JFrame() {
+class MainFrame : JFrame() {
 
     private var searchFrame: SearchFrame? = null
     private var tasksFrame: TasksFrame? = null
 
     private lateinit var timer: Timer
-    private var dataManager = DataManager
+    private lateinit var dataManager: DataManager
 
     fun initialize() {
         initComponents()
@@ -31,9 +31,6 @@ object MainFrame : JFrame() {
         // Set application title from resources
         //
         title = dataManager.appTitle + " " + dataManager.appVersion
-
-        // TODO remove in later versions
-        dataManager.mainFrame = this
 
         //
         // Ask to save changes on exit
@@ -190,26 +187,26 @@ object MainFrame : JFrame() {
         containerPanel.isVisible = true
         val locker = dataManager.currentLocker
         if (locker.isFree) {
-            surnameTextField.text = ""
-            nameTextField.text = ""
+            lastNameTextField.text = ""
+            firstNameTextField.text = ""
             classTextField.text = ""
-            sizeTextField.text = ""
+            heightInCmTextField.text = ""
             hasContractCheckbox.isSelected = false
             moneyTextField.text = ""
             previousAmountTextField.text = ""
-            fromDateTextField.text = ""
-            untilDateTextField.text = ""
+            rentedFromDateTextField.text = ""
+            rentedUntilDateTextField.text = ""
             remainingTimeInMonthsTextField.text = ""
         } else {
-            surnameTextField.text = locker.pupil.lastName
-            nameTextField.text = locker.pupil.firstName
+            lastNameTextField.text = locker.pupil.lastName
+            firstNameTextField.text = locker.pupil.firstName
             classTextField.text = locker.pupil.schoolClassName
-            sizeTextField.text = locker.pupil.heightInCm.toString()
+            heightInCmTextField.text = locker.pupil.heightInCm.toString()
             hasContractCheckbox.isSelected = locker.pupil.hasContract
             moneyTextField.text = locker.pupil.paidAmount.toString()
             previousAmountTextField.text = locker.pupil.previouslyPaidAmount.toString()
-            fromDateTextField.text = locker.pupil.rentedFromDate
-            untilDateTextField.text = locker.pupil.rentedUntilDate
+            rentedFromDateTextField.text = locker.pupil.rentedFromDate
+            rentedUntilDateTextField.text = locker.pupil.rentedUntilDate
             remainingTimeInMonthsTextField.text = locker.pupil.remainingTimeInMonths.let {
                 "$it ${if (it == 1L) "Monat" else "Monate"}"
             }
@@ -239,7 +236,7 @@ object MainFrame : JFrame() {
      * When executed the data from the GUI components is written into the locker
      * object.
      */
-    private fun setLockerInformation() {
+    fun setLockerInformation() {
         val locker = dataManager.currentLocker
         val id = lockerIDTextField.text
         if (dataManager.currentLocker.id == id || dataManager.isLockerIdUnique(id)) {
@@ -266,15 +263,15 @@ object MainFrame : JFrame() {
         locker.isOutOfOrder = outOfOrderCheckbox.isSelected
         locker.lockCode = lockTextField.text
         locker.note = noteTextArea.text
-        val lastName = surnameTextField.text
+        val lastName = lastNameTextField.text
         if (lastName.isNotBlank()) {
             getOrCreatePupil(locker).lastName = lastName
         }
-        val firstName = nameTextField.text
+        val firstName = firstNameTextField.text
         if (firstName.isNotBlank()) {
             getOrCreatePupil(locker).firstName = firstName
         }
-        val heightString = sizeTextField.text
+        val heightString = heightInCmTextField.text
         if (heightString.isNotBlank()) {
             try {
                 val height = heightString.toInt()
@@ -282,14 +279,14 @@ object MainFrame : JFrame() {
             } catch (e: NumberFormatException) {
                 JOptionPane.showMessageDialog(
                     null,
-                    "Die eigegebene Größe ist ungültig!",
+                    "Die eingegebene Größe ist ungültig!",
                     "Fehler",
                     JOptionPane.ERROR_MESSAGE
                 )
                 return
             }
         }
-        val from = fromDateTextField.text
+        val from = rentedFromDateTextField.text
         if (from.isNotBlank()) {
             if (isDateValid(from)) {
                 getOrCreatePupil(locker).rentedFromDate = from
@@ -303,7 +300,7 @@ object MainFrame : JFrame() {
                 return
             }
         }
-        val until = untilDateTextField.text
+        val until = rentedUntilDateTextField.text
         if (until.isNotBlank()) {
             if (isDateValid(until)) {
                 getOrCreatePupil(locker).rentedUntilDate = until
@@ -425,21 +422,21 @@ object MainFrame : JFrame() {
         lockerIDLabel = JLabel()
         lockerIDTextField = JTextField()
         surnameLabel = JLabel()
-        surnameTextField = JTextField()
+        lastNameTextField = JTextField()
         nameLabel = JLabel()
-        nameTextField = JTextField()
+        firstNameTextField = JTextField()
         classLabel = JLabel()
         classTextField = JTextField()
         sizeLabel = JLabel()
-        sizeTextField = JTextField()
+        heightInCmTextField = JTextField()
         noteLabel = JLabel()
         noteTextArea = JTextField()
         middlePanel = JPanel()
         lockerPanel = JPanel()
         fromDateLabel = JLabel()
-        fromDateTextField = JTextField()
+        rentedFromDateTextField = JTextField()
         untilDateLabel = JLabel()
-        untilDateTextField = JTextField()
+        rentedUntilDateTextField = JTextField()
         remainingTimeInMonthsLabel = JLabel()
         remainingTimeInMonthsTextField = JTextField()
         currentPinLabel = JLabel()
@@ -669,16 +666,16 @@ object MainFrame : JFrame() {
         userPanel.add(lockerIDTextField)
         surnameLabel.text = "Nachname"
         userPanel.add(surnameLabel)
-        userPanel.add(surnameTextField)
+        userPanel.add(lastNameTextField)
         nameLabel.text = "Vorname"
         userPanel.add(nameLabel)
-        userPanel.add(nameTextField)
+        userPanel.add(firstNameTextField)
         classLabel.text = "Klasse"
         userPanel.add(classLabel)
         userPanel.add(classTextField)
         sizeLabel.text = "Größe"
         userPanel.add(sizeLabel)
-        userPanel.add(sizeTextField)
+        userPanel.add(heightInCmTextField)
         noteLabel.text = "Notiz"
         userPanel.add(noteLabel)
         userPanel.add(noteTextArea)
@@ -691,10 +688,10 @@ object MainFrame : JFrame() {
         lockerPanel.layout = GridLayout(5, 2, 5, 3)
         fromDateLabel.text = "von"
         lockerPanel.add(fromDateLabel)
-        lockerPanel.add(fromDateTextField)
+        lockerPanel.add(rentedFromDateTextField)
         untilDateLabel.text = "bis"
         lockerPanel.add(untilDateLabel)
-        lockerPanel.add(untilDateTextField)
+        lockerPanel.add(rentedUntilDateTextField)
         remainingTimeInMonthsLabel.text = "verbleibende Monate"
         lockerPanel.add(remainingTimeInMonthsLabel)
         lockerPanel.add(remainingTimeInMonthsTextField)
@@ -918,16 +915,16 @@ object MainFrame : JFrame() {
             JOptionPane.YES_NO_CANCEL_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
-            surnameTextField.text = ""
-            nameTextField.text = ""
+            lastNameTextField.text = ""
+            firstNameTextField.text = ""
             classTextField.text = ""
-            sizeTextField.text = "0"
+            heightInCmTextField.text = "0"
             hasContractCheckbox.isSelected = false
             moneyTextField.text = "0"
             previousAmountTextField.text = "0"
             remainingTimeInMonthsTextField.text = ""
-            fromDateTextField.text = ""
-            untilDateTextField.text = ""
+            rentedFromDateTextField.text = ""
+            rentedUntilDateTextField.text = ""
             noteTextArea.text = ""
             val locker = dataManager.currentLocker
             locker.empty()
@@ -1132,7 +1129,7 @@ object MainFrame : JFrame() {
     private lateinit var freeLabel: JLabel
     private lateinit var freePanel: JPanel
     private lateinit var fromDateLabel: JLabel
-    private lateinit var fromDateTextField: JTextField
+    private lateinit var rentedFromDateTextField: JTextField
     private lateinit var gridLayoutPanel: JPanel
     private lateinit var hasContractCheckbox: JCheckBox
     private lateinit var helpMenu: JMenu
@@ -1154,7 +1151,7 @@ object MainFrame : JFrame() {
     private lateinit var moveClassMenuItem: JMenuItem
     private lateinit var moveLockerMenuItem: JMenuItem
     private lateinit var nameLabel: JLabel
-    private lateinit var nameTextField: JTextField
+    private lateinit var firstNameTextField: JTextField
     private lateinit var noContractColorLabel: JPanel
     private lateinit var noContractLabel: JLabel
     private lateinit var noContractPanel: JPanel
@@ -1184,25 +1181,16 @@ object MainFrame : JFrame() {
     private lateinit var settingsMenuItem: JMenuItem
     private lateinit var showTasksMenuItem: JMenuItem
     private lateinit var sizeLabel: JLabel
-    private lateinit var sizeTextField: JTextField
+    private lateinit var heightInCmTextField: JTextField
     private lateinit var statusMessageLabel: JLabel
     private lateinit var statusPanel: JPanel
     private lateinit var surnameLabel: JLabel
-    private lateinit var surnameTextField: JTextField
+    private lateinit var lastNameTextField: JTextField
     private lateinit var untilDateLabel: JLabel
-    private lateinit var untilDateTextField: JTextField
+    private lateinit var rentedUntilDateTextField: JTextField
     private lateinit var userPanel: JPanel
     private lateinit var userScrollPane: JScrollPane
     private lateinit var walkComboBox: JComboBox<String>
     private lateinit var walkLabel: JLabel
     private lateinit var walksPanel: JPanel
-}
-
-fun main() {
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    // Create and display the form
-    EventQueue.invokeLater {
-        MainFrame.initialize()
-        MainFrame.isVisible = true
-    }
 }
