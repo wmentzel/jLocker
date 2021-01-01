@@ -72,23 +72,16 @@ class Locker(
     }
 
     fun setAppropriateColor() {
-
-        if (isFree) {
-            setColor(Color.Free)
-        } else {
-            if (pupil.hasContract) {
-                setColor(Color.Rented)
-            } else {
-                setColor(Color.NoContract)
-            }
-
-            if (pupil.remainingTimeInMonths <= 1) {
-                setColor(Color.OneMonthRentRemaining)
-            }
-        }
-
-        if (isOutOfOrder) {
-            setColor(Color.OutOfOrder)
+        listOf(
+            isOutOfOrder to Color.OutOfOrder,
+            isFree to Color.Free,
+            (pupil.remainingTimeInMonths <= 1) to Color.OneMonthRentRemaining,
+            pupil.hasContract to Color.Rented,
+            true to Color.NoContract
+        ).first { (predicate, _) ->
+            predicate
+        }.let { (_, color) ->
+            setColor(color)
         }
     }
 
@@ -117,7 +110,7 @@ class Locker(
         }
     }
 
-    fun setColor(color: Color) {
+    private fun setColor(color: Color) {
         background = color.background
         foreground = color.foreground
     }
