@@ -13,6 +13,7 @@ import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.math.roundToLong
 
 private const val CRYPTO_ALOGRITHM_NAME = "DES"
 
@@ -142,7 +143,7 @@ fun isDateValid(dateStr: String): Boolean {
 }
 
 fun getDifferenceInMonths(start: Calendar, end: Calendar): Long {
-    return Math.round((end.timeInMillis.toDouble() - start.timeInMillis) / 2592000000.0) // 2592000000.0 = 24 * 60 * 60 * 1000 * 30
+    return ((end.timeInMillis - start.timeInMillis) / 2592000000.0).roundToLong() // 2592000000.0 = 1 month in milli seconds
 }
 
 fun moveOwner(sourceLocker: Locker, destLocker: Locker) {
