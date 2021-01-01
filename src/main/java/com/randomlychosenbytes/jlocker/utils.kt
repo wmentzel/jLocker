@@ -6,6 +6,9 @@ import com.randomlychosenbytes.jlocker.model.Building
 import com.randomlychosenbytes.jlocker.model.Locker
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -13,7 +16,6 @@ import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
 import javax.crypto.spec.SecretKeySpec
-import kotlin.math.roundToLong
 
 private const val CRYPTO_ALOGRITHM_NAME = "DES"
 
@@ -122,28 +124,11 @@ fun decryptKeyWithString(encKeyBase64: String, pw: String): SecretKey { // Key i
     }
 }
 
-fun getCalendarFromString(dateStr: String): Calendar? {
-    return if (dateStr.length < 10) {
-        null
-    } else try {
-        val day = dateStr.substring(0, 2).toInt()
-        val month = dateStr.substring(3, 5).toInt() - 1
-        val year = dateStr.substring(6, 10).toInt()
-        val calendar: Calendar = GregorianCalendar(year, month, day)
-        calendar.isLenient = false
-        calendar.time
-        calendar
-    } catch (e: Exception) {
-        null
-    }
-}
-
-fun isDateValid(dateStr: String): Boolean {
-    return getCalendarFromString(dateStr) != null
-}
-
-fun getDifferenceInMonths(start: Calendar, end: Calendar): Long {
-    return ((end.timeInMillis - start.timeInMillis) / 2592000000.0).roundToLong() // 2592000000.0 = 1 month in milli seconds
+fun isDateValid(dateStr: String): Boolean = try {
+    LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    true
+} catch (e: DateTimeParseException) {
+    false
 }
 
 fun moveOwner(sourceLocker: Locker, destLocker: Locker) {

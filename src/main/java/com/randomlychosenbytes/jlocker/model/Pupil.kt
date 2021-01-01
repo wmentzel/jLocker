@@ -1,9 +1,9 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.getCalendarFromString
-import com.randomlychosenbytes.jlocker.getDifferenceInMonths
-import java.util.*
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
 class Pupil(
     @Expose var firstName: String,
@@ -28,18 +28,12 @@ class Pupil(
         previouslyPaidAmount = 0
     )
 
-    val remainingTimeInMonths: Long
+    val remainingTimeInMonths: Int
         get() {
-            if (rentedUntilDate == "" || rentedFromDate == "") {
+            if (rentedUntilDate == "") {
                 return 0
             }
-
-            val today: Calendar = GregorianCalendar().apply {
-                isLenient = false
-                time
-            }
-
-            val end = getCalendarFromString(rentedUntilDate)
-            return getDifferenceInMonths(today, end!!)
+            val end = LocalDate.parse(rentedUntilDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            return Period.between(LocalDate.now(), end).months
         }
 }

@@ -208,7 +208,7 @@ class MainFrame : JFrame() {
             rentedFromDateTextField.text = locker.pupil.rentedFromDate
             rentedUntilDateTextField.text = locker.pupil.rentedUntilDate
             remainingTimeInMonthsTextField.text = locker.pupil.remainingTimeInMonths.let {
-                "$it ${if (it == 1L) "Monat" else "Monate"}"
+                "$it ${if (it == 1) "Monat" else "Monate"}"
             }
         }
 
@@ -316,7 +316,7 @@ class MainFrame : JFrame() {
         }
         if (!locker.isFree) {
             val months = locker.pupil.remainingTimeInMonths
-            remainingTimeInMonthsTextField.text = months.toString() + " " + if (months == 1L) "Monat" else "Monate"
+            remainingTimeInMonthsTextField.text = months.toString() + " " + if (months == 1) "Monat" else "Monate"
         }
         val schoolClassName = classTextField.text
         if (schoolClassName.isNotBlank()) {
