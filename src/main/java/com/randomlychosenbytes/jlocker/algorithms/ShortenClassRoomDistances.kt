@@ -46,7 +46,7 @@ class ShortenClassRoomDistances(
         classRoomNodeId?.let {
             this.classRoomNodeId = it
         } ?: kotlin.run {
-            return Status.SpecifiedClassRoomDoesNotExist
+            return Status.ClassRoomForSpecifiedClassDoesNotExist
         }
 
         val freeLockersEntityCoordinatesList: MutableList<EntityCoordinates<Locker>> = mutableListOf()
@@ -441,9 +441,10 @@ class ShortenClassRoomDistances(
     }
 
     enum class Status {
-        SpecifiedClassRoomDoesNotExist,
-        NoFreeLockersAvailable,
-        ClassHasNoPupils,
+        ClassRoomForSpecifiedClassDoesNotExist,
+        ClassRoomIsNotReachable,
+        NoFreeLockersAvailable, // nothing to optimize?
+        ClassHasNoPupils, // no lockers with pupils of class exist
         NonReachableLockersExist,
         NoMinimumSizeDefinedForRow,
         Success,

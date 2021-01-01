@@ -45,7 +45,7 @@ class ShortenClassRoomDistancesTest {
         )
 
         val status = scd.check()
-        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.SpecifiedClassRoomDoesNotExist)
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.ClassRoomForSpecifiedClassDoesNotExist)
     }
 
     @Test
