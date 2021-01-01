@@ -6,10 +6,10 @@ import javax.swing.UIManager
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     EventQueue.invokeLater {
-        val mainFrame = MainFrame().apply {
+        MainFrame().apply {
+            DataManager.mainFrame = this
             initialize()
             isVisible = true
         }
-        DataManager.mainFrame = mainFrame
     }
 }

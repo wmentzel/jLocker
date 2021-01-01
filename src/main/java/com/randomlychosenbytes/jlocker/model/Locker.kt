@@ -75,8 +75,8 @@ class Locker(
         listOf(
             isOutOfOrder to Color.OutOfOrder,
             isFree to Color.Free,
-            (pupil.remainingTimeInMonths <= 1) to Color.OneMonthRentRemaining,
-            pupil.hasContract to Color.Rented,
+            (_pupil?.let { it.remainingTimeInMonths <= 1 } == true) to Color.OneMonthRentRemaining,
+            (_pupil?.hasContract == true) to Color.Rented,
             true to Color.NoContract
         ).first { (predicate, _) ->
             predicate
