@@ -908,33 +908,17 @@ class MainFrame : JFrame() {
     private fun emptyButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_emptyButtonActionPerformed
     { //GEN-HEADEREND:event_emptyButtonActionPerformed
         dataManager.hasDataChanged = true
+
         val answer = JOptionPane.showConfirmDialog(
             null,
             "Wollen Sie dieses Schließfach wirklich leeren?",
             "Schließfach leeren",
             JOptionPane.YES_NO_CANCEL_OPTION
         )
-        if (answer == JOptionPane.YES_OPTION) {
-            lastNameTextField.text = ""
-            firstNameTextField.text = ""
-            classTextField.text = ""
-            heightInCmTextField.text = "0"
-            hasContractCheckbox.isSelected = false
-            moneyTextField.text = "0"
-            previousAmountTextField.text = "0"
-            remainingTimeInMonthsTextField.text = ""
-            rentedFromDateTextField.text = ""
-            rentedUntilDateTextField.text = ""
-            noteTextArea.text = ""
-            val locker = dataManager.currentLocker
-            locker.empty()
 
-            // Combobox initialization
-            if (dataManager.currentUser is SuperUser) {
-                codeTextField.text = locker.getCurrentCode(dataManager.superUserMasterKey)
-            } else {
-                codeTextField.text = "00-00-00"
-            }
+        if (answer == JOptionPane.YES_OPTION) {
+            dataManager.currentLocker.empty()
+            showLockerInformation()
         }
     } //GEN-LAST:event_emptyButtonActionPerformed
 
