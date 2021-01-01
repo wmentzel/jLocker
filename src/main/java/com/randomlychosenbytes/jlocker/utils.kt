@@ -5,7 +5,7 @@ import com.randomlychosenbytes.jlocker.nonabstractreps.Locker
 /**
  * Moves a student from one locker to another.
  */
-fun moveLockers(sourceLocker: Locker, destLocker: Locker) {
+fun moveOwner(sourceLocker: Locker, destLocker: Locker) {
 
     if (sourceLocker.isFree) {
         throw IllegalStateException("The source locker does not have an owner who could be moved to a new locker.")

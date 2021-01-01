@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.algorithms
 
 import com.randomlychosenbytes.jlocker.abstractreps.EntityCoordinates
-import com.randomlychosenbytes.jlocker.moveLockers
+import com.randomlychosenbytes.jlocker.moveOwner
 import com.randomlychosenbytes.jlocker.nonabstractreps.*
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
@@ -185,7 +185,7 @@ class ShortenClassRoomDistances(
                     statusMessage.append("Entfernung verkürzt um: ")
                         .append(df.format(distanceReduction.toDouble())).append("%\n\n")
 
-                    moveLockers(srcLocker, destLocker)
+                    moveOwner(srcLocker, destLocker)
 
                     freeLockerToDistancePairList.remove(freeLockerToDistancePair) // this one is now occupied, so remove it
                     val taskText = "Klassenumzug (${destLocker.pupil.schoolClassName} ): ${srcLocker.id} -> "
