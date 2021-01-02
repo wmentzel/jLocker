@@ -552,7 +552,7 @@ public class SearchFrame extends javax.swing.JFrame {
 
     private void emptySelectedButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_emptySelectedButtonActionPerformed
     {//GEN-HEADEREND:event_emptySelectedButtonActionPerformed
-        int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie die markierten Schließfächer wirklich leeren?", "Bestätigung", JOptionPane.YES_NO_CANCEL_OPTION);
+        int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie die markierten Schließfächer wirklich leeren?", "Bestätigung", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.NO_OPTION || answer == JOptionPane.CANCEL_OPTION || answer == JOptionPane.CLOSED_OPTION) {
             return;

@@ -100,7 +100,7 @@ class LockerCabinet : Module() {
                 null,
                 "Wollen Sie dieses Schließfach wirklich löschen?",
                 "Löschen",
-                JOptionPane.YES_NO_CANCEL_OPTION
+                JOptionPane.YES_NO_OPTION
             )
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.removeAt(0) // remove first

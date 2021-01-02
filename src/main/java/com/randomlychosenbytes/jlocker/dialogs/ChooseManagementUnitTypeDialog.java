@@ -133,7 +133,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
                 + module
                 + " transformieren?";
 
-        int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_CANCEL_OPTION);
+        int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
             munit.setModule(module);

@@ -45,7 +45,7 @@ class MainFrame : JFrame() {
                         null,
                         "Wollen Sie Ihre Änderungen speichern?",
                         "Speichern und beenden",
-                        JOptionPane.YES_NO_CANCEL_OPTION
+                        JOptionPane.YES_NO_OPTION
                     )
                     if (answer == JOptionPane.CANCEL_OPTION) {
                         return
@@ -848,7 +848,7 @@ class MainFrame : JFrame() {
             null,
             "Wollen Sie dieses Gebäude wirklich löschen?",
             "Gebäude löschen",
-            JOptionPane.YES_NO_CANCEL_OPTION
+            JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
             dataManager.buildingList.removeAt(dataManager.currentBuildingIndex)
@@ -866,7 +866,7 @@ class MainFrame : JFrame() {
             null,
             "Wollen Sie diese Etage wirklich löschen?",
             "Etage löschen",
-            JOptionPane.YES_NO_CANCEL_OPTION
+            JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
             dataManager.currentFloorList.removeAt(dataManager.currentFloorIndex)
@@ -883,7 +883,7 @@ class MainFrame : JFrame() {
             null,
             "Wollen Sie diesen Gang wirklich löschen?",
             "Gang löschen",
-            JOptionPane.YES_NO_CANCEL_OPTION
+            JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
             dataManager.currentWalkList.removeAt(dataManager.currentWalkIndex)
@@ -913,7 +913,7 @@ class MainFrame : JFrame() {
             null,
             "Wollen Sie dieses Schließfach wirklich leeren?",
             "Schließfach leeren",
-            JOptionPane.YES_NO_CANCEL_OPTION
+            JOptionPane.YES_NO_OPTION
         )
 
         if (answer == JOptionPane.YES_OPTION) {

@@ -195,7 +195,7 @@ public class TasksFrame extends javax.swing.JFrame {
         if (newTasksList.size() == tasks.size()) {
             JOptionPane.showMessageDialog(null, "Sie haben keine Aufgaben ausgewählt!", "Löschen", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle erledigten Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
+            int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle erledigten Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_OPTION);
 
             if (answer == JOptionPane.YES_OPTION) {
                 dataManager.setTasks(newTasksList);
@@ -207,7 +207,7 @@ public class TasksFrame extends javax.swing.JFrame {
 
     private void deleteAllButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deleteAllButtonActionPerformed
     {//GEN-HEADEREND:event_deleteAllButtonActionPerformed
-        int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_CANCEL_OPTION);
+        int answer = JOptionPane.showConfirmDialog(null, "Wollen Sie wirklich alle Aufgaben löschen?", "Löschen", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
             while (tablemodel.getRowCount() > 0) {

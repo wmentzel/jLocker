@@ -129,7 +129,7 @@ class ModuleWrapper(module: Module) : JPanel() {
             null,
             "Wollen Sie diesen ${this.module} wirklich löschen?",
             "Löschen",
-            JOptionPane.YES_NO_CANCEL_OPTION
+            JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
             val mus = dataManager.currentManagmentUnitList
