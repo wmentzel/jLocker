@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Module;
 import com.randomlychosenbytes.jlocker.model.*;
 
@@ -9,7 +9,6 @@ import java.awt.*;
 import java.util.List;
 
 public class RenameClassDialog extends JDialog {
-    DataManager dataManager = DataManager.INSTANCE;
 
     public RenameClassDialog(Frame parent, boolean modal) {
         super(parent, modal);
@@ -91,7 +90,7 @@ public class RenameClassDialog extends JDialog {
         boolean searchForAgeGroup = previousClassName.indexOf('.') == -1;
         int numMatches = 0;
 
-        List<Building> buildings = dataManager.getBuildingList();
+        List<Building> buildings = State.Companion.getDataManager().getBuildingList();
 
         for (Building building : buildings) {
             List<Floor> floors = building.getFloors();

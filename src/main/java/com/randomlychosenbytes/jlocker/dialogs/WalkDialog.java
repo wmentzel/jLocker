@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.LockerCabinet;
 import com.randomlychosenbytes.jlocker.model.ModuleWrapper;
 import com.randomlychosenbytes.jlocker.model.Walk;
@@ -14,7 +15,7 @@ public class WalkDialog extends JDialog {
     public static final int ADD = 1;
 
     final int bMode;
-    private DataManager dataManager = DataManager.INSTANCE;
+    private DataManager dataManager = State.Companion.getDataManager();
 
     public WalkDialog(Frame parent, boolean modal, int mode) {
         super(parent, modal);

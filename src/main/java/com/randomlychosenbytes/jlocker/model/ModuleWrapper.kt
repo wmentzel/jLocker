@@ -1,10 +1,7 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.DataManager.currentLockerIndex
-import com.randomlychosenbytes.jlocker.DataManager.currentManagementUnitIndex
-import com.randomlychosenbytes.jlocker.DataManager.currentManagmentUnitList
-import com.randomlychosenbytes.jlocker.DataManager.mainFrame
+import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog
 import java.awt.*
 import java.awt.event.MouseAdapter
@@ -100,7 +97,7 @@ class ModuleWrapper(module: Module) : JPanel() {
 
     private fun addMUnitLeftLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_addMUnitLeftLabelMouseReleased
     { //GEN-HEADEREND:event_addMUnitLeftLabelMouseReleased
-        val mus = currentManagmentUnitList
+        val mus = State.dataManager.currentManagmentUnitList
         val index = mus.indexOf(this)
         val iNewIndex: Int = if (index == mus.size - 1) {
             mus.add(ModuleWrapper(LockerCabinet()))
@@ -109,9 +106,9 @@ class ModuleWrapper(module: Module) : JPanel() {
             mus.add(index + 1, ModuleWrapper(LockerCabinet()))
             index + 1
         }
-        currentManagementUnitIndex = iNewIndex
-        currentLockerIndex = 0
-        mainFrame.drawLockerOverview()
+        State.dataManager.currentManagementUnitIndex = iNewIndex
+        State.dataManager.currentLockerIndex = 0
+        State.dataManager.mainFrame.drawLockerOverview()
     } //GEN-LAST:event_addMUnitLeftLabelMouseReleased
 
     private fun transformLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_transformLabelMouseReleased
@@ -123,7 +120,7 @@ class ModuleWrapper(module: Module) : JPanel() {
 
     private fun removeThisMUnitLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_removeThisMUnitLabelMouseReleased
     { //GEN-HEADEREND:event_removeThisMUnitLabelMouseReleased
-        if (currentManagmentUnitList.size <= 1) {
+        if (State.dataManager.currentManagmentUnitList.size <= 1) {
             return
         }
 
@@ -134,20 +131,20 @@ class ModuleWrapper(module: Module) : JPanel() {
             JOptionPane.YES_NO_CANCEL_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
-            val mus = currentManagmentUnitList
+            val mus = State.dataManager.currentManagmentUnitList
             mus.remove(this)
-            mainFrame.drawLockerOverview()
+            State.dataManager.mainFrame.drawLockerOverview()
         }
     } //GEN-LAST:event_removeThisMUnitLabelMouseReleased
 
     private fun addMUnitRightLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_addMUnitRightLabelMouseReleased
     { //GEN-HEADEREND:event_addMUnitRightLabelMouseReleased
-        val mus = currentManagmentUnitList
+        val mus = State.dataManager.currentManagmentUnitList
         val index = mus.indexOf(this)
         mus.add(index, ModuleWrapper(LockerCabinet()))
-        currentManagementUnitIndex = index
-        currentLockerIndex = 0
-        mainFrame.drawLockerOverview()
+        State.dataManager.currentManagementUnitIndex = index
+        State.dataManager.currentLockerIndex = 0
+        State.dataManager.mainFrame.drawLockerOverview()
     } //GEN-LAST:event_addMUnitRightLabelMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

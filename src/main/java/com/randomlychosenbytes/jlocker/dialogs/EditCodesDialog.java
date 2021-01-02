@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.*;
 public class EditCodesDialog extends JDialog {
     private final JTextField codeTextFields[] = new JTextField[5];
     private int iCurCodeIndex;
-    private DataManager dataManager = DataManager.INSTANCE;
+    private DataManager dataManager = State.Companion.getDataManager();
 
     /**
      * Creates new form EditCodesDialog

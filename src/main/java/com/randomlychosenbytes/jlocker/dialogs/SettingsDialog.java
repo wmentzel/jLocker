@@ -1,12 +1,14 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class SettingsDialog extends javax.swing.JDialog {
-    private DataManager dataManager = DataManager.INSTANCE;
+public class SettingsDialog extends JDialog {
+    private DataManager dataManager = State.Companion.getDataManager();
 
     public SettingsDialog(Frame parent, boolean modal) {
         super(parent, modal);

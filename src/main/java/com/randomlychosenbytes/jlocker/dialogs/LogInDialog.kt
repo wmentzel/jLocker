@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager
-import com.randomlychosenbytes.jlocker.DataManager.backupDirectory
+import com.randomlychosenbytes.jlocker.State
 import java.awt.Frame
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -13,9 +12,9 @@ import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileFilter
 
-class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
+class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
     var resPath: File? = null
-    private val dataManager = DataManager
+    private val dataManager = State.dataManager
 
     // auto generated
     private fun initComponents() {
@@ -29,7 +28,7 @@ class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
         okButton = JButton()
         loadBackupButton = JButton()
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
-        title = "jLocker 1.5 - Anmeldung"
+        title = "${dataManager.appTitle} ${dataManager.appVersion} - Anmeldung"
         isResizable = false
         contentPane.layout = GridBagLayout()
         splashImageLabel.icon = ImageIcon(javaClass.getResource("/jLocker_2014.png")) // NOI18N
@@ -81,7 +80,7 @@ class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
 
     private fun okButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_okButtonActionPerformed
     { //GEN-HEADEREND:event_okButtonActionPerformed
-        val isSuperUser = chooseUserComboBox!!.selectedIndex == 0
+        val isSuperUser = chooseUserComboBox.selectedIndex == 0
 
         //
         // Loading...
@@ -89,13 +88,13 @@ class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
         if (resPath == null) {
             dataManager.loadFromCustomFile(loadAsSuperUser = isSuperUser)
         } else {
-            dataManager.loadFromCustomFile(resPath!!, isSuperUser) // backup loading
+            dataManager.loadFromCustomFile(resPath!!, loadAsSuperUser = isSuperUser) // backup loading
         }
 
         //
         // Initialization
         //
-        val password = String(passwordTextField!!.password)
+        val password = String(passwordTextField.password)
         if (dataManager.currentUser.isPasswordCorrect(password)) {
             dataManager.initMasterKeys(password)
         } else {
@@ -108,7 +107,7 @@ class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
 
     private fun loadBackupButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_loadBackupButtonActionPerformed
     { //GEN-HEADEREND:event_loadBackupButtonActionPerformed
-        val fc = JFileChooser(backupDirectory)
+        val fc = JFileChooser(dataManager.backupDirectory)
         val filter: FileFilter = object : FileFilter() {
             override fun accept(pathname: File): Boolean {
                 return pathname.name.endsWith(".dat")
@@ -157,6 +156,6 @@ class LogInDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
         })
 
         // Check if backup directory exists. If not, create it.
-        loadBackupButton!!.isEnabled = backupDirectory.exists()
+        loadBackupButton.isEnabled = State.dataManager.backupDirectory.exists()
     }
 }

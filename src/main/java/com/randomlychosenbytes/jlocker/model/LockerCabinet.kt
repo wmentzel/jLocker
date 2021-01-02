@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.DataManager
+import com.randomlychosenbytes.jlocker.State
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Font
@@ -20,8 +20,6 @@ class LockerCabinet : Module() {
     var lockers: MutableList<Locker>
 
     companion object {
-        private val dataManager = DataManager
-
         @JvmStatic
         fun updateDummyRows(cabinets: List<LockerCabinet>) {
             val maxRows = cabinets.map { it.lockers.size }.maxOrNull() ?: 0
@@ -91,7 +89,7 @@ class LockerCabinet : Module() {
     private fun addLockerLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_addLockerLabelMouseReleased
     { //GEN-HEADEREND:event_addLockerLabelMouseReleased
         lockers.add(0, Locker())
-        updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }.filterIsInstance<LockerCabinet>())
+        updateDummyRows(State.dataManager.currentManagmentUnitList.map { it.module }.filterIsInstance<LockerCabinet>())
         remLockerLabel.isEnabled = true
     } //GEN-LAST:event_addLockerLabelMouseReleased
 
@@ -106,7 +104,7 @@ class LockerCabinet : Module() {
             )
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.removeAt(0) // remove first
-                updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }
+                updateDummyRows(State.dataManager.currentManagmentUnitList.map { it.module }
                     .filterIsInstance<LockerCabinet>())
             }
         }

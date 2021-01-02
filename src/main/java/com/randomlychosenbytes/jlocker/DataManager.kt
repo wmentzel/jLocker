@@ -9,41 +9,43 @@ import java.io.FileWriter
 import java.util.*
 import javax.crypto.SecretKey
 
+
 /**
  * DataManager is a singleton class. There can only be one instance of this
  * class at any time and it has to be accessed from anywhere. This may not be
  * the best design but it stays that way for the time being.
  */
-object DataManager {
+class DataManager {
     /**
      * TODO remove
      * instance of the MainFrame object is need to call the setStatusMessage method
      */
     lateinit var mainFrame: MainFrame
 
-    val ressourceFile: File
-    val backupDirectory: File
+    lateinit var ressourceFile: File
+    lateinit var backupDirectory: File
 
-    var hasDataChanged = false
-    var buildingList: MutableList<Building> = mutableListOf()
+    private lateinit var encryptedBuildingsBase64: String
+    private lateinit var userMasterKey: SecretKey
+    lateinit var superUserMasterKey: SecretKey
         private set
 
     private lateinit var restrictedUser: RestrictedUser
     private lateinit var superUser: SuperUser
-    lateinit var currentUser: User
-        private set
 
     var tasks: MutableList<Task> = mutableListOf()
 
     var settings: Settings = Settings()
         private set
 
-    private lateinit var encryptedBuildingsBase64: String
-
-    private lateinit var userMasterKey: SecretKey
-
-    lateinit var superUserMasterKey: SecretKey
+    var hasDataChanged = false
+    var buildingList: MutableList<Building> = mutableListOf()
         private set
+
+    fun initPath(path: File) {
+        ressourceFile = File(path, "jlocker.json")
+        backupDirectory = File(path, "Backup")
+    }
 
     fun initMasterKeys(currentUserPassword: String) {
 
@@ -63,10 +65,10 @@ object DataManager {
         userMasterKey: SecretKey,
         superUserMasterKey: SecretKey
     ) {
-        DataManager.superUser = superUser
-        DataManager.restrictedUser = restrictedUser
-        DataManager.userMasterKey = userMasterKey
-        DataManager.superUserMasterKey = superUserMasterKey
+        this.superUser = superUser
+        this.restrictedUser = restrictedUser
+        this.userMasterKey = userMasterKey
+        this.superUserMasterKey = superUserMasterKey
         currentUser = superUser
     }
 
@@ -194,6 +196,9 @@ object DataManager {
     val appTitle: String
     val appVersion: String
 
+    lateinit var currentUser: User
+        private set
+
     val currentFloorList
         get() = currentBuilding.floors
 
@@ -231,17 +236,5 @@ object DataManager {
         val bundle = ResourceBundle.getBundle("App")
         appTitle = bundle.getString("Application.title")
         appVersion = bundle.getString("Application.version")
-
-        val url = MainFrame::class.java.protectionDomain.codeSource.location
-        var homeDirectory = File(url.file)
-
-        if (!homeDirectory.isDirectory) {
-            homeDirectory = homeDirectory.parentFile
-        }
-
-        ressourceFile = File(homeDirectory, "jlocker.json")
-        backupDirectory = File(homeDirectory, "Backup")
-
-        println("* program directory is: \"$homeDirectory\"")
     }
 }

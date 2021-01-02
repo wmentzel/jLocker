@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Floor;
 import com.randomlychosenbytes.jlocker.model.LockerCabinet;
 import com.randomlychosenbytes.jlocker.model.ModuleWrapper;
@@ -12,7 +13,7 @@ public class FloorDialog extends javax.swing.JDialog {
     public static final int ADD = 1;
 
     private final int bMode;
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
 
     public FloorDialog(java.awt.Frame parent, boolean modal, int mode) {
         super(parent, modal);

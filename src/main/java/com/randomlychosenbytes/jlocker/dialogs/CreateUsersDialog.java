@@ -1,6 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Module;
 import com.randomlychosenbytes.jlocker.model.*;
 
@@ -16,7 +17,7 @@ public class CreateUsersDialog extends JDialog {
     private int displayedCardIndex;
     private final CardLayout cardLayout;
     private boolean isFirstRun;
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
 
     private SuperUser superUser;
     private RestrictedUser restrictedUser;
@@ -33,19 +34,18 @@ public class CreateUsersDialog extends JDialog {
 
         isFirstRun = dataManager.getBuildingList().isEmpty();
 
-        addWindowListener
-                (
-                        new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent winEvt) {
-                                if (isFirstRun) {
-                                    System.exit(0);
-                                } else {
-                                    ((JDialog) winEvt.getSource()).dispose();
-                                }
-                            }
+        addWindowListener(
+                new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent winEvt) {
+                        if (isFirstRun) {
+                            System.exit(0);
+                        } else {
+                            ((JDialog) winEvt.getSource()).dispose();
                         }
-                );
+                    }
+                }
+        );
 
         cardLayout = new CardLayout();
 

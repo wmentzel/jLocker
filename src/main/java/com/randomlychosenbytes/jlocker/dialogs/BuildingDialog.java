@@ -2,12 +2,13 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.*;
 
 public class BuildingDialog extends javax.swing.JDialog {
     public static final int EDIT = 0;
     public static final int ADD = 1;
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
     int mode;
 
     public BuildingDialog(java.awt.Frame parent, boolean modal, int mode) {

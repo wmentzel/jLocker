@@ -3,6 +3,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.EntityCoordinates;
 import com.randomlychosenbytes.jlocker.MainFrame;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Module;
 import com.randomlychosenbytes.jlocker.model.*;
 
@@ -19,7 +20,7 @@ public class SearchFrame extends javax.swing.JFrame {
     private final List<Class> dataTypes = new LinkedList<>();
 
     private final MainFrame mainFrame;
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
 
     public SearchFrame(MainFrame mainFrame) {
         initComponents();

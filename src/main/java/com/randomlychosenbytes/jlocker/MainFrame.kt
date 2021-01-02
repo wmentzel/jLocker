@@ -20,11 +20,9 @@ class MainFrame : JFrame() {
     private var tasksFrame: TasksFrame? = null
 
     private lateinit var timer: Timer
-    private lateinit var dataManager: DataManager
+    private var dataManager: DataManager = State.dataManager
 
-    fun initialize(dataManager: DataManager) {
-
-        this.dataManager = dataManager
+    fun initialize() {
 
         initComponents()
 
@@ -72,17 +70,18 @@ class MainFrame : JFrame() {
         //
         // Show CreateUserDialog if there are none
         //
-        val newResFile = dataManager.ressourceFile
-        if (!newResFile.exists()) {
-            val dialog = CreateUsersDialog(this, true)
-            dialog.isVisible = true
+        if (!dataManager.ressourceFile.exists()) {
+            CreateUsersDialog(this, true).apply {
+                isVisible = true
+            }
         }
 
         //
         // LogIn
         //
-        val dialog = LogInDialog(this, true)
-        dialog.isVisible = true
+        LogInDialog(this, true).apply {
+            isVisible = true
+        }
 
         //
         // Initialize UI
@@ -151,25 +150,25 @@ class MainFrame : JFrame() {
     }
 
     fun selectLocker(locker: Locker) {
-        if (DataManager.currentLockerList.isNotEmpty()) {
-            DataManager.currentLocker.setAppropriateColor()
+        if (dataManager.currentLockerList.isNotEmpty()) {
+            dataManager.currentLocker.setAppropriateColor()
         }
 
-        val (mwIndex, lockerIndex) = DataManager.currentWalk.moduleWrappers.asSequence()
+        val (mwIndex, lockerIndex) = dataManager.currentWalk.moduleWrappers.asSequence()
             .mapIndexed { index, moduleWrapper ->
                 index to moduleWrapper
             }.mapNotNull { (index, moduleWrapper) ->
-            (moduleWrapper.module as? LockerCabinet)?.let {
-                index to it
-            }
-        }.mapNotNull { (index, lockerCabinet) ->
-            lockerCabinet.lockers.indexOfFirst { it === locker }.takeIf { it != -1 }?.let {
-                index to it
-            }
-        }.single()
+                (moduleWrapper.module as? LockerCabinet)?.let {
+                    index to it
+                }
+            }.mapNotNull { (index, lockerCabinet) ->
+                lockerCabinet.lockers.indexOfFirst { it === locker }.takeIf { it != -1 }?.let {
+                    index to it
+                }
+            }.single()
 
-        DataManager.currentLockerIndex = lockerIndex
-        DataManager.currentManagementUnitIndex = mwIndex
+        dataManager.currentLockerIndex = lockerIndex
+        dataManager.currentManagementUnitIndex = mwIndex
 
         locker.setSelected()
         showLockerInformation()

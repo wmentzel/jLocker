@@ -2,6 +2,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.ShortenClassRoomDistances;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Module;
 import com.randomlychosenbytes.jlocker.model.*;
 
@@ -23,7 +24,7 @@ import java.util.Set;
  * SimpleWeightedGraph
  */
 public class MoveClassDialog extends JDialog {
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
     private Set<String> schoolClasses = new HashSet<>();
     private Set<String> lockerIdWithoutHeights;
 

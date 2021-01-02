@@ -1,6 +1,7 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
 import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 import com.randomlychosenbytes.jlocker.model.Task;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class TasksFrame extends javax.swing.JFrame {
     private final List<String> columnData;
     private final JTable table;
     private DefaultTableModel tablemodel;
-    private final DataManager dataManager = DataManager.INSTANCE;
+    private final DataManager dataManager = State.Companion.getDataManager();
 
     public TasksFrame() {
         initComponents();

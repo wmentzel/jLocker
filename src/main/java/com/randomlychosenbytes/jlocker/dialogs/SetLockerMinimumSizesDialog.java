@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
     private final List<JTextField> textFields = new LinkedList<>();
-    private final List<Integer> minSizes = DataManager.INSTANCE.getSettings().getLockerMinSizes();
+    private final List<Integer> minSizes = State.Companion.getDataManager().getSettings().getLockerMinSizes();
 
     public SetLockerMinimumSizesDialog(JDialog parent, boolean modal) {
         super(parent, modal);

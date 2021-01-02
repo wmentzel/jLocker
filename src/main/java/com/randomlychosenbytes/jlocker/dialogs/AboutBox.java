@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.DataManager;
+import com.randomlychosenbytes.jlocker.State;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -115,7 +115,7 @@ public class AboutBox extends javax.swing.JDialog {
 
         centerPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 5));
 
-        appVersionLabel.setText(DataManager.INSTANCE.getAppVersion());
+        appVersionLabel.setText(State.Companion.getDataManager().getAppVersion());
         centerPanel.add(appVersionLabel);
 
         appVendorLabel.setText("Willi Mentzel");
