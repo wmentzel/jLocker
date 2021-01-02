@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Font
@@ -89,7 +89,7 @@ class LockerCabinet : Module() {
     private fun addLockerLabelMouseReleased(evt: MouseEvent) //GEN-FIRST:event_addLockerLabelMouseReleased
     { //GEN-HEADEREND:event_addLockerLabelMouseReleased
         lockers.add(0, Locker())
-        updateDummyRows(State.dataManager.currentManagmentUnitList.map { it.module }.filterIsInstance<LockerCabinet>())
+        updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }.filterIsInstance<LockerCabinet>())
         remLockerLabel.isEnabled = true
     } //GEN-LAST:event_addLockerLabelMouseReleased
 
@@ -104,7 +104,7 @@ class LockerCabinet : Module() {
             )
             if (answer == JOptionPane.YES_OPTION) {
                 lockers.removeAt(0) // remove first
-                updateDummyRows(State.dataManager.currentManagmentUnitList.map { it.module }
+                updateDummyRows(dataManager.currentManagmentUnitList.map { it.module }
                     .filterIsInstance<LockerCabinet>())
             }
         }

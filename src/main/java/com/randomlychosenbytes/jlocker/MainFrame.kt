@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker
 
+import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.dialogs.*
 import com.randomlychosenbytes.jlocker.model.*
 import com.randomlychosenbytes.jlocker.model.LockerCabinet.Companion.updateDummyRows
@@ -20,7 +21,6 @@ class MainFrame : JFrame() {
     private var tasksFrame: TasksFrame? = null
 
     private lateinit var timer: Timer
-    private var dataManager: DataManager = State.dataManager
 
     fun initialize() {
 

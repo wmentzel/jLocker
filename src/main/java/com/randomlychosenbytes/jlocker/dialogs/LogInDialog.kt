@@ -1,6 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import java.awt.Frame
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -14,7 +14,6 @@ import javax.swing.filechooser.FileFilter
 
 class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
     var resPath: File? = null
-    private val dataManager = State.dataManager
 
     // auto generated
     private fun initComponents() {
@@ -156,6 +155,6 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         })
 
         // Check if backup directory exists. If not, create it.
-        loadBackupButton.isEnabled = State.dataManager.backupDirectory.exists()
+        loadBackupButton.isEnabled = dataManager.backupDirectory.exists()
     }
 }

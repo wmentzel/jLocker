@@ -1,6 +1,7 @@
 package com.randomlychosenbytes.jlocker
 
 import com.google.gson.GsonBuilder
+import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.model.*
 import java.io.File
 import java.io.FileFilter
@@ -16,11 +17,6 @@ import javax.crypto.SecretKey
  * the best design but it stays that way for the time being.
  */
 class DataManager {
-    /**
-     * TODO remove
-     * instance of the MainFrame object is need to call the setStatusMessage method
-     */
-    lateinit var mainFrame: MainFrame
 
     lateinit var ressourceFile: File
     lateinit var backupDirectory: File
