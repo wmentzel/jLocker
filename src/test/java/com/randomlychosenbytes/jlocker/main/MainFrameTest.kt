@@ -3,11 +3,10 @@ package com.randomlychosenbytes.jlocker.main
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.randomlychosenbytes.jlocker.DataManager
 import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.Pupil
 import com.randomlychosenbytes.jlocker.model.SuperUser
@@ -30,9 +29,13 @@ import javax.swing.JTextField
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MainFrameTest {
 
+    val dataManager = mock<DataManager>()
+
     @BeforeEach
     fun setup() {
+        reset(dataManager)
         MockitoAnnotations.openMocks(this)
+        State.dataManager = dataManager
     }
 
     @Test
@@ -295,9 +298,6 @@ class MainFrameTest {
 
     @Mock
     private lateinit var containerPanel: JPanel
-
-    @Mock
-    private lateinit var dataManager: DataManager
 
     @Mock
     private lateinit var lastNameTextField: JTextField
