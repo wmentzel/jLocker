@@ -40,21 +40,7 @@ class MainFrame : JFrame() {
         addWindowListener(
             object : WindowAdapter() {
                 override fun windowClosing(winEvt: WindowEvent) {
-
-                    val answer = JOptionPane.showConfirmDialog(
-                        null,
-                        "Wollen Sie Ihre Änderungen speichern?",
-                        "Speichern und beenden",
-                        JOptionPane.YES_NO_OPTION
-                    )
-                    if (answer == JOptionPane.CANCEL_OPTION) {
-                        return
-                    }
-                    if (answer == JOptionPane.YES_OPTION) {
-                        dataManager.saveAndCreateBackup()
-                    }
-
-                    exitProcess(0)
+                    exit()
                 }
             }
         )
@@ -370,6 +356,23 @@ class MainFrame : JFrame() {
         removeFloorButton.isEnabled = dataManager.currentFloorList.size > 1
         removeWalkButton.isEnabled = dataManager.currentWalkList.size > 1
         drawLockerOverview()
+    }
+
+    private fun exit() {
+        val answer = JOptionPane.showConfirmDialog(
+            null,
+            "Wollen Sie Ihre Änderungen speichern?",
+            "Speichern und beenden",
+            JOptionPane.YES_NO_OPTION
+        )
+        if (answer == JOptionPane.CANCEL_OPTION) {
+            return
+        }
+        if (answer == JOptionPane.YES_OPTION) {
+            dataManager.saveAndCreateBackup()
+        }
+
+        exitProcess(0)
     }
 
     /**
@@ -809,7 +812,7 @@ class MainFrame : JFrame() {
         loadMenuItem.addActionListener { evt -> loadMenuItemActionPerformed(evt) }
         fileMenu.add(loadMenuItem)
         exitMenu.text = "Beenden"
-        exitMenu.addActionListener { evt -> exitMenuActionPerformed(evt) }
+        exitMenu.addActionListener { evt -> exit() }
         fileMenu.add(exitMenu)
         menuBar.add(fileMenu)
         editMenu.text = "Bearbeiten"
@@ -1027,11 +1030,6 @@ class MainFrame : JFrame() {
         dataManager.initBuildingObject()
         drawLockerOverview()
     } //GEN-LAST:event_loadMenuItemActionPerformed
-
-    private fun exitMenuActionPerformed(evt: ActionEvent) //GEN-FIRST:event_exitMenuActionPerformed
-    { //GEN-HEADEREND:event_exitMenuActionPerformed
-        System.exit(0)
-    } //GEN-LAST:event_exitMenuActionPerformed
 
     private fun aboutMenuItemActionPerformed(evt: ActionEvent) //GEN-FIRST:event_aboutMenuItemActionPerformed
     { //GEN-HEADEREND:event_aboutMenuItemActionPerformed
