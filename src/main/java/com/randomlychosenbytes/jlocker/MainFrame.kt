@@ -8,6 +8,7 @@ import java.awt.event.*
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+import kotlin.system.exitProcess
 
 /**
  * This is the main windows of the application. It is displayed right after
@@ -19,9 +20,12 @@ class MainFrame : JFrame() {
     private var tasksFrame: TasksFrame? = null
 
     private lateinit var timer: Timer
-    private val dataManager = DataManager
+    private lateinit var dataManager: DataManager
 
-    fun initialize() {
+    fun initialize(dataManager: DataManager) {
+
+        this.dataManager = dataManager
+
         initComponents()
 
         // center on screen
@@ -30,7 +34,7 @@ class MainFrame : JFrame() {
         //
         // Set application title from resources
         //
-        title = dataManager.appTitle + " " + dataManager.appVersion
+        title = "${dataManager.appTitle} ${dataManager.appVersion}"
 
         //
         // Ask to save changes on exit
@@ -52,7 +56,7 @@ class MainFrame : JFrame() {
                             dataManager.saveAndCreateBackup()
                         }
                     }
-                    System.exit(0)
+                    exitProcess(0)
                 }
             }
         )

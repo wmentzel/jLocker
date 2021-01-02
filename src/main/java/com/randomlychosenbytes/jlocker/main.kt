@@ -8,7 +8,7 @@ fun main() {
     EventQueue.invokeLater {
         MainFrame().apply {
             DataManager.mainFrame = this
-            initialize()
+            initialize(DataManager)
             isVisible = true
         }
     }

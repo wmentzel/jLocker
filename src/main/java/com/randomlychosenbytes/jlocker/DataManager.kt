@@ -33,7 +33,7 @@ object DataManager {
     lateinit var currentUser: User
         private set
 
-    lateinit var tasks: MutableList<Task>
+    var tasks: MutableList<Task> = mutableListOf()
 
     var settings: Settings = Settings()
         private set
