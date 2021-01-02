@@ -34,7 +34,6 @@ class DataManager {
     var settings: Settings = Settings()
         private set
 
-    var hasDataChanged = false
     var buildingList: MutableList<Building> = mutableListOf()
         private set
 

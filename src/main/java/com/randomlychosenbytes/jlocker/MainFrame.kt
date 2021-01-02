@@ -40,20 +40,20 @@ class MainFrame : JFrame() {
         addWindowListener(
             object : WindowAdapter() {
                 override fun windowClosing(winEvt: WindowEvent) {
-                    if (dataManager.hasDataChanged) {
-                        val answer = JOptionPane.showConfirmDialog(
-                            null,
-                            "Wollen Sie Ihre Änderungen speichern?",
-                            "Speichern und beenden",
-                            JOptionPane.YES_NO_CANCEL_OPTION
-                        )
-                        if (answer == JOptionPane.CANCEL_OPTION) {
-                            return
-                        }
-                        if (answer == JOptionPane.YES_OPTION) {
-                            dataManager.saveAndCreateBackup()
-                        }
+
+                    val answer = JOptionPane.showConfirmDialog(
+                        null,
+                        "Wollen Sie Ihre Änderungen speichern?",
+                        "Speichern und beenden",
+                        JOptionPane.YES_NO_CANCEL_OPTION
+                    )
+                    if (answer == JOptionPane.CANCEL_OPTION) {
+                        return
                     }
+                    if (answer == JOptionPane.YES_OPTION) {
+                        dataManager.saveAndCreateBackup()
+                    }
+
                     exitProcess(0)
                 }
             }
@@ -897,7 +897,6 @@ class MainFrame : JFrame() {
     private fun saveButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_saveButtonActionPerformed
     { //GEN-HEADEREND:event_saveButtonActionPerformed
         setLockerInformation()
-        dataManager.hasDataChanged = true
     } //GEN-LAST:event_saveButtonActionPerformed
 
     private fun codeTextFieldMouseClicked(evt: MouseEvent) //GEN-FIRST:event_codeTextFieldMouseClicked
@@ -910,8 +909,6 @@ class MainFrame : JFrame() {
 
     private fun emptyButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_emptyButtonActionPerformed
     { //GEN-HEADEREND:event_emptyButtonActionPerformed
-        dataManager.hasDataChanged = true
-
         val answer = JOptionPane.showConfirmDialog(
             null,
             "Wollen Sie dieses Schließfach wirklich leeren?",
