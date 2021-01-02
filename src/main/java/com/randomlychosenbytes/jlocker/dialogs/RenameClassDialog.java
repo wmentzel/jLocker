@@ -113,6 +113,11 @@ public class RenameClassDialog extends JDialog {
                         String sSubClass;
 
                         for (Locker locker : lockers) {
+
+                            if (locker.isFree()) {
+                                continue;
+                            }
+
                             String sFoundClass = locker.getPupil().getSchoolClassName();
                             sSubClass = "";
 

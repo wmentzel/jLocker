@@ -10,13 +10,7 @@ fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     EventQueue.invokeLater {
 
-        mainFrame = MainFrame().apply {
-            initialize()
-            isVisible = true
-        }
-
-        val url = MainFrame::class.java.protectionDomain.codeSource.location
-        var homeDirectory = File(url.file)
+        var homeDirectory = File(MainFrame::class.java.protectionDomain.codeSource.location.file)
 
         if (!homeDirectory.isDirectory) {
             homeDirectory = homeDirectory.parentFile
@@ -25,5 +19,12 @@ fun main() {
         dataManager.initPath(homeDirectory)
 
         println("""* program directory is: "$homeDirectory"""")
+
+        mainFrame = MainFrame()
+
+        mainFrame.apply {
+            initialize()
+            isVisible = true
+        }
     }
 }
