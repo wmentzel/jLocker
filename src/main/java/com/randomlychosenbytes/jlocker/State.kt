@@ -1,6 +1,5 @@
 package com.randomlychosenbytes.jlocker
 
-//
 class State {
     companion object {
         var dataManager = DataManager()

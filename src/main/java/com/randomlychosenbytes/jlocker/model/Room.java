@@ -3,6 +3,9 @@ package com.randomlychosenbytes.jlocker.model;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.RoomDialog;
 
+import static com.randomlychosenbytes.jlocker.ColorsKt.getRoomBackgroundColor;
+import static com.randomlychosenbytes.jlocker.ColorsKt.getRoomFontColor;
+
 public class Room extends Module {
 
     @Expose
@@ -60,11 +63,11 @@ public class Room extends Module {
 
         captionLabel = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(160, 116, 52));
+        setBackground(getRoomBackgroundColor());
         setLayout(new java.awt.BorderLayout());
 
         captionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        captionLabel.setForeground(new java.awt.Color(255, 255, 255));
+        captionLabel.setForeground(getRoomFontColor());
         captionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {

@@ -3,6 +3,9 @@ package com.randomlychosenbytes.jlocker.model;
 import com.google.gson.annotations.Expose;
 import com.randomlychosenbytes.jlocker.dialogs.StaircaseDialog;
 
+import static com.randomlychosenbytes.jlocker.ColorsKt.getStaircaseBackgroundColor;
+import static com.randomlychosenbytes.jlocker.ColorsKt.getStaircaseFontColor;
+
 public class Staircase extends Module {
 
     @Expose
@@ -42,11 +45,11 @@ public class Staircase extends Module {
 
         captionLabel = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(153, 153, 153));
+        setBackground(getStaircaseBackgroundColor());
         setLayout(new java.awt.BorderLayout());
 
         captionLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        captionLabel.setForeground(new java.awt.Color(255, 255, 255));
+        captionLabel.setForeground(getStaircaseFontColor());
         captionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         captionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {

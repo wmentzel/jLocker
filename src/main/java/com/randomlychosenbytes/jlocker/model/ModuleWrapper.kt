@@ -3,7 +3,9 @@ package com.randomlychosenbytes.jlocker.model
 import com.google.gson.annotations.Expose
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
+import com.randomlychosenbytes.jlocker.accentColor
 import com.randomlychosenbytes.jlocker.dialogs.ChooseManagementUnitTypeDialog
+import com.randomlychosenbytes.jlocker.secondaryColor
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -42,11 +44,11 @@ class ModuleWrapper(module: Module) : JPanel() {
         transformLabel = JLabel()
         removeThisMUnitLabel = JLabel()
         addMUnitRightLabel = JLabel()
-        background = Color(177, 192, 138)
+        background = secondaryColor
         minimumSize = Dimension(125, 72)
         preferredSize = Dimension(125, 72)
         layout = GridBagLayout()
-        centerPanel.background = Color(177, 192, 138)
+        centerPanel.background = secondaryColor
         centerPanel.layout = BorderLayout()
         var gridBagConstraints: GridBagConstraints = GridBagConstraints()
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
@@ -55,9 +57,9 @@ class ModuleWrapper(module: Module) : JPanel() {
         gridBagConstraints.weighty = 1.0
         gridBagConstraints.insets = Insets(10, 10, 10, 10)
         add(centerPanel, gridBagConstraints)
-        southPanel.background = Color(177, 192, 138)
+        southPanel.background = secondaryColor
         addMUnitLeftLabel.font = Font("Tahoma", 1, 18) // NOI18N
-        addMUnitLeftLabel.foreground = Color(131, 150, 81)
+        addMUnitLeftLabel.foreground = accentColor
         addMUnitLeftLabel.text = "+"
         addMUnitLeftLabel.addMouseListener(object : MouseAdapter() {
             override fun mouseReleased(evt: MouseEvent) {
@@ -73,7 +75,7 @@ class ModuleWrapper(module: Module) : JPanel() {
         })
         southPanel.add(transformLabel)
         removeThisMUnitLabel.font = Font("Tahoma", 1, 18) // NOI18N
-        removeThisMUnitLabel.foreground = Color(131, 150, 81)
+        removeThisMUnitLabel.foreground = accentColor
         removeThisMUnitLabel.text = "-"
         removeThisMUnitLabel.addMouseListener(object : MouseAdapter() {
             override fun mouseReleased(evt: MouseEvent) {
@@ -82,7 +84,7 @@ class ModuleWrapper(module: Module) : JPanel() {
         })
         southPanel.add(removeThisMUnitLabel)
         addMUnitRightLabel.font = Font("Tahoma", 1, 18) // NOI18N
-        addMUnitRightLabel.foreground = Color(131, 150, 81)
+        addMUnitRightLabel.foreground = accentColor
         addMUnitRightLabel.text = "+"
         addMUnitRightLabel.addMouseListener(object : MouseAdapter() {
             override fun mouseReleased(evt: MouseEvent) {

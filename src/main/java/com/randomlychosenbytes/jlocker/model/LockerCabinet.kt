@@ -2,8 +2,9 @@ package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
+import com.randomlychosenbytes.jlocker.accentColor
+import com.randomlychosenbytes.jlocker.secondaryColor
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Font
 import java.awt.GridLayout
 import java.awt.event.MouseAdapter
@@ -52,9 +53,9 @@ class LockerCabinet : Module() {
         remLockerLabel = JLabel()
         cabinetPanel = JPanel()
         layout = BorderLayout()
-        buttonPanel.background = Color(177, 192, 138)
+        buttonPanel.background = secondaryColor
         addLockerLabel.font = Font("Tahoma", 1, 18) // NOI18N
-        addLockerLabel.foreground = Color(131, 150, 81)
+        addLockerLabel.foreground = accentColor
         addLockerLabel.text = "+"
         addLockerLabel.addMouseListener(object : MouseAdapter() {
             override fun mouseReleased(evt: MouseEvent) {
@@ -63,7 +64,7 @@ class LockerCabinet : Module() {
         })
         buttonPanel.add(addLockerLabel)
         remLockerLabel.font = Font("Tahoma", 1, 18) // NOI18N
-        remLockerLabel.foreground = Color(131, 150, 81)
+        remLockerLabel.foreground = accentColor
         remLockerLabel.text = "-"
         remLockerLabel.addMouseListener(object : MouseAdapter() {
             override fun mouseReleased(evt: MouseEvent) {
@@ -72,7 +73,7 @@ class LockerCabinet : Module() {
         })
         buttonPanel.add(remLockerLabel)
         add(buttonPanel, BorderLayout.NORTH)
-        cabinetPanel.background = Color(177, 192, 138)
+        cabinetPanel.background = secondaryColor
         val cabinetPanelLayout = GroupLayout(cabinetPanel)
         cabinetPanel.layout = cabinetPanelLayout
         cabinetPanelLayout.setHorizontalGroup(

@@ -483,11 +483,11 @@ class MainFrame : JFrame() {
         aboutMenuItem = JMenuItem()
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
         preferredSize = Dimension(1000, 600)
-        centerPanel.background = Color(189, 205, 149)
+        centerPanel.background = primaryColor
         centerPanel.layout = BorderLayout()
-        comboBoxPanel.background = Color(189, 205, 149)
+        comboBoxPanel.background = primaryColor
         comboBoxPanel.layout = FlowLayout(FlowLayout.LEFT)
-        buildingsPanel.background = Color(189, 205, 149)
+        buildingsPanel.background = primaryColor
         buildingsLabel.text = "Gebäude"
         buildingsPanel.add(buildingsLabel)
         buildingComboBox.addPopupMenuListener(object : PopupMenuListener {
@@ -499,20 +499,20 @@ class MainFrame : JFrame() {
             override fun popupMenuWillBecomeVisible(evt: PopupMenuEvent) {}
         })
         buildingsPanel.add(buildingComboBox)
-        addBuildingButton.background = Color(189, 205, 149)
+        addBuildingButton.background = primaryColor
         addBuildingButton.text = "+"
         addBuildingButton.addActionListener { evt -> addBuildingButtonActionPerformed(evt) }
         buildingsPanel.add(addBuildingButton)
-        removeBuildingButton.background = Color(189, 205, 149)
+        removeBuildingButton.background = primaryColor
         removeBuildingButton.text = "-"
         removeBuildingButton.addActionListener { evt -> removeBuildingButtonActionPerformed(evt) }
         buildingsPanel.add(removeBuildingButton)
-        editBuildingButton.background = Color(189, 205, 149)
+        editBuildingButton.background = primaryColor
         editBuildingButton.icon = ImageIcon(javaClass.getResource("/gray gear.png")) // NOI18N
         editBuildingButton.addActionListener { evt -> editBuildingButtonActionPerformed(evt) }
         buildingsPanel.add(editBuildingButton)
         comboBoxPanel.add(buildingsPanel)
-        floorPanel.background = Color(189, 205, 149)
+        floorPanel.background = primaryColor
         floorLabel.text = "Etage"
         floorPanel.add(floorLabel)
         floorComboBox.addPopupMenuListener(object : PopupMenuListener {
@@ -524,20 +524,20 @@ class MainFrame : JFrame() {
             override fun popupMenuWillBecomeVisible(evt: PopupMenuEvent) {}
         })
         floorPanel.add(floorComboBox)
-        addFloorButton.background = Color(189, 205, 149)
+        addFloorButton.background = primaryColor
         addFloorButton.text = "+"
         addFloorButton.addActionListener { evt -> addFloorButtonActionPerformed(evt) }
         floorPanel.add(addFloorButton)
-        removeFloorButton.background = Color(189, 205, 149)
+        removeFloorButton.background = primaryColor
         removeFloorButton.text = "-"
         removeFloorButton.addActionListener { evt -> removeFloorButtonActionPerformed(evt) }
         floorPanel.add(removeFloorButton)
-        editFloorButton.background = Color(189, 205, 149)
+        editFloorButton.background = primaryColor
         editFloorButton.icon = ImageIcon(javaClass.getResource("/gray gear.png")) // NOI18N
         editFloorButton.addActionListener { evt -> editFloorButtonActionPerformed(evt) }
         floorPanel.add(editFloorButton)
         comboBoxPanel.add(floorPanel)
-        walksPanel.background = Color(189, 205, 149)
+        walksPanel.background = primaryColor
         walkLabel.text = "Gang"
         walksPanel.add(walkLabel)
         walkComboBox.addPopupMenuListener(object : PopupMenuListener {
@@ -549,31 +549,31 @@ class MainFrame : JFrame() {
             override fun popupMenuWillBecomeVisible(evt: PopupMenuEvent) {}
         })
         walksPanel.add(walkComboBox)
-        addWalkButton.background = Color(189, 205, 149)
+        addWalkButton.background = primaryColor
         addWalkButton.text = "+"
         addWalkButton.addActionListener { evt -> addWalkButtonActionPerformed(evt) }
         walksPanel.add(addWalkButton)
-        removeWalkButton.background = Color(189, 205, 149)
+        removeWalkButton.background = primaryColor
         removeWalkButton.text = "-"
         removeWalkButton.addActionListener { evt -> removeWalkButtonActionPerformed(evt) }
         walksPanel.add(removeWalkButton)
-        editWalkButton.background = Color(189, 205, 149)
+        editWalkButton.background = primaryColor
         editWalkButton.icon = ImageIcon(javaClass.getResource("/gray gear.png")) // NOI18N
         editWalkButton.addActionListener { evt -> editWalkButtonActionPerformed(evt) }
         walksPanel.add(editWalkButton)
         comboBoxPanel.add(walksPanel)
         centerPanel.add(comboBoxPanel, BorderLayout.NORTH)
         lockerOverviewScrollPane.border = null
-        lockerOverviewPanel.background = Color(189, 205, 149)
+        lockerOverviewPanel.background = primaryColor
         lockerOverviewPanel.layout = GridLayout(1, 0, 5, 0)
         lockerOverviewScrollPane.setViewportView(lockerOverviewPanel)
         centerPanel.add(lockerOverviewScrollPane, BorderLayout.CENTER)
-        containerPanel.background = Color(189, 205, 149)
+        containerPanel.background = primaryColor
         containerPanel.layout = FlowLayout(FlowLayout.LEFT)
-        leftFlowLayout.background = Color(189, 205, 149)
+        leftFlowLayout.background = primaryColor
         leftFlowLayout.layout = GridBagLayout()
-        legendPanel.background = Color(189, 205, 149)
-        noContractPanel.background = Color(189, 205, 149)
+        legendPanel.background = primaryColor
+        noContractPanel.background = primaryColor
         noContractLabel.text = "kein Vertrag"
         noContractPanel.add(noContractLabel)
         noContractColorLabel.background = Color(0, 0, 255)
@@ -590,7 +590,7 @@ class MainFrame : JFrame() {
         )
         noContractPanel.add(noContractColorLabel)
         legendPanel.add(noContractPanel)
-        freePanel.background = Color(189, 205, 149)
+        freePanel.background = primaryColor
         freeLabel.text = "Frei"
         freePanel.add(freeLabel)
         freeColorPanel.background = Color(255, 255, 255)
@@ -608,7 +608,7 @@ class MainFrame : JFrame() {
         )
         freePanel.add(freeColorPanel)
         legendPanel.add(freePanel)
-        rentedPanel.background = Color(189, 205, 149)
+        rentedPanel.background = primaryColor
         rentedLabel.text = "Vermietet"
         rentedPanel.add(rentedLabel)
         rentedColorPanel.background = Color(0, 102, 0)
@@ -625,7 +625,7 @@ class MainFrame : JFrame() {
         )
         rentedPanel.add(rentedColorPanel)
         legendPanel.add(rentedPanel)
-        outOfOrderPanel.background = Color(189, 205, 149)
+        outOfOrderPanel.background = primaryColor
         outOfOrderLabel.text = "Defekt"
         outOfOrderPanel.add(outOfOrderLabel)
         outOfOrderColorPanel.background = Color(255, 0, 0)
@@ -642,7 +642,7 @@ class MainFrame : JFrame() {
         )
         outOfOrderPanel.add(outOfOrderColorPanel)
         legendPanel.add(outOfOrderPanel)
-        oneMonthRemainingPanel.background = Color(189, 205, 149)
+        oneMonthRemainingPanel.background = primaryColor
         oneMonthRemainingLabel.text = "Mietdauer >= 1 Monat"
         oneMonthRemainingPanel.add(oneMonthRemainingLabel)
         oneMonthRemainingColorPanel.background = Color(255, 153, 0)
@@ -663,9 +663,9 @@ class MainFrame : JFrame() {
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
         gridBagConstraints.anchor = GridBagConstraints.WEST
         leftFlowLayout.add(legendPanel, gridBagConstraints)
-        dataPanel.background = Color(189, 205, 149)
+        dataPanel.background = primaryColor
         dataPanel.layout = GridBagLayout()
-        userPanel.background = Color(189, 205, 149)
+        userPanel.background = primaryColor
         userPanel.layout = GridLayout(6, 2, 5, 3)
         lockerIDLabel.text = "Schließfach-ID           "
         userPanel.add(lockerIDLabel)
@@ -688,9 +688,9 @@ class MainFrame : JFrame() {
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 0, 0, 20)
         dataPanel.add(userPanel, gridBagConstraints)
-        middlePanel.background = Color(189, 205, 149)
+        middlePanel.background = primaryColor
         middlePanel.layout = GridBagLayout()
-        lockerPanel.background = Color(189, 205, 149)
+        lockerPanel.background = primaryColor
         lockerPanel.layout = GridLayout(5, 2, 5, 3)
         fromDateLabel.text = "von"
         lockerPanel.add(fromDateLabel)
@@ -716,15 +716,15 @@ class MainFrame : JFrame() {
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
         middlePanel.add(lockerPanel, gridBagConstraints)
-        checkBoxPanel.background = Color(189, 205, 149)
+        checkBoxPanel.background = primaryColor
         checkBoxPanel.layout = GridBagLayout()
-        outOfOrderCheckbox.background = Color(189, 205, 149)
+        outOfOrderCheckbox.background = primaryColor
         outOfOrderCheckbox.text = "defekt"
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
         gridBagConstraints.weightx = 1.0
         checkBoxPanel.add(outOfOrderCheckbox, gridBagConstraints)
-        hasContractCheckbox.background = Color(189, 205, 149)
+        hasContractCheckbox.background = primaryColor
         hasContractCheckbox.text = "Vertrag"
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
@@ -737,11 +737,11 @@ class MainFrame : JFrame() {
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 0, 0, 30)
         dataPanel.add(middlePanel, gridBagConstraints)
-        moneyPanel.background = Color(189, 205, 149)
+        moneyPanel.background = primaryColor
         moneyPanel.border =
-            BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color(131, 150, 81)), "Finanzen")
+            BorderFactory.createTitledBorder(BorderFactory.createLineBorder(accentColor), "Finanzen")
         moneyPanel.layout = GridBagLayout()
-        gridLayoutPanel.background = Color(189, 205, 149)
+        gridLayoutPanel.background = primaryColor
         gridLayoutPanel.layout = GridLayout(3, 2, 10, 3)
         moneyLabel.text = "Kontostand"
         gridLayoutPanel.add(moneyLabel)
@@ -753,7 +753,7 @@ class MainFrame : JFrame() {
         gridLayoutPanel.add(previousAmountTextField)
         currentAmountTextField.columns = 3
         gridLayoutPanel.add(currentAmountTextField)
-        addAmountButton.background = Color(189, 205, 149)
+        addAmountButton.background = primaryColor
         addAmountButton.text = "Einzahlen"
         addAmountButton.addActionListener { evt -> addAmountButtonActionPerformed(evt) }
         gridLayoutPanel.add(addAmountButton)
@@ -769,17 +769,17 @@ class MainFrame : JFrame() {
         gridBagConstraints.anchor = GridBagConstraints.WEST
         gridBagConstraints.insets = Insets(5, 10, 0, 0)
         leftFlowLayout.add(dataPanel, gridBagConstraints)
-        statusPanel.background = Color(189, 205, 149)
+        statusPanel.background = primaryColor
         statusPanel.layout = GridBagLayout()
-        buttonPanel.background = Color(189, 205, 149)
+        buttonPanel.background = primaryColor
         buttonPanel.layout = GridBagLayout()
-        saveButton.background = Color(189, 205, 149)
+        saveButton.background = primaryColor
         saveButton.text = "Speichern"
         saveButton.addActionListener { evt -> saveButtonActionPerformed(evt) }
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 0, 0, 10)
         buttonPanel.add(saveButton, gridBagConstraints)
-        emptyButton.background = Color(189, 205, 149)
+        emptyButton.background = primaryColor
         emptyButton.text = "Leeren"
         emptyButton.addActionListener { evt -> emptyButtonActionPerformed(evt) }
         buttonPanel.add(emptyButton, GridBagConstraints())
