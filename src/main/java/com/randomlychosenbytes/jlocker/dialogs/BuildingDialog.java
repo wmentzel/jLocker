@@ -109,7 +109,7 @@ public class BuildingDialog extends javax.swing.JDialog {
             dataManager.setCurrentLockerIndex(0);
         }
 
-        ((MainFrame) this.getParent()).setComboBoxes2CurIndizes();
+        ((MainFrame) this.getParent()).updateComboBoxes();
 
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed

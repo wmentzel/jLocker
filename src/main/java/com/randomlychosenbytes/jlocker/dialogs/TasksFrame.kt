@@ -22,8 +22,8 @@ class TasksFrame : JFrame() {
 
         tablemodel = object : DefaultTableModel(tableData, columnData) {
             var types = arrayOf(
-                java.lang.String::class.java,
-                java.lang.String::class.java,
+                String::class.java,
+                String::class.java,
                 java.lang.Boolean::class.java // needs to be Java's Boolean, otherwise no checkbox will be displayed
             )
 

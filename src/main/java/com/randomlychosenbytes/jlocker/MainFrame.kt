@@ -72,7 +72,7 @@ class MainFrame : JFrame() {
         //
         // Initialize UI
         //
-        setComboBoxes2CurIndizes()
+        updateComboBoxes()
 
         // If the super user is logged in, he is allowed to change to passwords.
         changeUserPWMenuItem.isEnabled = dataManager.currentUser is SuperUser
@@ -345,7 +345,7 @@ class MainFrame : JFrame() {
      * Sets all three combo boxes to the current indices of the building,
      * floor and walk.
      */
-    fun setComboBoxes2CurIndizes() {
+    fun updateComboBoxes() {
         initializeComboBox(dataManager.buildingList, buildingComboBox)
         buildingComboBox.selectedIndex = dataManager.currentBuildingIndex
         initializeComboBox(dataManager.currentFloorList, floorComboBox)
@@ -860,7 +860,7 @@ class MainFrame : JFrame() {
             dataManager.currentWalkIndex = 0
             dataManager.currentManagementUnitIndex = 0
             dataManager.currentLockerIndex = 0
-            setComboBoxes2CurIndizes()
+            updateComboBoxes()
         }
     } //GEN-LAST:event_removeBuildingButtonActionPerformed
 
@@ -877,7 +877,7 @@ class MainFrame : JFrame() {
             dataManager.currentWalkIndex = 0
             dataManager.currentManagementUnitIndex = 0
             dataManager.currentLockerIndex = 0
-            setComboBoxes2CurIndizes()
+            updateComboBoxes()
         }
     } //GEN-LAST:event_removeFloorButtonActionPerformed
 
@@ -893,7 +893,7 @@ class MainFrame : JFrame() {
             dataManager.currentWalkIndex = dataManager.currentWalkList.size - 1
             dataManager.currentManagementUnitIndex = 0
             dataManager.currentLockerIndex = 0
-            setComboBoxes2CurIndizes()
+            updateComboBoxes()
         }
     } //GEN-LAST:event_removeWalkButtonActionPerformed
 
@@ -1058,7 +1058,7 @@ class MainFrame : JFrame() {
     private fun searchMenuItemActionPerformed(evt: ActionEvent) //GEN-FIRST:event_searchMenuItemActionPerformed
     { //GEN-HEADEREND:event_searchMenuItemActionPerformed
         searchFrame?.dispose()
-        searchFrame = SearchFrame(this).apply {
+        searchFrame = SearchFrame().apply {
             isVisible = true
         }
     } //GEN-LAST:event_searchMenuItemActionPerformed
