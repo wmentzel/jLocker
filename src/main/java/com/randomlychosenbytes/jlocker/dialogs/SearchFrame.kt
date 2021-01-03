@@ -3,7 +3,9 @@ package com.randomlychosenbytes.jlocker.dialogs
 import com.randomlychosenbytes.jlocker.EntityCoordinates
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
-import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.model.Locker
+import com.randomlychosenbytes.jlocker.model.LockerCabinet
+import com.randomlychosenbytes.jlocker.model.SuperUser
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
@@ -13,8 +15,15 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 class SearchFrame : JFrame() {
-    private lateinit var table: JTable
-    private lateinit var foundLockers: MutableList<EntityCoordinates<Locker>>
+    private val table: JTable = JTable().apply {
+        autoCreateRowSorter = true
+        addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                rowClicked(evt)
+            }
+        })
+    }
+    private lateinit var foundLockers: List<EntityCoordinates<Locker>>
 
     private val columnData = listOfNotNull(
         "Schließfach-ID", "Name", "Vorname", "Klasse", "Größe", "Vertrag", "Geld", "Dauer", "von", "bis", "Schloss",
@@ -90,10 +99,10 @@ class SearchFrame : JFrame() {
         containerPanel = JPanel()
         lockerIDLabel = JLabel()
         lockerIDTextField = JTextField()
-        surnameLabel = JLabel()
-        surnameTextField = JTextField()
-        nameLabel = JLabel()
-        nameTextField = JTextField()
+        lastNameLabel = JLabel()
+        lastNameTextField = JTextField()
+        firstNameLabel = JLabel()
+        firstNameTextField = JTextField()
         classLabel = JLabel()
         classTextField = JTextField()
         sizeLabel = JLabel()
@@ -127,12 +136,12 @@ class SearchFrame : JFrame() {
         lockerIDLabel.text = "Schließfach-ID"
         containerPanel.add(lockerIDLabel)
         containerPanel.add(lockerIDTextField)
-        surnameLabel.text = "Name"
-        containerPanel.add(surnameLabel)
-        containerPanel.add(surnameTextField)
-        nameLabel.text = "Vorname"
-        containerPanel.add(nameLabel)
-        containerPanel.add(nameTextField)
+        lastNameLabel.text = "Nachname"
+        containerPanel.add(lastNameLabel)
+        containerPanel.add(lastNameTextField)
+        firstNameLabel.text = "Vorname"
+        containerPanel.add(firstNameLabel)
+        containerPanel.add(firstNameTextField)
         classLabel.text = "Klasse"
         containerPanel.add(classLabel)
         containerPanel.add(classTextField)
@@ -207,152 +216,162 @@ class SearchFrame : JFrame() {
         pack()
     } // </editor-fold>//GEN-END:initComponents
 
-    private fun searchButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_searchButtonActionPerformed
-    { //GEN-HEADEREND:event_searchButtonActionPerformed
-        val id = lockerIDTextField.text
-        val surname = surnameTextField.text
-        val name = nameTextField.text
-        val schoolClass = classTextField.text
-        val size: Int = try {
-            sizeTextField.text.toInt()
-        } catch (e: NumberFormatException) {
-            -1
-        }
-        val contract = hasContractCheckbox.isSelected
-        val money: Int = try {
-            moneyTextField.text.toInt()
-        } catch (e: NumberFormatException) {
-            -1
-        }
-        val remainingTimeInMonths = try {
-            durationTextField.text.toInt()
-        } catch (e: NumberFormatException) {
-            -1
-        }
-        val fromdate = fromDateTextField.text
-        val untildate = untilDateTextField.text
-        val lock = lockTextField.text
-
-        val tableData: MutableList<Array<Any>> = mutableListOf()
-        foundLockers = mutableListOf()
-
-        val buildings: List<Building> = dataManager.buildingList
-        for (b in buildings.indices) {
-            val floors: List<Floor> = buildings[b].floors
-            for (f in floors.indices) {
-                val walks: List<Walk> = floors[f].walks
-                for (w in walks.indices) {
-                    val cols: List<ModuleWrapper> = walks[w].moduleWrappers
-                    for (c in cols.indices) {
-                        val module = cols[c].module as? LockerCabinet ?: continue
-                        val lockers: List<Locker> = module.lockers
-                        for (l in lockers.indices) {
-                            val locker = lockers[l]
-
-                            if (emptyCheckbox.isSelected && !locker.isFree) {
-                                continue
-                            }
-
-                            if (id.isNotBlank()) {
-                                if (locker.id != id) {
-                                    continue
-                                }
-                            }
-                            if (surname.isNotEmpty()) {
-                                if (locker.isFree || surname != locker.pupil.lastName) {
-                                    continue
-                                }
-                            }
-
-                            if (name.isNotBlank()) {
-                                if (locker.isFree || name != locker.pupil.firstName) {
-                                    continue
-                                }
-                            }
-
-                            if (contract) {
-                                if (locker.isFree || !locker.pupil.hasContract) {
-                                    continue
-                                }
-                            }
-
-                            if (schoolClass.isNotBlank()) {
-                                if (locker.isFree || schoolClass != locker.pupil.schoolClassName) {
-                                    continue
-                                }
-                            }
-
-                            if (size != -1) {
-                                if (locker.isFree || size != locker.pupil.heightInCm) {
-                                    continue
-                                }
-                            }
-                            if (money != -1) {
-                                if (locker.isFree || money != locker.pupil.paidAmount) {
-                                    continue
-                                }
-                            }
-                            if (remainingTimeInMonths != -1) {
-                                if (locker.isFree || locker.pupil.remainingTimeInMonths != remainingTimeInMonths) {
-                                    continue
-                                }
-                            }
-                            if (fromdate.isNotBlank()) {
-                                if (locker.isFree || fromdate != locker.pupil.rentedFromDate) {
-                                    continue
-                                }
-                            }
-                            if (untildate.isNotBlank()) {
-                                if (locker.isFree || untildate != locker.pupil.rentedUntilDate) {
-                                    continue
-                                }
-                            }
-                            if (lock.isNotBlank()) {
-                                if (lock != locker.lockCode) {
-                                    continue
-                                }
-                            }
-
-                            val rowData: MutableList<Any> = if (locker.isFree) {
-                                mutableListOf(
-                                    locker.id,
-                                    locker.lockCode,
-                                )
-                            } else {
-                                mutableListOf(
-                                    locker.id,
-                                    locker.pupil.lastName,
-                                    locker.pupil.firstName,
-                                    locker.pupil.schoolClassName,
-                                    locker.pupil.heightInCm,
-                                    locker.pupil.hasContract,
-                                    locker.pupil.paidAmount,
-                                    locker.pupil.remainingTimeInMonths,
-                                    locker.pupil.rentedFromDate,
-                                    locker.pupil.rentedUntilDate,
-                                    locker.lockCode,
-                                )
-                            }
-
-                            if (dataManager.currentUser is SuperUser) {
-                                val codes = locker.getCodes(dataManager.superUserMasterKey).joinToString()
-                                rowData.add(codes)
-                            }
-                            tableData.add(rowData.toTypedArray())
-                            foundLockers.add(EntityCoordinates(locker, b, f, w, c, l))
+    private fun getAllLockers() = sequence {
+        dataManager.buildingList.forEachIndexed { bIndex, building ->
+            building.floors.forEachIndexed { fIndex, floor ->
+                floor.walks.forEachIndexed { wIndex, walk ->
+                    walk.moduleWrappers.map { it.module }.mapIndexed { index, module ->
+                        (module as? LockerCabinet)?.let {
+                            index to module
+                        }
+                    }.filterNotNull().forEach { (mwIndex, module) ->
+                        module.lockers.forEachIndexed { lIndex, locker ->
+                            yield(EntityCoordinates(locker, bIndex, fIndex, wIndex, mwIndex, lIndex))
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun searchButtonActionPerformed(evt: ActionEvent) {
+
+        foundLockers =
+            getAllLockers().mapNotNull(fun(foundLockerCoords: EntityCoordinates<Locker>): EntityCoordinates<Locker>? {
+                val locker = foundLockerCoords.entity
+
+                if (emptyCheckbox.isSelected && !locker.isFree) {
+                    return null
+                }
+
+                lockerIDTextField.text.let { id ->
+                    if (id.isNotBlank()) {
+                        if (locker.id != id) {
+                            return null
+                        }
+                    }
+                }
+
+                lastNameTextField.text.let { lastName ->
+                    if (lastName.isNotEmpty()) {
+                        if (locker.isFree || lastName != locker.pupil.lastName) {
+                            return null
+                        }
+                    }
+                }
+
+                firstNameTextField.text.let { firstName ->
+                    if (firstName.isNotBlank()) {
+                        if (locker.isFree || firstName != locker.pupil.firstName) {
+                            return null
+                        }
+                    }
+                }
+
+                hasContractCheckbox.isSelected.let { contract ->
+                    if (contract) {
+                        if (locker.isFree || !locker.pupil.hasContract) {
+                            return null
+                        }
+                    }
+                }
+
+                classTextField.text.let { schoolClass ->
+
+                    if (schoolClass.isNotBlank()) {
+                        if (locker.isFree || schoolClass != locker.pupil.schoolClassName) {
+                            return null
+                        }
+                    }
+                }
+
+                sizeTextField.text.let { size ->
+                    if (size.isNotBlank()) {
+                        if (locker.isFree || size.toIntOrNull() != locker.pupil.heightInCm) {
+                            return null
+                        }
+                    }
+                }
+
+                moneyTextField.text.let { money ->
+                    if (money.isNotBlank()) {
+                        if (locker.isFree || money.toIntOrNull() != locker.pupil.paidAmount) {
+                            return null
+                        }
+                    }
+                }
+
+                durationTextField.text.let { remainingTimeInMonths ->
+                    if (remainingTimeInMonths.isNotBlank()) {
+                        if (locker.isFree || remainingTimeInMonths.toIntOrNull() != locker.pupil.remainingTimeInMonths) {
+                            return null
+                        }
+                    }
+                }
+
+                fromDateTextField.text.let { fromdate ->
+                    if (fromdate.isNotBlank()) {
+                        if (locker.isFree || fromdate != locker.pupil.rentedFromDate) {
+                            return null
+                        }
+                    }
+                }
+
+                untilDateTextField.text.let { untildate ->
+                    if (untildate.isNotBlank()) {
+                        if (locker.isFree || untildate != locker.pupil.rentedUntilDate) {
+                            return null
+                        }
+                    }
+                }
+
+                lockTextField.text.let { lock ->
+                    if (lock.isNotBlank()) {
+                        if (lock != locker.lockCode) {
+                            return null
+                        }
+                    }
+                }
+
+                return foundLockerCoords
+            }).toList()
+
+        val tableData = foundLockers.map { foundLockerCoords ->
+
+            val locker = foundLockerCoords.entity
+
+            val rowData: MutableList<Any> = if (locker.isFree) {
+                mutableListOf(
+                    locker.id,
+                    locker.lockCode,
+                )
+            } else {
+                mutableListOf(
+                    locker.id,
+                    locker.pupil.lastName,
+                    locker.pupil.firstName,
+                    locker.pupil.schoolClassName,
+                    locker.pupil.heightInCm,
+                    locker.pupil.hasContract,
+                    locker.pupil.paidAmount,
+                    locker.pupil.remainingTimeInMonths,
+                    locker.pupil.rentedFromDate,
+                    locker.pupil.rentedUntilDate,
+                    locker.lockCode,
+                )
+            }
+
+            if (dataManager.currentUser is SuperUser) {
+                val codes = locker.getCodes(dataManager.superUserMasterKey).joinToString()
+                rowData.add(codes)
+            }
+
+            rowData.toTypedArray()
+        }
+
         resultsPanel.removeAll()
 
-        printResultsButton.isEnabled = foundLockers.isNotEmpty()
-        emptySelectedButton.isEnabled = foundLockers.isNotEmpty()
-
         if (foundLockers.isNotEmpty()) {
-            table = JTable()
-            table.autoCreateRowSorter = true
             table.model = object : DefaultTableModel(tableData.toTypedArray(), columnData) {
                 override fun getColumnClass(columnIndex: Int): Class<*> {
                     return dataTypes[columnIndex]
@@ -362,15 +381,13 @@ class SearchFrame : JFrame() {
                     return false
                 }
             }
-            table.addMouseListener(object : MouseAdapter() {
-                override fun mouseClicked(evt: MouseEvent) {
-                    rowClicked(evt)
-                }
-            })
             resultsScrollPane.setViewportView(table)
         } else {
             resultsScrollPane.setViewportView(noDataFoundLabel)
         }
+
+        printResultsButton.isEnabled = foundLockers.isNotEmpty()
+        emptySelectedButton.isEnabled = foundLockers.isNotEmpty()
         resultsPanel.updateUI()
     } //GEN-LAST:event_searchButtonActionPerformed
 
@@ -397,8 +414,8 @@ class SearchFrame : JFrame() {
             return
         }
         val selectedRows = table.selectedRows
-        for (r in selectedRows.indices) {
 
+        for (r in selectedRows.indices) {
             val row = selectedRows[r]
             val locker = getLockerFromRow(row).entity
 
@@ -446,8 +463,8 @@ class SearchFrame : JFrame() {
     private lateinit var lockerIDTextField: JTextField
     private lateinit var moneyLabel: JLabel
     private lateinit var moneyTextField: JTextField
-    private lateinit var nameLabel: JLabel
-    private lateinit var nameTextField: JTextField
+    private lateinit var firstNameLabel: JLabel
+    private lateinit var firstNameTextField: JTextField
     private lateinit var noDataFoundLabel: JLabel
     private lateinit var printResultsButton: JButton
     private lateinit var resultsPanel: JPanel
@@ -455,8 +472,8 @@ class SearchFrame : JFrame() {
     private lateinit var searchButton: JButton
     private lateinit var sizeLabel: JLabel
     private lateinit var sizeTextField: JTextField
-    private lateinit var surnameLabel: JLabel
-    private lateinit var surnameTextField: JTextField
+    private lateinit var lastNameLabel: JLabel
+    private lateinit var lastNameTextField: JTextField
     private lateinit var untilDateTextField: JTextField
     private lateinit var untilLabel: JLabel
 
