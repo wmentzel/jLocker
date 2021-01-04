@@ -299,6 +299,86 @@ class ShortenClassRoomDistancesTest {
         )
     }
 
+    @Test
+    fun `should optimize class room distances across floors`() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(
+                    Floor("ground floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            moduleWrappers.addAll(listOf(
+                                createModuleWrapperWithLockerCabinetOf(
+                                    Locker(id = "1").apply {
+                                        moveInNewOwner(Pupil().apply {
+                                            firstName = "Don"
+                                            lastName = "Draper"
+                                            heightInCm = 175
+                                            schoolClassName = "12"
+                                        })
+                                    }
+                                ),
+                                ModuleWrapper(Staircase("main staircase"))
+                            ))
+                        }))
+                    },
+                    Floor("1st floor").apply {
+
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            moduleWrappers.addAll(
+                                listOf(
+                                    ModuleWrapper(Staircase("main staircase"))
+                                )
+                            )
+                        }))
+                    },
+                    Floor("2nd floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            moduleWrappers.addAll(
+                                listOf(
+                                    ModuleWrapper(Staircase("main staircase"))
+                                )
+                            )
+                        }))
+                    },
+                    Floor("3rd floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            moduleWrappers.addAll(
+                                listOf(
+                                    createModuleWrapperWithLockerCabinetOf(
+                                        Locker(id = "2")
+                                    ),
+                                    ModuleWrapper(Room("some classroom", "12")),
+                                    ModuleWrapper(Staircase("main staircase"))
+                                )
+                            )
+                        }))
+                    }
+                ))
+            })
+
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
+        scd.execute()
+
+        assertThat((buildings[0].floors[0].walks[0].moduleWrappers[0].module as LockerCabinet).lockers[0].isFree).isTrue()
+        assertThat((buildings[0].floors[3].walks[0].moduleWrappers[0].module as LockerCabinet).lockers[0].isFree).isFalse()
+        assertThat((buildings[0].floors[3].walks[0].moduleWrappers[0].module as LockerCabinet).lockers[0].pupil.firstName).isEqualTo(
+            "Don"
+        )
+        assertThat((buildings[0].floors[3].walks[0].moduleWrappers[0].module as LockerCabinet).lockers[0].pupil.lastName).isEqualTo(
+            "Draper"
+        )
+    }
+
     private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
     private val ModuleWrapper.room get() = module as Room
     private val ModuleWrapper.staircase get() = module as Staircase
