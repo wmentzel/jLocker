@@ -482,7 +482,7 @@ class MainFrame : JFrame() {
         helpMenu = JMenu()
         aboutMenuItem = JMenuItem()
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
-        preferredSize = Dimension(1000, 600)
+        preferredSize = Dimension(1280, 800)
         centerPanel.background = primaryColor
         centerPanel.layout = BorderLayout()
         comboBoxPanel.background = primaryColor
