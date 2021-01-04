@@ -235,10 +235,6 @@ class ShortenClassRoomDistancesTest {
 
     }
 
-    private fun createModuleWrapperWithLockerCabinetOf(vararg lockers: Locker) = ModuleWrapper(LockerCabinet().apply {
-        this.lockers.addAll(lockers)
-    })
-
     private val ModuleWrapper.lockerCabinet get() = module as LockerCabinet
     private val ModuleWrapper.room get() = module as Room
     private val ModuleWrapper.staircase get() = module as Staircase

@@ -4,7 +4,6 @@ import com.randomlychosenbytes.jlocker.EntityCoordinates
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.model.Locker
-import com.randomlychosenbytes.jlocker.model.LockerCabinet
 import com.randomlychosenbytes.jlocker.model.SuperUser
 import java.awt.*
 import java.awt.event.ActionEvent
@@ -216,125 +215,22 @@ class SearchFrame : JFrame() {
         pack()
     } // </editor-fold>//GEN-END:initComponents
 
-    private fun getAllLockers() = sequence {
-        dataManager.buildingList.forEachIndexed { bIndex, building ->
-            building.floors.forEachIndexed { fIndex, floor ->
-                floor.walks.forEachIndexed { wIndex, walk ->
-                    walk.moduleWrappers.map { it.module }.mapIndexed { index, module ->
-                        (module as? LockerCabinet)?.let {
-                            index to module
-                        }
-                    }.filterNotNull().forEach { (mwIndex, module) ->
-                        module.lockers.forEachIndexed { lIndex, locker ->
-                            yield(EntityCoordinates(locker, bIndex, fIndex, wIndex, mwIndex, lIndex))
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun searchButtonActionPerformed(evt: ActionEvent) {
 
-        foundLockers =
-            getAllLockers().mapNotNull(fun(foundLockerCoords: EntityCoordinates<Locker>): EntityCoordinates<Locker>? {
-                val locker = foundLockerCoords.entity
-
-                if (emptyCheckbox.isSelected && !locker.isFree) {
-                    return null
-                }
-
-                lockerIDTextField.text.let { id ->
-                    if (id.isNotBlank()) {
-                        if (locker.id != id) {
-                            return null
-                        }
-                    }
-                }
-
-                lastNameTextField.text.let { lastName ->
-                    if (lastName.isNotEmpty()) {
-                        if (locker.isFree || lastName != locker.pupil.lastName) {
-                            return null
-                        }
-                    }
-                }
-
-                firstNameTextField.text.let { firstName ->
-                    if (firstName.isNotBlank()) {
-                        if (locker.isFree || firstName != locker.pupil.firstName) {
-                            return null
-                        }
-                    }
-                }
-
-                hasContractCheckbox.isSelected.let { contract ->
-                    if (contract) {
-                        if (locker.isFree || !locker.pupil.hasContract) {
-                            return null
-                        }
-                    }
-                }
-
-                classTextField.text.let { schoolClass ->
-
-                    if (schoolClass.isNotBlank()) {
-                        if (locker.isFree || schoolClass != locker.pupil.schoolClassName) {
-                            return null
-                        }
-                    }
-                }
-
-                sizeTextField.text.let { size ->
-                    if (size.isNotBlank()) {
-                        if (locker.isFree || size.toIntOrNull() != locker.pupil.heightInCm) {
-                            return null
-                        }
-                    }
-                }
-
-                moneyTextField.text.let { money ->
-                    if (money.isNotBlank()) {
-                        if (locker.isFree || money.toIntOrNull() != locker.pupil.paidAmount) {
-                            return null
-                        }
-                    }
-                }
-
-                durationTextField.text.let { remainingTimeInMonths ->
-                    if (remainingTimeInMonths.isNotBlank()) {
-                        if (locker.isFree || remainingTimeInMonths.toIntOrNull() != locker.pupil.remainingTimeInMonths) {
-                            return null
-                        }
-                    }
-                }
-
-                fromDateTextField.text.let { fromdate ->
-                    if (fromdate.isNotBlank()) {
-                        if (locker.isFree || fromdate != locker.pupil.rentedFromDate) {
-                            return null
-                        }
-                    }
-                }
-
-                untilDateTextField.text.let { untildate ->
-                    if (untildate.isNotBlank()) {
-                        if (locker.isFree || untildate != locker.pupil.rentedUntilDate) {
-                            return null
-                        }
-                    }
-                }
-
-                lockTextField.text.let { lock ->
-                    if (lock.isNotBlank()) {
-                        if (lock != locker.lockCode) {
-                            return null
-                        }
-                    }
-                }
-
-                return foundLockerCoords
-            }).toList()
+        foundLockers = dataManager.findLockers(
+            lockerIDTextField.text.takeIf { it.isNotBlank() },
+            lastNameTextField.text.takeIf { it.isNotBlank() },
+            firstNameTextField.text.takeIf { it.isNotBlank() },
+            hasContractCheckbox.isSelected,
+            classTextField.text.takeIf { it.isNotBlank() },
+            sizeTextField.text.takeIf { it.isNotBlank() },
+            moneyTextField.text.takeIf { it.isNotBlank() },
+            durationTextField.text.takeIf { it.isNotBlank() },
+            fromDateTextField.text.takeIf { it.isNotBlank() },
+            untilDateTextField.text.takeIf { it.isNotBlank() },
+            lockTextField.text.takeIf { it.isNotBlank() },
+            emptyCheckbox.isSelected
+        ).toList()
 
         val tableData = foundLockers.map { foundLockerCoords ->
 

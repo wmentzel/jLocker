@@ -2,8 +2,11 @@ package com.randomlychosenbytes.jlocker.main
 
 import assertk.assertThat
 import assertk.assertions.hasSize
+import assertk.assertions.isEqualTo
 import com.nhaarman.mockitokotlin2.mock
 import com.randomlychosenbytes.jlocker.DataManager
+import com.randomlychosenbytes.jlocker.EntityCoordinates
+import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.decryptKeyWithString
 import com.randomlychosenbytes.jlocker.model.*
@@ -94,5 +97,65 @@ class DataManagerTest {
         dataManager.initBuildingObject()
 
         assertThat(dataManager.buildingList).hasSize(1)
+    }
+
+    @Test
+    fun shouldFindLockersMatchingCriteria() {
+
+        val building = Building("main building")
+        val groundFloor = Floor("ground floor")
+        val firstFloor = Floor("first floor")
+
+        building.floors.addAll(listOf(groundFloor, firstFloor))
+        val walk = Walk("main walk")
+        groundFloor.walks.add(walk)
+
+        val locker1 = Locker(id = "1").apply {
+            moveInNewOwner(Pupil().apply {
+                firstName = "Don"
+                lastName = "Draper"
+                heightInCm = 175
+                schoolClassName = "12"
+            })
+        }
+
+        val locker2 = Locker(id = "2").apply {
+            moveInNewOwner(Pupil().apply {
+                firstName = "Peggy"
+                lastName = "Olsen"
+                heightInCm = 150
+                schoolClassName = "12"
+            })
+        }
+
+        walk.moduleWrappers.addAll(
+            listOf(
+                createModuleWrapperWithLockerCabinetOf(locker1, locker2),
+                ModuleWrapper(Room("", "12"))
+            )
+        )
+
+        dataManager.buildingList.clear()
+        dataManager.buildingList.add(building)
+
+        assertThat(
+            dataManager.findLockers(
+                id = "1",
+                firstName = "Don",
+                lastName = "Draper",
+                height = "175",
+                schoolClass = "12"
+            ).toList()
+        ).isEqualTo(
+            listOf(EntityCoordinates(locker1, 0, 0, 0, 0, 0))
+        )
+
+        assertThat(
+            dataManager.findLockers(
+                firstName = "Peggy",
+            ).toList()
+        ).isEqualTo(
+            listOf(EntityCoordinates(locker2, 0, 0, 0, 0, 1))
+        )
     }
 }

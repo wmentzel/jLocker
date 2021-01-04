@@ -9,7 +9,7 @@ package com.randomlychosenbytes.jlocker
  * (1st coordinate), floor (2nd coordinate) and walk (3rd coordinate) the locker
  * is in.
  */
-class EntityCoordinates<T : Any>(
+data class EntityCoordinates<T : Any>(
     var entity: T,
     var bValue: Int,
     var fValue: Int,
