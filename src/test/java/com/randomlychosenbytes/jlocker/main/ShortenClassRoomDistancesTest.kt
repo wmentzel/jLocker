@@ -14,29 +14,25 @@ class ShortenClassRoomDistancesTest {
     fun shouldReportIfClassRoomDoesNotExist() {
         val buildings = listOf(
             Building("main building").apply {
-                floors.addAll(
-                    listOf(
-                        Floor("ground floor").apply {
-                            walks.addAll(listOf(Walk("main walk").apply {
-                                moduleWrappers.addAll(
-                                    listOf(
-                                        createModuleWrapperWithLockerCabinetOf(
-                                            Locker(id = "1").apply {
-                                                moveInNewOwner(Pupil().apply {
-                                                    firstName = "Don"
-                                                    lastName = "Draper"
-                                                    heightInCm = 175
-                                                    schoolClassName = "12"
-                                                })
-                                            },
-                                            Locker(id = "2")
-                                        )
-                                    )
+                floors.addAll(listOf(Floor("ground floor").apply {
+                    walks.addAll(listOf(Walk("main walk").apply {
+                        moduleWrappers.addAll(
+                            listOf(
+                                createModuleWrapperWithLockerCabinetOf(
+                                    Locker(id = "1").apply {
+                                        moveInNewOwner(Pupil().apply {
+                                            firstName = "Don"
+                                            lastName = "Draper"
+                                            heightInCm = 175
+                                            schoolClassName = "12"
+                                        })
+                                    },
+                                    Locker(id = "2")
                                 )
-                            }))
-                        }
-                    )
-                )
+                            )
+                        )
+                    }))
+                }))
             })
 
         val scd = ShortenClassRoomDistances(
@@ -55,41 +51,35 @@ class ShortenClassRoomDistancesTest {
 
         val buildings = listOf(
             Building("main building").apply {
-                floors.addAll(listOf(
-                    Floor("ground floor").apply {
+                floors.addAll(listOf(Floor("ground floor").apply {
+                    walks.addAll(listOf(Walk("main walk").apply {
+                        moduleWrappers.addAll(listOf(createModuleWrapperWithLockerCabinetOf(
+                            Locker(id = "1").apply {
+                                moveInNewOwner(Pupil().apply {
+                                    firstName = "Don"
+                                    lastName = "Draper"
+                                    heightInCm = 175
+                                    schoolClassName = "12"
+                                })
+                            }
+                        ),
+                            ModuleWrapper(Room("", "12")),
+                            ModuleWrapper(Staircase("main staircase"))
+                        ))
+                    }))
+                },
+                    Floor("first floor").apply {
                         walks.addAll(listOf(Walk("main walk").apply {
-                            moduleWrappers.addAll(listOf(
-                                createModuleWrapperWithLockerCabinetOf(
-                                    Locker(id = "1").apply {
-                                        moveInNewOwner(Pupil().apply {
-                                            firstName = "Don"
-                                            lastName = "Draper"
-                                            heightInCm = 175
-                                            schoolClassName = "12"
-                                        })
-                                    }
-                                ),
-                                ModuleWrapper(Room("", "12")),
-                                ModuleWrapper(Staircase("main staircase"))
-                            )
+                            moduleWrappers.addAll(
+                                listOf(
+                                    createModuleWrapperWithLockerCabinetOf(
+                                        Locker(id = "2") // unreachable locker
+                                    ),
+                                )
                             )
                         }))
-                    },
-                    Floor("first floor").apply {
-                        walks.addAll(listOf(
-                            Walk("main walk").apply {
-                                moduleWrappers.addAll(
-                                    listOf(
-                                        createModuleWrapperWithLockerCabinetOf(
-                                            Locker(id = "2") // unreachable locker
-                                        ),
-                                    )
-                                )
-                            }
-                        ))
                     }
-                )
-                )
+                ))
             })
 
 
