@@ -5,6 +5,8 @@ import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.SuperUser
+import com.randomlychosenbytes.jlocker.utils.findLockers
+import com.randomlychosenbytes.jlocker.utils.getAllLockerCoordinates
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
@@ -217,7 +219,7 @@ class SearchFrame : JFrame() {
 
     private fun searchButtonActionPerformed(evt: ActionEvent) {
 
-        foundLockers = dataManager.findLockers(
+        foundLockers = dataManager.buildingList.getAllLockerCoordinates().findLockers(
             lockerIDTextField.text.takeIf { it.isNotBlank() },
             lastNameTextField.text.takeIf { it.isNotBlank() },
             firstNameTextField.text.takeIf { it.isNotBlank() },

@@ -8,7 +8,7 @@ import com.randomlychosenbytes.jlocker.model.Task;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.randomlychosenbytes.jlocker.UtilsKt.moveOwner;
+import static com.randomlychosenbytes.jlocker.utils.UtilsKt.moveOwner;
 
 public class MoveLockerDialog extends JDialog {
     private final DataManager dataManager = State.Companion.getDataManager();

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import static com.randomlychosenbytes.jlocker.UtilsKt.decryptKeyWithString;
+import static com.randomlychosenbytes.jlocker.CryptoKt.decryptKeyWithString;
 
 public class CreateUsersDialog extends JDialog {
     private int displayedCardIndex;
