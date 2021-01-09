@@ -6,7 +6,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.Pupil
-import com.randomlychosenbytes.jlocker.moveOwner
+import com.randomlychosenbytes.jlocker.utils.moveOwner
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows

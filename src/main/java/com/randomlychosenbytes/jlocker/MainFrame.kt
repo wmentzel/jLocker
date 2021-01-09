@@ -4,6 +4,7 @@ import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.dialogs.*
 import com.randomlychosenbytes.jlocker.model.*
 import com.randomlychosenbytes.jlocker.model.LockerCabinet.Companion.updateDummyRows
+import com.randomlychosenbytes.jlocker.utils.isDateValid
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*

@@ -35,7 +35,7 @@ tasks {
 
     register<Jar>("fatJar") {
         manifest {
-            attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.main.MainFrame"
+            attributes["Main-Class"] = "com.randomlychosenbytes.jlocker.MainKt"
         }
         archiveBaseName.set("${project.name}")
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
