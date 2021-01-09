@@ -20,14 +20,6 @@ class FindLockerTest {
     @Test
     fun shouldFindLockersMatchingCriteria() {
 
-        val building = Building("main building")
-        val groundFloor = Floor("ground floor")
-        val firstFloor = Floor("first floor")
-
-        building.floors.addAll(listOf(groundFloor, firstFloor))
-        val walk = Walk("main walk")
-        groundFloor.walks.add(walk)
-
         val locker1 = Locker(id = "1").apply {
             moveInNewOwner(Pupil().apply {
                 firstName = "Don"
@@ -46,15 +38,21 @@ class FindLockerTest {
             })
         }
 
-        walk.moduleWrappers.addAll(
-            listOf(
-                createModuleWrapperWithLockerCabinetOf(locker1, locker2),
-                ModuleWrapper(Room("", "12"))
-            )
-        )
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(Floor("ground floor").apply {
+                    walks.addAll(listOf(Walk("main walk").apply {
+                        moduleWrappers.addAll(
+                            listOf(
+                                createModuleWrapperWithLockerCabinetOf(locker1, locker2)
+                            )
+                        )
+                    }))
+                }))
+            })
 
         assertThat(
-            listOf(building).getAllLockerCoordinates().findLockers(
+            buildings.getAllLockerCoordinates().findLockers(
                 id = "1",
                 firstName = "Don",
                 lastName = "Draper",
@@ -66,7 +64,7 @@ class FindLockerTest {
         )
 
         assertThat(
-            listOf(building).getAllLockerCoordinates().findLockers(
+            buildings.getAllLockerCoordinates().findLockers(
                 firstName = "Peggy",
             ).toList()
         ).isEqualTo(
