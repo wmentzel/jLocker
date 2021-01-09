@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.utils
 
 import com.randomlychosenbytes.jlocker.EntityCoordinates
-import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.model.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -137,22 +136,22 @@ fun Sequence<EntityCoordinates<Locker>>.findLockers(
 })
 
 fun List<Building>.renameSchoolClass(previousClassName: String, newClassName: String): Int {
-    val searchForAgeGroup = '.' in previousClassName
+    val searchForAgeGroup = '.' !in previousClassName
 
     var numMatches = 0
 
-    val buildings: List<Building> = State.dataManager.buildingList
-
-    for (building in buildings) {
+    for (building in this) {
         val floors: List<Floor> = building.floors
         for (floor in floors) {
             val walks: List<Walk> = floor.walks
             for (walk in walks) {
                 val cols: List<ModuleWrapper> = walk.moduleWrappers
                 for (col in cols) {
+
                     val module = col.module as? LockerCabinet ?: continue
                     val lockers: List<Locker> = module.lockers
                     var sSubClass: String
+
                     for (locker in lockers) {
                         if (locker.isFree) {
                             continue
@@ -170,7 +169,7 @@ fun List<Building>.renameSchoolClass(previousClassName: String, newClassName: St
                         // else 7.2, E.2 ...
                         if (sFoundClass == previousClassName) {
                             numMatches++
-                            locker.pupil.schoolClassName = newClassName + sSubClass
+                            locker.pupil.schoolClassName = "$newClassName.$sSubClass"
                         }
                     }
                 }
