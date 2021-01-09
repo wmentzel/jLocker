@@ -1,6 +1,7 @@
 package com.randomlychosenbytes.jlocker
 
 import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.utils.moveOwner
 import org.jgrapht.alg.DijkstraShortestPath
 import org.jgrapht.graph.DefaultWeightedEdge
 import org.jgrapht.graph.SimpleWeightedGraph
