@@ -77,8 +77,7 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         pack()
     } // </editor-fold>//GEN-END:initComponents
 
-    private fun okButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_okButtonActionPerformed
-    { //GEN-HEADEREND:event_okButtonActionPerformed
+    private fun okButtonActionPerformed(evt: ActionEvent) {
         val isSuperUser = chooseUserComboBox.selectedIndex == 0
 
         //
@@ -102,10 +101,9 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         }
         dataManager.initBuildingObject()
         dispose()
-    } //GEN-LAST:event_okButtonActionPerformed
+    }
 
-    private fun loadBackupButtonActionPerformed(evt: ActionEvent) //GEN-FIRST:event_loadBackupButtonActionPerformed
-    { //GEN-HEADEREND:event_loadBackupButtonActionPerformed
+    private fun loadBackupButtonActionPerformed(evt: ActionEvent) {
         val fc = JFileChooser(dataManager.backupDirectory)
         val filter: FileFilter = object : FileFilter() {
             override fun accept(pathname: File): Boolean {
@@ -122,9 +120,9 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             resPath = fc.selectedFile
         }
-    } //GEN-LAST:event_loadBackupButtonActionPerformed
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private lateinit var bottomPanel: JPanel
     private lateinit var chooseUserComboBox: JComboBox<String>
     private lateinit var loadBackupButton: JButton
