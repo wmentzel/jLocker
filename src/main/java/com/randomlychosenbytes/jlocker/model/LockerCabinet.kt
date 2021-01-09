@@ -109,7 +109,6 @@ class LockerCabinet : Module() {
         }
     }
 
-    // Variables declaration - do not modify
     private lateinit var addLockerLabel: JLabel
     private lateinit var buttonPanel: JPanel
     private lateinit var cabinetPanel: JPanel

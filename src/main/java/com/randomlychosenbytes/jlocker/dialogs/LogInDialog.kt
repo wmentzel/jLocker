@@ -122,7 +122,6 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         }
     }
 
-    // Variables declaration - do not modify
     private lateinit var bottomPanel: JPanel
     private lateinit var chooseUserComboBox: JComboBox<String>
     private lateinit var loadBackupButton: JButton

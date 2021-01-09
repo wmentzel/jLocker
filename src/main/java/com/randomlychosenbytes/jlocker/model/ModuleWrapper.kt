@@ -146,7 +146,6 @@ class ModuleWrapper(module: Module) : JPanel() {
         mainFrame.drawLockerOverview()
     }
 
-    // Variables declaration - do not modify
     private lateinit var addMUnitLeftLabel: JLabel
     private lateinit var addMUnitRightLabel: JLabel
     private lateinit var centerPanel: JPanel

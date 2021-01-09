@@ -65,7 +65,6 @@ public class Staircase extends Module {
         dialog.setVisible(true);
     }
 
-    // Variables declaration - do not modify
     private javax.swing.JLabel captionLabel;
     // End of variables declaration//GEN-END:variables
 }

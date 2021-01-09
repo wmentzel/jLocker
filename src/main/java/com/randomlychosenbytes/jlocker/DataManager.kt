@@ -10,7 +10,6 @@ import java.io.FileWriter
 import java.util.*
 import javax.crypto.SecretKey
 
-
 /**
  * DataManager is a singleton class. There can only be one instance of this
  * class at any time and it has to be accessed from anywhere. This may not be

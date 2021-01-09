@@ -82,7 +82,6 @@ class ShortenClassRoomDistancesTest {
                 ))
             })
 
-
         val scd = ShortenClassRoomDistances(
             buildings = buildings,
             lockerMinSizes = listOf(0, 0, 140, 150, 175),
@@ -154,7 +153,6 @@ class ShortenClassRoomDistancesTest {
     @Test
     fun shouldMovePupilsAcrossBuildings() {
     }
-
 
     @Test
     fun shouldMovePupilToCorrectFreeLocker() {
@@ -366,7 +364,6 @@ class ShortenClassRoomDistancesTest {
                     }
                 ))
             })
-
 
         val scd = ShortenClassRoomDistances(
             buildings = buildings,

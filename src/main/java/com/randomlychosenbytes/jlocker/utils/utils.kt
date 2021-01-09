@@ -92,7 +92,6 @@ fun Sequence<EntityCoordinates<Locker>>.findLockers(
     }
 
 
-
     if (schoolClass != null) {
         if (locker.isFree || schoolClass != locker.pupil.schoolClassName) {
             return null

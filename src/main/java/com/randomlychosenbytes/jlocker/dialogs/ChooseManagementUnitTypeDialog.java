@@ -39,7 +39,6 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         }
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,7 +146,6 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     }
 
 
-    // Variables declaration - do not modify
     private javax.swing.ButtonGroup buttonGroup;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;

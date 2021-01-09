@@ -235,7 +235,6 @@ public class EditCodesDialog extends JDialog {
         setCurCode(evt);
     }
 
-    // Variables declaration - do not modify
     private javax.swing.JCheckBox allowEditCheckBox;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton cancelButton;

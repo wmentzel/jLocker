@@ -155,7 +155,6 @@ public class SettingsDialog extends JDialog {
     }
 
 
-    // Variables declaration - do not modify
     private javax.swing.JPanel backupPanel;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;

@@ -119,7 +119,6 @@ public class FloorDialog extends javax.swing.JDialog {
     }
 
 
-    // Variables declaration - do not modify
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JLabel entityNameLabel;

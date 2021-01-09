@@ -336,7 +336,6 @@ class SearchFrame : JFrame() {
         )
     }
 
-    // Variables declaration - do not modify
     private lateinit var classLabel: JLabel
     private lateinit var classTextField: JTextField
     private lateinit var containerPanel: JPanel

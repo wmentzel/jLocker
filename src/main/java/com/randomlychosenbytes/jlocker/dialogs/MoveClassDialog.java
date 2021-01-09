@@ -250,7 +250,7 @@ public class MoveClassDialog extends JDialog {
     }
 
     // new DisplayGraphFrame(scrd.getWeightedGraph()).setVisible(true);
-    // Variables declaration - do not modify
+
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox classComboBox;

@@ -124,7 +124,6 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
         this.dispose();
     }
 
-    // Variables declaration - do not modify
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel centerPanel;

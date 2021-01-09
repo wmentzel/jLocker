@@ -182,7 +182,6 @@ class TasksFrame : JFrame() {
         dispose()
     }
 
-    // Variables declaration - do not modify
     private lateinit var addButton: JButton
     private lateinit var bottomPanel: JPanel
     private lateinit var cancelButton: JButton

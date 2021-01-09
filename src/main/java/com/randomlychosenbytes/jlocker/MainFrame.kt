@@ -1053,7 +1053,6 @@ class MainFrame : JFrame() {
         dialog.isVisible = true
     }
 
-    // Variables declaration - do not modify
     private lateinit var aboutMenuItem: JMenuItem
     private lateinit var addAmountButton: JButton
     private lateinit var addBuildingButton: JButton

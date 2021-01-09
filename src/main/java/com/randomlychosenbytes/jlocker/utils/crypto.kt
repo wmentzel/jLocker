@@ -29,9 +29,7 @@ fun getHash(pw: String): String {
 
 private fun bytesToBase64String(bytes: ByteArray): String = Base64.getEncoder().encodeToString(bytes)
 
-
 private fun base64StringToBytes(str: String): ByteArray = Base64.getDecoder().decode(str)
-
 
 fun encrypt(s: String, key: SecretKey?): String {
     val ecipher = Cipher.getInstance(CRYPTO_ALOGRITHM_NAME)

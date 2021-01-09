@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 /**
  * A simple dialog that displays information about this program.
  */
@@ -154,7 +153,6 @@ public class AboutBox extends javax.swing.JDialog {
         this.dispose();
     }
 
-    // Variables declaration - do not modify
     private javax.swing.JLabel appEmailAddressLabel;
     private javax.swing.JLabel appTechnologyLabel;
     private javax.swing.JLabel appThanks2Label;
