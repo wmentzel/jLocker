@@ -1,9 +1,8 @@
 package com.randomlychosenbytes.jlocker.utils
 
 import com.randomlychosenbytes.jlocker.EntityCoordinates
-import com.randomlychosenbytes.jlocker.model.Building
-import com.randomlychosenbytes.jlocker.model.Locker
-import com.randomlychosenbytes.jlocker.model.LockerCabinet
+import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.model.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -136,3 +135,48 @@ fun Sequence<EntityCoordinates<Locker>>.findLockers(
 
     return foundLockerCoords
 })
+
+fun List<Building>.renameSchoolClass(previousClassName: String, newClassName: String): Int {
+    val searchForAgeGroup = '.' in previousClassName
+
+    var numMatches = 0
+
+    val buildings: List<Building> = State.dataManager.buildingList
+
+    for (building in buildings) {
+        val floors: List<Floor> = building.floors
+        for (floor in floors) {
+            val walks: List<Walk> = floor.walks
+            for (walk in walks) {
+                val cols: List<ModuleWrapper> = walk.moduleWrappers
+                for (col in cols) {
+                    val module = col.module as? LockerCabinet ?: continue
+                    val lockers: List<Locker> = module.lockers
+                    var sSubClass: String
+                    for (locker in lockers) {
+                        if (locker.isFree) {
+                            continue
+                        }
+                        var sFoundClass = locker.pupil.schoolClassName
+                        sSubClass = ""
+
+                        //7, E, Kurs
+                        if (searchForAgeGroup) {
+                            if ('.' in sFoundClass) {
+                                sSubClass = sFoundClass.substringAfter(".")
+                                sFoundClass = sFoundClass.substringBefore(".")
+                            }
+                        }
+                        // else 7.2, E.2 ...
+                        if (sFoundClass == previousClassName) {
+                            numMatches++
+                            locker.pupil.schoolClassName = newClassName + sSubClass
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return numMatches
+}
