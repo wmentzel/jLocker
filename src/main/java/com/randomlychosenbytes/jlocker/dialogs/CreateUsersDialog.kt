@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs
 
+import com.randomlychosenbytes.jlocker.MainFrame
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.decryptKeyWithString
 import com.randomlychosenbytes.jlocker.model.*
@@ -11,9 +12,12 @@ import javax.crypto.SecretKey
 import javax.swing.*
 import kotlin.system.exitProcess
 
-class CreateUsersDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
+class CreateUsersDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
+
+    constructor() : this(MainFrame(), true)
+
     private var displayedCardIndex: Int
-    private val cardLayout: CardLayout
+    private val cardLayout: CardLayout = CardLayout()
     private val isFirstRun: Boolean
 
     private lateinit var superUser: SuperUser
@@ -146,7 +150,7 @@ class CreateUsersDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal)
         gridBagConstraints.insets = Insets(0, 0, 0, 10)
         southPanel.add(previousButton, gridBagConstraints)
         nextButton.text = "Weiter >"
-        nextButton.addActionListener { evt -> nextButtonActionPerformed(evt) }
+        nextButton.addActionListener { evt -> nextButtonActionPerformed() }
         southPanel.add(nextButton, GridBagConstraints())
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
@@ -175,7 +179,7 @@ class CreateUsersDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal)
         }
     }
 
-    private fun nextButtonActionPerformed(evt: ActionEvent) {
+    fun nextButtonActionPerformed() {
         if (displayedCardIndex < 2) {
             cardLayout.next(centerPanel) // display next card
         }
@@ -309,16 +313,20 @@ class CreateUsersDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal)
                 }
             }
         )
-        cardLayout = CardLayout()
-        centerPanel.layout = cardLayout
-        centerPanel.add(welcomePanel, "card1")
-        centerPanel.add(superUserPanel, "card2")
-        centerPanel.add(userPanel, "card3")
+        centerPanel.apply {
+            layout = cardLayout
+            add(welcomePanel, "card1")
+            add(superUserPanel, "card2")
+            add(userPanel, "card3")
+        }
+
         displayedCardIndex = 0
+
         if (!isFirstRun) {
             cardLayout.next(centerPanel)
             displayedCardIndex = 1
         }
+
         previousButton.isEnabled = false
     }
 }
