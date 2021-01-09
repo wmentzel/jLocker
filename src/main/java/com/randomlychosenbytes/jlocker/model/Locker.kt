@@ -59,7 +59,7 @@ class Locker(
         return code.substring(0, 2) + "-" + code.substring(2, 4) + "-" + code.substring(4, 6)
     }
 
-    fun setCodes(codes: Array<String>, superUserMasterKey: SecretKey?) {
+    fun setCodes(codes: Array<String>, superUserMasterKey: SecretKey) {
         // codes is unencrypted... encrypting and saving in encCodes
 
         // The Value of code[i] looks like "00-00-00"

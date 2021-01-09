@@ -59,11 +59,40 @@ class DataManager {
         userMasterKey: SecretKey,
         superUserMasterKey: SecretKey
     ) {
+        if (this::superUser.isInitialized) {
+            reencryptLockerCodes(superUserMasterKey, this.superUserMasterKey)
+        }
+
         this.superUser = superUser
         this.restrictedUser = restrictedUser
         this.userMasterKey = userMasterKey
         this.superUserMasterKey = superUserMasterKey
         currentUser = superUser
+    }
+
+    private fun reencryptLockerCodes(newSuperUserMasterKey: SecretKey, oldSuperUserMasterKey: SecretKey) {
+        for (building in buildingList) {
+            val floors: List<Floor> = building.floors
+            for (floor in floors) {
+                val walks: List<Walk> = floor.walks
+                for (walk in walks) {
+                    val mus: List<ModuleWrapper> = walk.moduleWrappers
+                    for (mu in mus) {
+                        val module = mu.module as? LockerCabinet ?: continue
+                        val lockers: List<Locker> = module.lockers
+                        for (locker in lockers) {
+                            val codes = locker.getCodes(oldSuperUserMasterKey)
+                            var i = 0
+                            while (i < 5) {
+                                codes[i] = codes[i].replace("-", "")
+                                i++
+                            }
+                            locker.setCodes(codes, newSuperUserMasterKey)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -18,7 +18,9 @@ class CreateUsersDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) 
 
     private var displayedCardIndex: Int
     private val cardLayout: CardLayout = CardLayout()
+
     private val isFirstRun: Boolean
+        get() = dataManager.buildingList.isEmpty()
 
     private lateinit var superUser: SuperUser
     private lateinit var restrictedUser: RestrictedUser
@@ -235,40 +237,17 @@ class CreateUsersDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) 
                     )
                     return
                 }
+
+                dataManager.setNewUsers(superUser, restrictedUser, userMasterKey, superUserMasterKey)
+
                 if (isFirstRun) {
-                    //
                     // Create initial data
-                    //
                     dataManager.buildingList.add(Building("-"))
                     dataManager.currentFloorList.add(Floor("-"))
                     dataManager.currentWalkList.add(Walk("-"))
                     dataManager.currentManagmentUnitList.add(ModuleWrapper(LockerCabinet()))
-                } else {
-                    val buildings: List<Building> = dataManager.buildingList
-                    for (building in buildings) {
-                        val floors: List<Floor> = building.floors
-                        for (floor in floors) {
-                            val walks: List<Walk> = floor.walks
-                            for (walk in walks) {
-                                val mus: List<ModuleWrapper> = walk.moduleWrappers
-                                for (mu in mus) {
-                                    val module = mu.module as? LockerCabinet ?: continue
-                                    val lockers: List<Locker> = module.lockers
-                                    for (locker in lockers) {
-                                        val codes = locker.getCodes(dataManager.superUserMasterKey)
-                                        var i = 0
-                                        while (i < 5) {
-                                            codes[i] = codes[i].replace("-", "")
-                                            i++
-                                        }
-                                        locker.setCodes(codes, superUserMasterKey)
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
-                dataManager.setNewUsers(superUser, restrictedUser, userMasterKey, superUserMasterKey)
+
                 dataManager.saveAndCreateBackup()
                 dispose()
             }
@@ -301,7 +280,7 @@ class CreateUsersDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) 
 
         // focus in the middle
         setLocationRelativeTo(null)
-        isFirstRun = dataManager.buildingList.isEmpty()
+
         addWindowListener(
             object : WindowAdapter() {
                 override fun windowClosing(winEvt: WindowEvent) {
