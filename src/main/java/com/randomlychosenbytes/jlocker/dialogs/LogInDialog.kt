@@ -75,7 +75,7 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         gridBagConstraints.insets = Insets(0, 0, 20, 0)
         contentPane.add(loginPanel, gridBagConstraints)
         pack()
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun okButtonActionPerformed(evt: ActionEvent) {
         val isSuperUser = chooseUserComboBox.selectedIndex == 0

@@ -81,7 +81,7 @@ public class RenameClassDialog extends JDialog {
         getContentPane().add(southPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -164,5 +164,5 @@ public class RenameClassDialog extends JDialog {
     private javax.swing.JTextField classTextField;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel southPanel;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -215,7 +215,7 @@ class SearchFrame : JFrame() {
         resultsScrollPane.setViewportView(resultsPanel)
         contentPane.add(resultsScrollPane, BorderLayout.CENTER)
         pack()
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun searchButtonActionPerformed(evt: ActionEvent) {
 

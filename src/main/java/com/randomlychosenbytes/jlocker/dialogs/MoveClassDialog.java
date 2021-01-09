@@ -173,7 +173,7 @@ public class MoveClassDialog extends JDialog {
         getContentPane().add(buttonPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.dispose();
@@ -259,5 +259,5 @@ public class MoveClassDialog extends JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JTextArea textArea;
     private javax.swing.JScrollPane textAreaScrollPane;
-    // End of variables declaration//GEN-END:variables
+
 }

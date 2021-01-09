@@ -102,7 +102,7 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
         getContentPane().add(bottomPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         for (int i = 0; i < minSizes.size(); i++) {
@@ -128,5 +128,5 @@ public class SetLockerMinimumSizesDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel centerPanel;
     private javax.swing.JButton okButton;
-    // End of variables declaration//GEN-END:variables
+
 }

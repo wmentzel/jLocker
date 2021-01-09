@@ -111,7 +111,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         getContentPane().add(buttonPanel, java.awt.BorderLayout.CENTER);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -156,5 +156,5 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
     private javax.swing.JPanel radioButtonPanel;
     private javax.swing.JRadioButton roomButton;
     private javax.swing.JRadioButton staircaseButton;
-    // End of variables declaration//GEN-END:variables
+
 }

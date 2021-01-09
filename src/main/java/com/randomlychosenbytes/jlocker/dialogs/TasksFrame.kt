@@ -93,7 +93,7 @@ class TasksFrame : JFrame() {
         componentsPanel.add(bottomPanel, gridBagConstraints)
         contentPane.add(componentsPanel, BorderLayout.SOUTH)
         pack()
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun deleteDoneTasksButtonActionPerformed(evt: ActionEvent) {
         val tasks: List<Task> = dataManager.tasks
@@ -193,7 +193,7 @@ class TasksFrame : JFrame() {
     private lateinit var okButton: JButton
     private lateinit var printTasksButton: JButton
     private lateinit var tableScrollPane: JScrollPane
-    private lateinit var tasksPanel: JPanel // End of variables declaration//GEN-END:variables
+    private lateinit var tasksPanel: JPanel
 
     init {
         initComponents()

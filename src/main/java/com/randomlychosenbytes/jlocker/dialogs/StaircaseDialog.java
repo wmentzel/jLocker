@@ -80,7 +80,7 @@ public class StaircaseDialog extends JDialog {
         getContentPane().add(centerPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         staircase.setCaption(staircaseNameTextBox.getText());
@@ -96,5 +96,5 @@ public class StaircaseDialog extends JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JTextField staircaseNameTextBox;
     private javax.swing.JLabel staircasenrLabel;
-    // End of variables declaration//GEN-END:variables
+
 }

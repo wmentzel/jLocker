@@ -845,7 +845,7 @@ class MainFrame : JFrame() {
         menuBar.add(helpMenu)
         jMenuBar = menuBar
         pack()
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun removeBuildingButtonActionPerformed(evt: ActionEvent) {
         val answer = JOptionPane.showConfirmDialog(

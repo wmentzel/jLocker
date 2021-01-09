@@ -85,7 +85,7 @@ class LockerCabinet : Module() {
                 .addGap(0, 233, Short.MAX_VALUE.toInt())
         )
         add(cabinetPanel, BorderLayout.CENTER)
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun addLockerLabelMouseReleased(evt: MouseEvent) {
         lockers.add(0, Locker())

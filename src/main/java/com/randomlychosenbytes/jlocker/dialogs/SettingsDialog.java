@@ -133,7 +133,7 @@ public class SettingsDialog extends JDialog {
         getContentPane().add(buttonPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         dataManager.getSettings().setNumOfBackups(numBackupsSlider.getValue());
@@ -165,5 +165,5 @@ public class SettingsDialog extends JDialog {
     private javax.swing.JSlider numBackupsSlider;
     private javax.swing.JTextField numBackupsTextField;
     private javax.swing.JButton okButton;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -96,7 +96,7 @@ class ModuleWrapper(module: Module) : JPanel() {
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
         gridBagConstraints.insets = Insets(10, 5, 10, 5)
         add(southPanel, gridBagConstraints)
-    } // </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>
 
     private fun addMUnitLeftLabelMouseReleased(evt: MouseEvent) {
         val mus = dataManager.currentManagmentUnitList

@@ -147,7 +147,7 @@ public class AboutBox extends javax.swing.JDialog {
         getContentPane().add(closeButton, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.dispose();
@@ -168,5 +168,5 @@ public class AboutBox extends javax.swing.JDialog {
     private javax.swing.JLabel vendorLabel;
     private javax.swing.JLabel versionLabel;
     private javax.swing.JPanel westPanel;
-    // End of variables declaration//GEN-END:variables
+
 }

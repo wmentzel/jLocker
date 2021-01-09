@@ -155,7 +155,7 @@ public class EditCodesDialog extends JDialog {
         getContentPane().add(bottomPanel, new java.awt.GridBagConstraints());
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         dataManager.getCurrentLocker().setCurrentCodeIndex(iCurCodeIndex);
@@ -245,5 +245,5 @@ public class EditCodesDialog extends JDialog {
     private javax.swing.JTextField codeThreeTextField;
     private javax.swing.JTextField codeTwoTextField;
     private javax.swing.JButton okButton;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -91,7 +91,7 @@ public class FloorDialog extends javax.swing.JDialog {
         getContentPane().add(centerPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         if (bMode == EDIT) {
@@ -124,5 +124,5 @@ public class FloorDialog extends javax.swing.JDialog {
     private javax.swing.JLabel entityNameLabel;
     private javax.swing.JTextField entityNameTextField;
     private javax.swing.JButton okButton;
-    // End of variables declaration//GEN-END:variables
+
 }

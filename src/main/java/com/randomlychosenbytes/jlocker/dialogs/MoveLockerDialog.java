@@ -94,7 +94,7 @@ public class MoveLockerDialog extends JDialog {
         getContentPane().add(centerPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.dispose();
@@ -141,5 +141,5 @@ public class MoveLockerDialog extends JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel sourceIDLabel;
     private javax.swing.JTextField sourceIDTextField;
-    // End of variables declaration//GEN-END:variables
+
 }

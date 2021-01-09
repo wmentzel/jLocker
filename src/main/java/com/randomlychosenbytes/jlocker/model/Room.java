@@ -75,7 +75,7 @@ public class Room extends Module {
             }
         });
         add(captionLabel, java.awt.BorderLayout.CENTER);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void captionLabelMouseReleased(java.awt.event.MouseEvent evt) {
         // TODO mainframe as first argument
@@ -84,5 +84,5 @@ public class Room extends Module {
     }
 
     private javax.swing.JLabel captionLabel;
-    // End of variables declaration//GEN-END:variables
+
 }

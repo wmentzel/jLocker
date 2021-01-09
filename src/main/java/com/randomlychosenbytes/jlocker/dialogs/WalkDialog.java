@@ -93,7 +93,7 @@ public class WalkDialog extends JDialog {
         getContentPane().add(centerPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.dispose();
@@ -129,5 +129,5 @@ public class WalkDialog extends JDialog {
     private javax.swing.JLabel entityNameLabel;
     private javax.swing.JTextField entityNameTextField;
     private javax.swing.JButton okButton;
-    // End of variables declaration//GEN-END:variables
+
 }

@@ -94,7 +94,7 @@ public class RoomDialog extends JDialog {
         getContentPane().add(centerPanel, gridBagConstraints);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String name = roomNameTextField.getText();
@@ -119,5 +119,5 @@ public class RoomDialog extends JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel roomNameLabel;
     private javax.swing.JTextField roomNameTextField;
-    // End of variables declaration//GEN-END:variables
+
 }
