@@ -10,6 +10,7 @@ import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.Pupil
 import com.randomlychosenbytes.jlocker.model.SuperUser
+import com.randomlychosenbytes.jlocker.utils.generateKey
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -19,7 +20,6 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.crypto.KeyGenerator
 import javax.swing.JCheckBox
 import javax.swing.JOptionPane
 import javax.swing.JPanel
@@ -206,7 +206,7 @@ class MainFrameTest {
         whenever(dataManager.currentLockerList).thenReturn(mutableListOf(Locker()))
         whenever(dataManager.currentLocker).thenReturn(Locker())
         whenever(dataManager.currentUser).thenReturn(SuperUser("11111111"))
-        whenever(dataManager.superUserMasterKey).thenReturn(KeyGenerator.getInstance("DES").generateKey())
+        whenever(dataManager.superUserMasterKey).thenReturn(generateKey())
         mainFrame.showLockerInformation()
 
         verify(containerPanel).isVisible = true
@@ -257,7 +257,7 @@ class MainFrameTest {
         whenever(dataManager.currentLockerList).thenReturn(mutableListOf(Locker()))
         whenever(dataManager.currentLocker).thenReturn(locker)
         whenever(dataManager.currentUser).thenReturn(SuperUser("11111111"))
-        whenever(dataManager.superUserMasterKey).thenReturn(KeyGenerator.getInstance("DES").generateKey())
+        whenever(dataManager.superUserMasterKey).thenReturn(generateKey())
         mainFrame.showLockerInformation()
 
         verify(containerPanel).isVisible = true
