@@ -53,21 +53,15 @@ class DataManagerTest {
         dataManager.createResourceFile()
 
         val locker = Locker(id = "1").apply {
-            moveInNewOwner(Pupil().apply {
-                firstName = "Don"
-                lastName = "Draper"
-                heightInCm = 175
-                schoolClassName = "12"
-                setCodes(
-                    arrayOf(
-                        "11-11-11",
-                        "22-22-22",
-                        "33-33-33",
-                        "44-44-44",
-                        "55-55-55"
-                    ), dataManager.superUserMasterKey
-                )
-            })
+            setCodes(
+                arrayOf(
+                    "11-11-11",
+                    "22-22-22",
+                    "33-33-33",
+                    "44-44-44",
+                    "55-55-55"
+                ), dataManager.superUserMasterKey
+            )
         }
 
         dataManager.buildingList[0].floors[0].walks[0].moduleWrappers[0].lockerCabinet.lockers.add(locker)
