@@ -169,7 +169,8 @@ fun List<Building>.renameSchoolClass(previousClassName: String, newClassName: St
                         // else 7.2, E.2 ...
                         if (sFoundClass == previousClassName) {
                             numMatches++
-                            locker.pupil.schoolClassName = "$newClassName.$sSubClass"
+                            locker.pupil.schoolClassName =
+                                if (searchForAgeGroup) "$newClassName$sSubClass" else "$newClassName.$sSubClass"
                         }
                     }
                 }
