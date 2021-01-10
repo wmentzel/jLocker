@@ -385,16 +385,4 @@ class ShortenClassRoomDistancesTest {
             "Draper"
         )
     }
-
-    private
-    val ModuleWrapper.lockerCabinet
-        get() = module as LockerCabinet
-
-    private
-    val ModuleWrapper.room
-        get() = module as Room
-
-    private
-    val ModuleWrapper.staircase
-        get() = module as Staircase
 }

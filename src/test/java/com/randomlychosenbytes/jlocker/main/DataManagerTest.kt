@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -44,6 +45,48 @@ class DataManagerTest {
         mainFrame = mock()
 
         saveAndCreateBackup()
+    }
+
+    @Test
+    fun `should reencrypt codes when new users are set`() {
+        val dataManager = DataManager()
+        dataManager.createResourceFile()
+
+        val locker = Locker(id = "1").apply {
+            moveInNewOwner(Pupil().apply {
+                firstName = "Don"
+                lastName = "Draper"
+                heightInCm = 175
+                schoolClassName = "12"
+                setCodes(
+                    arrayOf(
+                        "11-11-11",
+                        "22-22-22",
+                        "33-33-33",
+                        "44-44-44",
+                        "55-55-55"
+                    ), dataManager.superUserMasterKey
+                )
+            })
+        }
+
+        dataManager.buildingList[0].floors[0].walks[0].moduleWrappers[0].lockerCabinet.lockers.add(locker)
+
+        assertDoesNotThrow {
+            locker.getCodes(dataManager.superUserMasterKey)
+        }
+
+        val newSuperUserPassword = "33333333"
+        val superUser = SuperUser("33333333")
+        val userMasterKey = decryptKeyWithString(superUser.encryptedUserMasterKeyBase64, newSuperUserPassword)
+        val superUserMasterKey = decryptKeyWithString(superUser.encryptedSuperUMasterKeyBase64, newSuperUserPassword)
+        val restrictedUser = RestrictedUser(restrictedUserPassword, userMasterKey)
+
+        dataManager.setNewUsers(superUser, restrictedUser, userMasterKey, superUserMasterKey)
+
+        assertDoesNotThrow {
+            locker.getCodes(dataManager.superUserMasterKey)
+        }
     }
 
     @Test
