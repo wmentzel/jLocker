@@ -1,8 +1,8 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.encryptKeyWithString
-import com.randomlychosenbytes.jlocker.generateKey
+import com.randomlychosenbytes.jlocker.utils.encryptKeyWithString
+import com.randomlychosenbytes.jlocker.utils.generateKey
 
 class SuperUser(password: String) : User(
     password, encryptKeyWithString(generateKey(), password)

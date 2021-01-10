@@ -1,7 +1,7 @@
 package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
-import com.randomlychosenbytes.jlocker.getHash
+import com.randomlychosenbytes.jlocker.utils.getHash
 
 /**
  * Represents a User of the program. There are two different kinds a the moment

@@ -2,8 +2,8 @@ package com.randomlychosenbytes.jlocker.dialogs
 
 import com.randomlychosenbytes.jlocker.MainFrame
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
-import com.randomlychosenbytes.jlocker.decryptKeyWithString
 import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.utils.decryptKeyWithString
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.WindowAdapter

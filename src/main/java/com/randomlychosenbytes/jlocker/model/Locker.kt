@@ -3,8 +3,8 @@ package com.randomlychosenbytes.jlocker.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.randomlychosenbytes.jlocker.State
-import com.randomlychosenbytes.jlocker.decrypt
-import com.randomlychosenbytes.jlocker.encrypt
+import com.randomlychosenbytes.jlocker.utils.decrypt
+import com.randomlychosenbytes.jlocker.utils.encrypt
 import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

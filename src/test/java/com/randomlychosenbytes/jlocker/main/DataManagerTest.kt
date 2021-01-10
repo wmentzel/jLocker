@@ -5,8 +5,8 @@ import assertk.assertions.hasSize
 import com.nhaarman.mockitokotlin2.mock
 import com.randomlychosenbytes.jlocker.DataManager
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
-import com.randomlychosenbytes.jlocker.decryptKeyWithString
 import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.utils.decryptKeyWithString
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

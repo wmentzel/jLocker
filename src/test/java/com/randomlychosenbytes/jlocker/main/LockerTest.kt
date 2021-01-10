@@ -2,8 +2,8 @@ package com.randomlychosenbytes.jlocker.main
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.randomlychosenbytes.jlocker.generateKey
 import com.randomlychosenbytes.jlocker.model.Locker
+import com.randomlychosenbytes.jlocker.utils.generateKey
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

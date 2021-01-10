@@ -1,8 +1,10 @@
-package com.randomlychosenbytes.jlocker
+package com.randomlychosenbytes.jlocker.utils
 
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.randomlychosenbytes.jlocker.ModuleDeserializer
 import com.randomlychosenbytes.jlocker.model.Building
+import com.randomlychosenbytes.jlocker.model.Module
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -53,7 +55,7 @@ fun unsealAndDeserializeBuildings(encryptedBuildingsBase64: String, key: SecretK
     val json = decrypt(encryptedBuildingsBase64, key)
     val gson = GsonBuilder().registerTypeAdapter(
         com.randomlychosenbytes.jlocker.model.Module::class.java,
-        ModuleDeserializer<com.randomlychosenbytes.jlocker.model.Module>()
+        ModuleDeserializer<Module>()
     ).excludeFieldsWithoutExposeAnnotation().create()
     return gson.fromJson(json, object : TypeToken<List<Building?>?>() {}.type)
 }

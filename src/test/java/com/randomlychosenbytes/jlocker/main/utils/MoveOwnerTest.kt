@@ -1,4 +1,4 @@
-package com.randomlychosenbytes.jlocker.main
+package com.randomlychosenbytes.jlocker.main.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo

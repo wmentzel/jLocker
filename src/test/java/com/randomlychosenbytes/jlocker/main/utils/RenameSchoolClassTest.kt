@@ -1,7 +1,8 @@
-package com.randomlychosenbytes.jlocker.main
+package com.randomlychosenbytes.jlocker.main.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.randomlychosenbytes.jlocker.main.createModuleWrapperWithLockerCabinetOf
 import com.randomlychosenbytes.jlocker.model.*
 import com.randomlychosenbytes.jlocker.utils.renameSchoolClass
 import org.junit.jupiter.api.Test
