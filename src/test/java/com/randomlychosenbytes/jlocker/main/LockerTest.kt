@@ -2,8 +2,7 @@ package com.randomlychosenbytes.jlocker.main
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.randomlychosenbytes.jlocker.decryptKeyWithString
-import com.randomlychosenbytes.jlocker.generateAndEncryptKey
+import com.randomlychosenbytes.jlocker.generateKey
 import com.randomlychosenbytes.jlocker.model.Locker
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +17,7 @@ class LockerTest {
     @Test
     fun `should encrypt and decrypt codes correctly`() {
 
-        val superUserMasterKey = decryptKeyWithString(generateAndEncryptKey("11111111"), "11111111")
+        val superUserMasterKey = generateKey()
 
         val codes = listOf(
             "11-11-11",

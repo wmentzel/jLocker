@@ -58,9 +58,7 @@ fun unsealAndDeserializeBuildings(encryptedBuildingsBase64: String, key: SecretK
     return gson.fromJson(json, object : TypeToken<List<Building?>?>() {}.type)
 }
 
-fun generateAndEncryptKey(
-    pw: String
-): String = encryptKeyWithString(KeyGenerator.getInstance(CRYPTO_ALOGRITHM_NAME).generateKey(), pw)
+fun generateKey(): SecretKey = KeyGenerator.getInstance(CRYPTO_ALOGRITHM_NAME).generateKey()
 
 fun encryptKeyWithString(key: SecretKey, pw: String): String {
     val ecipher = Cipher.getInstance(CRYPTO_ALOGRITHM_NAME)
