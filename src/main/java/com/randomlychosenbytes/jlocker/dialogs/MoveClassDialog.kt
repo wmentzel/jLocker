@@ -1,96 +1,66 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager;
-import com.randomlychosenbytes.jlocker.ShortenClassRoomDistances;
-import com.randomlychosenbytes.jlocker.State;
-import com.randomlychosenbytes.jlocker.model.Module;
-import com.randomlychosenbytes.jlocker.model.*;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.randomlychosenbytes.jlocker.ShortenClassRoomDistances
+import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.model.*
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.util.*
+import javax.swing.*
 
 /**
  * This dialog looks simple when you look at the two row GUI, but under the hood
  * this is the most complex part of jLocker.
  * The code in this dialog is responsible for optimizing the distances between
  * lookers and their respective class rooms.
- * <p>
+ *
+ *
  * It utilizes the Dijkstra shortest path algorithm implemented in the library
  * jGraphT.
- * <p>
+ *
+ *
  * SimpleWeightedGraph
  */
-public class MoveClassDialog extends JDialog {
-    private final DataManager dataManager = State.Companion.getDataManager();
-    private final Set<String> schoolClasses = new HashSet<>();
-    private final Set<String> lockerIdWithoutHeights;
-
-    public MoveClassDialog(Frame parent) {
-        super(parent, false);
-        initComponents();
-
-        // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
-
-        // focus in the middle
-        setLocationRelativeTo(null);
-
-        lockerIdWithoutHeights = new HashSet<>();
-
-        findClassesAndClassRooms();
-
-        classComboBox.setModel(new DefaultComboBoxModel(schoolClasses.stream().sorted().toArray()));
-    }
+class MoveClassDialog(parent: Frame) : JDialog(parent, false) {
+    private val dataManager = State.dataManager
+    private val schoolClasses: MutableSet<String> = HashSet()
+    private val lockerIdWithoutHeights: MutableSet<String>
 
     /**
      * Finds all classes that have a classroom. All other classes (the ones that
      * are only assigned to pupils and don't have a room) don't have to
      * be listed because the algorithm can't be used on them anyway.
-     * <p>
+     *
+     *
      * Requires a classroom to be unique! (test to be implemented)
      */
-    private void findClassesAndClassRooms() {
-        List<Building> buildings = dataManager.getBuildingList();
-
-        for (int b = 0; b < buildings.size(); b++) {
-            List<Floor> floors = buildings.get(b).getFloors();
-
-            for (int f = 0; f < floors.size(); f++) {
-                List<Walk> walks = floors.get(f).getWalks();
-
-                for (int w = 0; w < walks.size(); w++) {
-                    List<ModuleWrapper> moduleWrappers = walks.get(w).getModuleWrappers();
-
-                    for (int m = 0; m < moduleWrappers.size(); m++) {
-                        ModuleWrapper munit = moduleWrappers.get(m);
-
-                        if (munit.getModule() instanceof Room) {
-                            String className = ((Room) munit.getModule()).getSchoolClassName();
-
+    private fun findClassesAndClassRooms() {
+        val buildings: List<Building> = dataManager.buildingList
+        for (b in buildings.indices) {
+            val floors: List<Floor> = buildings[b].floors
+            for (f in floors.indices) {
+                val walks: List<Walk> = floors[f].walks
+                for (w in walks.indices) {
+                    val moduleWrappers: List<ModuleWrapper> = walks[w].moduleWrappers
+                    for (m in moduleWrappers.indices) {
+                        val munit = moduleWrappers[m]
+                        if (munit.module is Room) {
+                            val className = (munit.module as Room).schoolClassName
                             if (!className.isEmpty()) {
-                                schoolClasses.add(className);
+                                schoolClasses.add(className)
                             }
                         }
-
-                        Module module = munit.getModule();
-
-                        if (!(module instanceof LockerCabinet)) {
-                            continue;
-                        }
-
-                        List<Locker> lockers = ((LockerCabinet) module).getLockers();
+                        val module = munit.module as? LockerCabinet ?: continue
+                        val lockers: List<Locker> = module.lockers
 
                         //
                         // Find classes assigned to pupils and gather lockers of pupils with an invalid height
                         // The height is needed in order to know up to which lockers a pupil can reach.
                         //
-                        for (Locker locker : lockers) {
-                            if (!locker.isFree()) {
-                                if (locker.getPupil().getHeightInCm() == 0) {
-                                    lockerIdWithoutHeights.add(locker.getId());
+                        for (locker in lockers) {
+                            if (!locker.isFree) {
+                                if (locker.pupil.heightInCm == 0) {
+                                    lockerIdWithoutHeights.add(locker.id)
                                 }
                             }
                         }
@@ -100,160 +70,138 @@ public class MoveClassDialog extends JDialog {
         }
     }
 
-
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        classPanel = JPanel()
+        classLabel = JLabel()
+        classComboBox = JComboBox<String>()
+        textAreaScrollPane = JScrollPane()
+        textArea = JTextArea()
+        buttonPanel = JPanel()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        title = "Klassenumzug"
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        classPanel.layout = FlowLayout(FlowLayout.LEFT, 10, 5)
+        classLabel.text = "Klasse"
+        classPanel.add(classLabel)
+        classPanel.add(classComboBox)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        contentPane.add(classPanel, gridBagConstraints)
+        textAreaScrollPane.preferredSize = Dimension(500, 400)
+        textArea.isEditable = false
+        textArea.columns = 20
+        textArea.rows = 5
+        textAreaScrollPane.setViewportView(textArea)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(0, 10, 10, 10)
+        contentPane.add(textAreaScrollPane, gridBagConstraints)
+        buttonPanel.layout = FlowLayout(FlowLayout.RIGHT, 10, 5)
+        okButton.text = "Optimale Belegung finden"
+        okButton.addActionListener { evt -> okButtonActionPerformed(evt) }
+        buttonPanel.add(okButton)
+        cancelButton.text = "Schließen"
+        cancelButton.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        buttonPanel.add(cancelButton)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.weightx = 1.0
+        contentPane.add(buttonPanel, gridBagConstraints)
+        pack()
+    } // </editor-fold>
 
-        classPanel = new javax.swing.JPanel();
-        classLabel = new javax.swing.JLabel();
-        classComboBox = new javax.swing.JComboBox();
-        textAreaScrollPane = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
-        buttonPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Klassenumzug");
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        classPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
-
-        classLabel.setText("Klasse");
-        classPanel.add(classLabel);
-
-        classPanel.add(classComboBox);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(classPanel, gridBagConstraints);
-
-        textAreaScrollPane.setPreferredSize(new java.awt.Dimension(500, 400));
-
-        textArea.setEditable(false);
-        textArea.setColumns(20);
-        textArea.setRows(5);
-        textAreaScrollPane.setViewportView(textArea);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 10);
-        getContentPane().add(textAreaScrollPane, gridBagConstraints);
-
-        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 10, 5));
-
-        okButton.setText("Optimale Belegung finden");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        buttonPanel.add(okButton);
-
-        cancelButton.setText("Schließen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        buttonPanel.add(cancelButton);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        getContentPane().add(buttonPanel, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
     }
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private fun okButtonActionPerformed(evt: ActionEvent) {
         // TODO gather info from drop down menu
-        String className = (String) classComboBox.getSelectedItem();
-
+        val className = classComboBox.selectedItem as String
         if (!lockerIdWithoutHeights.isEmpty()) {
-            StringBuilder ids = new StringBuilder();
-
-            for (String id : lockerIdWithoutHeights) {
-                ids.append(id).append("\n");
+            val ids = StringBuilder()
+            for (id in lockerIdWithoutHeights) {
+                ids.append(id).append("\n")
             }
-
-            JOptionPane.showMessageDialog(null, "Nicht alle Schüler der Klasse " + className + " haben eine gültige Größe!\n"
-                    + "IDs der betroffenen Schließfächer: " + ids, "Fehler", JOptionPane.OK_OPTION);
-            return;
+            JOptionPane.showMessageDialog(
+                null, """Nicht alle Schüler der Klasse $className haben eine gültige Größe!
+IDs der betroffenen Schließfächer: $ids""", "Fehler", JOptionPane.OK_OPTION
+            )
+            return
         }
-
         if (className.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Bitte geben Sie die Klasse ein!", "Fehler", JOptionPane.OK_OPTION);
-            return;
+            JOptionPane.showMessageDialog(null, "Bitte geben Sie die Klasse ein!", "Fehler", JOptionPane.OK_OPTION)
+            return
         }
-
-        ShortenClassRoomDistances scrd = new ShortenClassRoomDistances(
-                dataManager.getBuildingList(),
-                dataManager.getSettings().getLockerMinSizes(),
-                className,
-                (taskText) -> {
-                    dataManager.getTasks().add(new Task(taskText));
-                    return null;
-                }
-        );
-
-        final ShortenClassRoomDistances.Status status = scrd.check();
-        String statusMessage = "";
-
-        okButton.setEnabled(false);
-
-        switch (status) {
-            case ClassRoomForSpecifiedClassDoesNotExist: {
-                statusMessage = "Die Klasse " + className + " hat keinen noch keinen Raum. Bitte fügen Sie diesen erst hinzu!";
-                break;
+        val scrd = ShortenClassRoomDistances(
+            dataManager.buildingList,
+            dataManager.settings.lockerMinSizes,
+            className
+        ) { taskText: String ->
+            dataManager.tasks.add(Task(taskText))
+            null
+        }
+        val status = scrd.check()
+        var statusMessage = ""
+        okButton.isEnabled = false
+        when (status) {
+            ShortenClassRoomDistances.Status.ClassRoomForSpecifiedClassDoesNotExist -> {
+                statusMessage = "Die Klasse $className hat keinen noch keinen Raum. Bitte fügen Sie diesen erst hinzu!"
             }
-            case NoFreeLockersAvailable: {
-                statusMessage = "Es gibt momentan keine leeren Schließfächer im Gebäude des Klassenraums!";
-                break;
+            ShortenClassRoomDistances.Status.NoFreeLockersAvailable -> {
+                statusMessage = "Es gibt momentan keine leeren Schließfächer im Gebäude des Klassenraums!"
             }
-            case ClassHasNoPupils: {
-                statusMessage = "Kein Schüler der Klasse " + className + " hat momentan  ein Schließfach gemietet!";
-                break;
+            ShortenClassRoomDistances.Status.ClassHasNoPupils -> {
+                statusMessage = "Kein Schüler der Klasse $className hat momentan  ein Schließfach gemietet!"
             }
-            case NonReachableLockersExist: {
-                statusMessage = "Folgende Schließfächer können vom Klassenraum nicht erreicht werden: " + scrd.getIdsOfUnreachableLockers();
-                break;
+            ShortenClassRoomDistances.Status.NonReachableLockersExist -> {
+                statusMessage =
+                    "Folgende Schließfächer können vom Klassenraum nicht erreicht werden: " + scrd.idsOfUnreachableLockers
             }
-            case Success: {
-                int answer = JOptionPane.showConfirmDialog(null, "Soll der Klassenumzug ausgeführt werden?", "Klassenumzug", JOptionPane.YES_NO_OPTION);
-
+            ShortenClassRoomDistances.Status.Success -> {
+                val answer = JOptionPane.showConfirmDialog(
+                    null,
+                    "Soll der Klassenumzug ausgeführt werden?",
+                    "Klassenumzug",
+                    JOptionPane.YES_NO_OPTION
+                )
                 if (answer == JOptionPane.YES_OPTION) {
-                    textArea.setText(scrd.execute());
+                    textArea.text = scrd.execute()
                 }
-                okButton.setEnabled(true);
-
-                return;
+                okButton.isEnabled = true
+                return
             }
         }
-
-        JOptionPane.showMessageDialog(null, statusMessage, "Fehler", JOptionPane.OK_OPTION);
-        this.dispose();
-
+        JOptionPane.showMessageDialog(null, statusMessage, "Fehler", JOptionPane.OK_OPTION)
+        dispose()
     }
 
     // new DisplayGraphFrame(scrd.getWeightedGraph()).setVisible(true);
+    private lateinit var buttonPanel: JPanel
+    private lateinit var cancelButton: JButton
+    private lateinit var classComboBox: JComboBox<String>
+    private lateinit var classLabel: JLabel
+    private lateinit var classPanel: JPanel
+    private lateinit var okButton: JButton
+    private lateinit var textArea: JTextArea
+    private lateinit var textAreaScrollPane: JScrollPane
 
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox classComboBox;
-    private javax.swing.JLabel classLabel;
-    private javax.swing.JPanel classPanel;
-    private javax.swing.JButton okButton;
-    private javax.swing.JTextArea textArea;
-    private javax.swing.JScrollPane textAreaScrollPane;
+    init {
+        initComponents()
 
+        // button that is clicked when you hit enter
+        getRootPane().defaultButton = okButton
+
+        // focus in the middle
+        setLocationRelativeTo(null)
+        lockerIdWithoutHeights = HashSet()
+        findClassesAndClassRooms()
+        classComboBox.setModel(DefaultComboBoxModel(schoolClasses.sorted().toTypedArray()))
+    }
 }
