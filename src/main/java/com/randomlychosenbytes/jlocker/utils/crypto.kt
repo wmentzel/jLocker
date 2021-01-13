@@ -1,5 +1,6 @@
 package com.randomlychosenbytes.jlocker.utils
 
+import com.google.common.io.BaseEncoding
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.randomlychosenbytes.jlocker.ModuleDeserializer
@@ -7,7 +8,6 @@ import com.randomlychosenbytes.jlocker.model.Building
 import com.randomlychosenbytes.jlocker.model.Module
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -29,9 +29,9 @@ fun getHash(pw: String): String {
     return BigInteger(1, m.digest()).toString(16)
 }
 
-private fun bytesToBase64String(bytes: ByteArray): String = Base64.getEncoder().encodeToString(bytes)
+fun bytesToBase64String(bytes: ByteArray): String = BaseEncoding.base64().encode(bytes)
 
-private fun base64StringToBytes(str: String): ByteArray = Base64.getDecoder().decode(str)
+fun base64StringToBytes(str: String): ByteArray = BaseEncoding.base64().decode(str);
 
 fun encrypt(s: String, key: SecretKey?): String {
     val ecipher = Cipher.getInstance(CRYPTO_ALOGRITHM_NAME)
