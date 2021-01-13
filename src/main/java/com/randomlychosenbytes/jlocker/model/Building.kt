@@ -6,5 +6,5 @@ class Building(
     name: String
 ) : Entity(name) {
     @Expose
-    val floors: MutableList<Floor> = mutableListOf()
+    var floors: MutableList<Floor> = mutableListOf()
 }
