@@ -1,14 +1,14 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.model.Staircase;
+import com.randomlychosenbytes.jlocker.uicomponents.StaircasePanel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StaircaseDialog extends JDialog {
-    private final Staircase staircase;
+    private final StaircasePanel staircase;
 
-    public StaircaseDialog(Frame parent, boolean modal, Staircase staircase) {
+    public StaircaseDialog(Frame parent, boolean modal, StaircasePanel staircasePanel) {
         super(parent, modal);
         initComponents();
 
@@ -18,9 +18,9 @@ public class StaircaseDialog extends JDialog {
         // focus in the middle
         setLocationRelativeTo(null);
 
-        this.staircase = staircase;
+        this.staircase = staircasePanel;
 
-        staircaseNameTextBox.setText(staircase.getStaircaseName());
+        staircaseNameTextBox.setText(staircasePanel.getName());
     }
 
 

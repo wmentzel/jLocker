@@ -3,6 +3,7 @@ package com.randomlychosenbytes.jlocker
 import com.google.gson.GsonBuilder
 import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.uicomponents.LockerPanel
 import com.randomlychosenbytes.jlocker.utils.decryptKeyWithString
 import com.randomlychosenbytes.jlocker.utils.encrypt
 import com.randomlychosenbytes.jlocker.utils.unsealAndDeserializeBuildings
@@ -225,42 +226,12 @@ class DataManager {
     lateinit var currentUser: User
         private set
 
-    val currentFloorList
-        get() = currentBuilding.floors
-
-    val currentWalkList
-        get() = currentFloor.walks
-
-    val currentManagmentUnitList
-        get() = currentWalk.moduleWrappers
-
-    val currentBuilding
-        get() = buildingList[currentBuildingIndex]
-
-    val currentFloor
-        get() = currentFloorList[currentFloorIndex]
-
-    val currentWalk
-        get() = currentWalkList[currentWalkIndex]
-
-    val currentManamentUnit
-        get() = currentManagmentUnitList[currentManagementUnitIndex]
-
-    val currentLockerList
-        get() = (currentManamentUnit.module as? LockerCabinet)?.lockers ?: emptyList()
-
-    val currentLocker: Locker
-        get() = currentLockerList[currentLockerIndex]
-
-    var currentBuildingIndex = 0
-    var currentFloorIndex = 0
-    var currentWalkIndex = 0
-    var currentManagementUnitIndex = 0
-    var currentLockerIndex = 0
+    var currentLockerPanel: LockerPanel? = null
 
     init {
-        val bundle = ResourceBundle.getBundle("App")
-        appTitle = bundle.getString("Application.title")
-        appVersion = bundle.getString("Application.version")
+        ResourceBundle.getBundle("App").apply {
+            appTitle = getString("Application.title")
+            appVersion = getString("Application.version")
+        }
     }
 }

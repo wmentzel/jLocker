@@ -1,129 +1,103 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager;
-import com.randomlychosenbytes.jlocker.MainFrame;
-import com.randomlychosenbytes.jlocker.State;
-import com.randomlychosenbytes.jlocker.model.LockerCabinet;
-import com.randomlychosenbytes.jlocker.model.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.model.Walk;
+import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.model.Walk
+import java.awt.Frame
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
+import java.awt.event.ActionEvent
+import javax.swing.*
 
-import javax.swing.*;
-import java.awt.*;
+class WalkDialog(
+    parent: Frame?,
+    modal: Boolean,
+    val currentWalk: Walk?,
+    val createWalk: ((String) -> Unit)?
+) : JDialog(parent, modal) {
+    private val dataManager = State.dataManager
 
-public class WalkDialog extends JDialog {
-    public static final int EDIT = 0;
-    public static final int ADD = 1;
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        centerPanel = JPanel()
+        entityNameLabel = JLabel()
+        entityNameTextField = JTextField()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        centerPanel!!.layout = GridBagLayout()
+        entityNameLabel!!.text = "Name"
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(0, 0, 10, 10)
+        centerPanel!!.add(entityNameLabel, gridBagConstraints)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.insets = Insets(0, 0, 10, 0)
+        centerPanel!!.add(entityNameTextField, gridBagConstraints)
+        okButton!!.text = "OK"
+        okButton!!.addActionListener { evt -> okButtonActionPerformed(evt) }
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(0, 0, 0, 10)
+        centerPanel!!.add(okButton, gridBagConstraints)
+        cancelButton!!.text = "Abbrechen"
+        cancelButton!!.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        centerPanel!!.add(cancelButton, GridBagConstraints())
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(10, 10, 10, 10)
+        contentPane.add(centerPanel, gridBagConstraints)
+        pack()
+    } // </editor-fold>
 
-    final int bMode;
-    private final DataManager dataManager = State.Companion.getDataManager();
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
 
-    public WalkDialog(Frame parent, boolean modal, int mode) {
-        super(parent, modal);
-        initComponents();
+    private fun okButtonActionPerformed(evt: ActionEvent) {
+        if (currentWalk != null) {
+            currentWalk.name = entityNameTextField.text
+        } else {
+            val name = entityNameTextField.text
+            if (name.isBlank()) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Bitte geben Sie einen Namen ein!",
+                    "Fehler",
+                    JOptionPane.ERROR_MESSAGE
+                )
+                return
+            }
+
+            createWalk?.invoke(entityNameTextField.text)
+        }
+        (parent as MainFrame).updateComboBoxes()
+        dispose()
+    }
+
+    private lateinit var cancelButton: JButton
+    private lateinit var centerPanel: JPanel
+    private lateinit var entityNameLabel: JLabel
+    private lateinit var entityNameTextField: JTextField
+    private lateinit var okButton: JButton
+
+    init {
+        initComponents()
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().defaultButton = okButton
 
         // focus in the middle
-        setLocationRelativeTo(null);
-
-        bMode = mode;
-
-        if (bMode == EDIT) {
-            setTitle("Gangname bearbeiten");
-            entityNameTextField.setText(dataManager.getCurrentWalk().getName());
+        setLocationRelativeTo(null)
+        if (currentWalk != null) {
+            title = "Gangname bearbeiten"
+            entityNameTextField.text = currentWalk.name
         } else {
-            setTitle("Gang hinzufügen");
+            title = "Gang hinzufügen"
         }
     }
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        centerPanel = new javax.swing.JPanel();
-        entityNameLabel = new javax.swing.JLabel();
-        entityNameTextField = new javax.swing.JTextField();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        centerPanel.setLayout(new java.awt.GridBagLayout());
-
-        entityNameLabel.setText("Name");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        centerPanel.add(entityNameLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        centerPanel.add(entityNameTextField, gridBagConstraints);
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        centerPanel.add(okButton, gridBagConstraints);
-
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        centerPanel.add(cancelButton, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(centerPanel, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
-    }
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if (bMode == EDIT) {
-            dataManager.getCurrentWalk().setName(entityNameTextField.getText());
-        } else {
-            String name = entityNameTextField.getText();
-
-            if (name.isBlank()) {
-                JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Namen ein!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            dataManager.getCurrentWalkList().add(new Walk(name));
-            dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
-
-            dataManager.getCurrentWalk().getModuleWrappers().add(new ModuleWrapper(new LockerCabinet()));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getModuleWrappers().size() - 1);
-
-            dataManager.setCurrentLockerIndex(0);
-        }
-
-        ((MainFrame) this.getParent()).updateComboBoxes();
-
-        dispose();
-    }
-
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel centerPanel;
-    private javax.swing.JLabel entityNameLabel;
-    private javax.swing.JTextField entityNameTextField;
-    private javax.swing.JButton okButton;
-
 }

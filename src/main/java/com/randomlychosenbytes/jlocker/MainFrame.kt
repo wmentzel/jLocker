@@ -3,7 +3,8 @@ package com.randomlychosenbytes.jlocker
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.dialogs.*
 import com.randomlychosenbytes.jlocker.model.*
-import com.randomlychosenbytes.jlocker.model.LockerCabinet.Companion.updateDummyRows
+import com.randomlychosenbytes.jlocker.uicomponents.LockerPanel
+import com.randomlychosenbytes.jlocker.uicomponents.ModulePanel
 import com.randomlychosenbytes.jlocker.utils.isDateValid
 import java.awt.*
 import java.awt.event.*
@@ -17,6 +18,18 @@ import kotlin.system.exitProcess
  * the login-dialog/create new user dialog.i
  */
 class MainFrame : JFrame() {
+
+    lateinit var currentModuleWrapperList: MutableList<ModuleWrapper>
+    var currentLocker: Locker? = null
+    lateinit var currentWalk: Walk
+    lateinit var currentFloor: Floor
+    lateinit var currentBuilding: Building
+
+    val currentFloorList: MutableList<Floor>
+        get() = currentBuilding.floors
+
+    val currentWalkList: MutableList<Walk>
+        get() = currentFloor.walks
 
     private var searchFrame: SearchFrame? = null
     private var tasksFrame: TasksFrame? = null
@@ -58,6 +71,14 @@ class MainFrame : JFrame() {
         // Show CreateUserDialog if there are none
         //
         if (!dataManager.ressourceFile.exists()) {
+
+            // Create initial data
+            dataManager.buildingList.add(Building("-"))
+            currentFloorList.add(Floor("-"))
+            currentWalkList.add(Walk("-").apply {
+                moduleWrappers.add(ModuleWrapper(LockerCabinet()))
+            })
+
             CreateUsersDialog(this, true).apply {
                 isVisible = true
             }
@@ -69,6 +90,15 @@ class MainFrame : JFrame() {
         LogInDialog(this, true).apply {
             isVisible = true
         }
+
+        currentBuilding = dataManager.buildingList.first()
+
+        currentFloor = currentFloorList.first()
+        currentWalk = currentWalkList.first()
+        currentModuleWrapperList = currentWalk.moduleWrappers
+        currentLocker =
+            currentWalk.moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
+                .first()
 
         //
         // Initialize UI
@@ -83,45 +113,68 @@ class MainFrame : JFrame() {
      * Put the lockers of the current walk in the layout manager.
      */
     fun drawLockerOverview() {
+
+        LockerPanel.isFirst = true
+
         // Remove old panels
         lockerOverviewPanel.removeAll()
 
-        val moduleWrappers = dataManager.currentManagmentUnitList.map { oldModuleWrapper ->
+        fun addMUnitLeftLabelMouseReleased(modulePanel: ModulePanel) {
+            val index = currentModuleWrapperList.indexOfFirst {
+                it.module === modulePanel.module
+            }
 
-            when (val oldModule = oldModuleWrapper.module) {
-                is Room -> {
-                    ModuleWrapper(Room(oldModule.roomName, oldModule.schoolClassName))
-                }
-                is LockerCabinet -> {
-                    val newLockers = oldModule.lockers.map { Locker(it) }
-                    ModuleWrapper(LockerCabinet()).apply {
-                        (module as LockerCabinet).lockers = newLockers.toMutableList()
-                    }
-                }
-                is Staircase -> {
-                    ModuleWrapper(Staircase(oldModule.staircaseName))
-                }
-                else -> TODO("There is a new module type ${oldModuleWrapper.module::class.simpleName} which was not considered.")
+            currentModuleWrapperList.add(index, ModuleWrapper(LockerCabinet()))
+            drawLockerOverview()
+        }
+
+        fun addMUnitRightLabelMouseReleased(modulePanel: ModulePanel) {
+            val index = currentModuleWrapperList.indexOfFirst {
+                it.module === modulePanel.module
+            }
+            currentModuleWrapperList.add(index + 1, ModuleWrapper(LockerCabinet()))
+            drawLockerOverview()
+        }
+
+        fun removeThisMUnitLabelMouseReleased(modulePanel: ModulePanel) {
+            if (currentModuleWrapperList.size <= 1) {
+                return
+            }
+
+            val answer = JOptionPane.showConfirmDialog(
+                null,
+                "Wollen Sie diesen ${modulePanel.module} wirklich löschen?",
+                "Löschen",
+                JOptionPane.YES_NO_OPTION
+            )
+            if (answer == JOptionPane.YES_OPTION) {
+                currentModuleWrapperList.remove(this)
+                State.mainFrame.drawLockerOverview()
             }
         }
 
-        dataManager.currentWalk.moduleWrappers = moduleWrappers.toMutableList()
 
-        val lockerCabinets = moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>()
-
-        lockerCabinets.flatMap {
-            it.lockers
-        }.forEach {
-            it.setAppropriateColor()
+        val modulePanels = currentModuleWrapperList.map { oldModuleWrapper ->
+            ModulePanel(
+                oldModuleWrapper.module,
+                ::addMUnitLeftLabelMouseReleased,
+                ::addMUnitRightLabelMouseReleased,
+                ::removeThisMUnitLabelMouseReleased
+            )
         }
+
+        //updateDummyRows(lockerCabinets)
+
+        currentWalk.moduleWrappers = currentModuleWrapperList
+
+        val lockerCabinets: List<LockerCabinet> =
+            currentModuleWrapperList.map { it.module }.filterIsInstance<LockerCabinet>()
 
         // add each ModuleWrapper to the lockerOverviewPanel
-        moduleWrappers.forEach { moduleWrapper ->
-            lockerOverviewPanel.add(moduleWrapper)
-        }
+        modulePanels.forEach(lockerOverviewPanel::add)
 
         // set selected locker
-        moduleWrappers.asSequence().mapIndexed { index, moduleWrapper ->
+/*        moduleWrappers.asSequence().mapIndexed { index, moduleWrapper ->
             index to moduleWrapper
         }.firstOrNull { (index, moduleWrapper) ->
             moduleWrapper.module is LockerCabinet
@@ -131,17 +184,22 @@ class MainFrame : JFrame() {
             dataManager.currentLockerIndex = 0
         }
 
-        updateDummyRows(lockerCabinets)
+
+*/
         showLockerInformation()
         lockerOverviewPanel.updateUI()
     }
 
-    fun selectLocker(locker: Locker) {
-        if (dataManager.currentLockerList.isNotEmpty()) {
-            dataManager.currentLocker.setAppropriateColor()
-        }
+    fun selectLocker(lockerPanel: LockerPanel) {
 
-        val (mwIndex, lockerIndex) = dataManager.currentWalk.moduleWrappers.asSequence()
+        dataManager.currentLockerPanel?.setAppropriateColor()
+        dataManager.currentLockerPanel = lockerPanel
+
+        lockerPanel.setSelectedColor()
+
+        showLockerInformation()
+
+/*        val (mwIndex, lockerIndex) = dataManager.currentWalk.moduleWrappers.asSequence()
             .mapIndexed { index, moduleWrapper ->
                 index to moduleWrapper
             }.mapNotNull { (index, moduleWrapper) ->
@@ -149,16 +207,13 @@ class MainFrame : JFrame() {
                     index to it
                 }
             }.mapNotNull { (index, lockerCabinet) ->
-                lockerCabinet.lockers.indexOfFirst { it === locker }.takeIf { it != -1 }?.let {
+                lockerCabinet.lockers.indexOfFirst { it === lockerPanel }.takeIf { it != -1 }?.let {
                     index to it
                 }
             }.single()
 
         dataManager.currentLockerIndex = lockerIndex
-        dataManager.currentManagementUnitIndex = mwIndex
-
-        locker.setSelected()
-        showLockerInformation()
+        dataManager.currentManagementUnitIndex = mwIndex*/
     }
 
     /**
@@ -166,7 +221,7 @@ class MainFrame : JFrame() {
      * GUI components (surname, name, etc.)
      */
     fun showLockerInformation() {
-        if (dataManager.currentLockerList.isEmpty()) {
+        if (currentLocker != null) {
             containerPanel.isVisible = false
             return
         }
@@ -175,7 +230,7 @@ class MainFrame : JFrame() {
         // Initialize all childs of userDataPanel
         //
         containerPanel.isVisible = true
-        val locker = dataManager.currentLocker
+        val locker = currentLocker!!
         if (locker.isFree) {
             lastNameTextField.text = ""
             firstNameTextField.text = ""
@@ -227,10 +282,12 @@ class MainFrame : JFrame() {
      * object.
      */
     fun setLockerInformation() {
-        val locker = dataManager.currentLocker
+
+        val currentLocker = currentLocker!!
+
         val id = lockerIDTextField.text
-        if (dataManager.currentLocker.id == id || dataManager.isLockerIdUnique(id)) {
-            locker.id = id
+        if (currentLocker.id == id || dataManager.isLockerIdUnique(id)) {
+            currentLocker.id = id
         } else {
             JOptionPane.showMessageDialog(
                 null,
@@ -250,22 +307,22 @@ class MainFrame : JFrame() {
             )
             return
         }
-        locker.isOutOfOrder = outOfOrderCheckbox.isSelected
-        locker.lockCode = lockTextField.text
-        locker.note = noteTextArea.text
+        currentLocker.isOutOfOrder = outOfOrderCheckbox.isSelected
+        currentLocker.lockCode = lockTextField.text
+        currentLocker.note = noteTextArea.text
         val lastName = lastNameTextField.text
         if (lastName.isNotBlank()) {
-            getOrCreatePupil(locker).lastName = lastName
+            getOrCreatePupil(currentLocker).lastName = lastName
         }
         val firstName = firstNameTextField.text
         if (firstName.isNotBlank()) {
-            getOrCreatePupil(locker).firstName = firstName
+            getOrCreatePupil(currentLocker).firstName = firstName
         }
         val heightString = heightInCmTextField.text
         if (heightString.isNotBlank()) {
             try {
                 val height = heightString.toInt()
-                getOrCreatePupil(locker).heightInCm = height
+                getOrCreatePupil(currentLocker).heightInCm = height
             } catch (e: NumberFormatException) {
                 JOptionPane.showMessageDialog(
                     null,
@@ -279,7 +336,7 @@ class MainFrame : JFrame() {
         val from = rentedFromDateTextField.text
         if (from.isNotBlank()) {
             if (isDateValid(from)) {
-                getOrCreatePupil(locker).rentedFromDate = from
+                getOrCreatePupil(currentLocker).rentedFromDate = from
             } else {
                 JOptionPane.showMessageDialog(
                     null,
@@ -293,7 +350,7 @@ class MainFrame : JFrame() {
         val until = rentedUntilDateTextField.text
         if (until.isNotBlank()) {
             if (isDateValid(until)) {
-                getOrCreatePupil(locker).rentedUntilDate = until
+                getOrCreatePupil(currentLocker).rentedUntilDate = until
             } else {
                 JOptionPane.showMessageDialog(
                     null,
@@ -304,16 +361,16 @@ class MainFrame : JFrame() {
                 return
             }
         }
-        if (!locker.isFree) {
-            val months = locker.pupil.remainingTimeInMonths
+        if (!currentLocker.isFree) {
+            val months = currentLocker.pupil.remainingTimeInMonths
             remainingTimeInMonthsTextField.text = months.toString() + " " + if (months == 1) "Monat" else "Monate"
         }
         val schoolClassName = classTextField.text
         if (schoolClassName.isNotBlank()) {
-            getOrCreatePupil(locker).schoolClassName = schoolClassName
+            getOrCreatePupil(currentLocker).schoolClassName = schoolClassName
         }
         if (hasContractCheckbox.isSelected) {
-            getOrCreatePupil(locker).hasContract = hasContractCheckbox.isSelected
+            getOrCreatePupil(currentLocker).hasContract = hasContractCheckbox.isSelected
         }
     }
 
@@ -330,9 +387,9 @@ class MainFrame : JFrame() {
      * Determines the scroll position to bring a certain locker into sight.
      */
     fun bringCurrentLockerInSight() {
-        val r = dataManager.currentManamentUnit.bounds
+/*        val r = dataManager.currentManamentUnit.bounds
         lockerOverviewScrollPane.horizontalScrollBar.value = r.x
-        lockerOverviewScrollPane.verticalScrollBar.value = dataManager.currentLocker.bounds.y
+        lockerOverviewScrollPane.verticalScrollBar.value = dataManager.currentLocker.bounds.y*/
     }
 
     /**
@@ -348,14 +405,14 @@ class MainFrame : JFrame() {
      */
     fun updateComboBoxes() {
         initializeComboBox(dataManager.buildingList, buildingComboBox)
-        buildingComboBox.selectedIndex = dataManager.currentBuildingIndex
-        initializeComboBox(dataManager.currentFloorList, floorComboBox)
-        floorComboBox.selectedIndex = dataManager.currentFloorIndex
-        initializeComboBox(dataManager.currentWalkList, walkComboBox)
-        walkComboBox.selectedIndex = dataManager.currentWalkIndex
+        buildingComboBox.selectedIndex = dataManager.buildingList.indexOf(currentBuilding)
+        initializeComboBox(currentFloorList, floorComboBox)
+        floorComboBox.selectedIndex = currentFloorList.indexOf(currentFloor)
+        initializeComboBox(currentWalkList, walkComboBox)
+        walkComboBox.selectedIndex = currentWalkList.indexOf(currentWalk)
         removeBuildingButton.isEnabled = dataManager.buildingList.size > 1
-        removeFloorButton.isEnabled = dataManager.currentFloorList.size > 1
-        removeWalkButton.isEnabled = dataManager.currentWalkList.size > 1
+        removeFloorButton.isEnabled = currentFloorList.size > 1
+        removeWalkButton.isEnabled = currentWalkList.size > 1
         drawLockerOverview()
     }
 
@@ -851,12 +908,13 @@ class MainFrame : JFrame() {
             JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.buildingList.removeAt(dataManager.currentBuildingIndex)
-            dataManager.currentBuildingIndex = dataManager.buildingList.size - 1
-            dataManager.currentFloorIndex = 0
-            dataManager.currentWalkIndex = 0
-            dataManager.currentManagementUnitIndex = 0
-            dataManager.currentLockerIndex = 0
+            dataManager.buildingList.remove(currentBuilding)
+            currentBuilding = dataManager.buildingList.first()
+            currentFloor = currentFloorList.first()
+            currentWalk = currentWalkList.first()
+            currentLocker =
+                currentWalk.moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
+                    .first()
             updateComboBoxes()
         }
     }
@@ -869,11 +927,12 @@ class MainFrame : JFrame() {
             JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.currentFloorList.removeAt(dataManager.currentFloorIndex)
-            dataManager.currentFloorIndex = dataManager.currentFloorList.size - 1
-            dataManager.currentWalkIndex = 0
-            dataManager.currentManagementUnitIndex = 0
-            dataManager.currentLockerIndex = 0
+            currentFloorList.remove(currentFloor)
+            currentFloor = currentFloorList.first()
+            currentWalk = currentWalkList.first()
+            currentLocker =
+                currentWalk.moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
+                    .first()
             updateComboBoxes()
         }
     }
@@ -886,10 +945,12 @@ class MainFrame : JFrame() {
             JOptionPane.YES_NO_OPTION
         )
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.currentWalkList.removeAt(dataManager.currentWalkIndex)
-            dataManager.currentWalkIndex = dataManager.currentWalkList.size - 1
-            dataManager.currentManagementUnitIndex = 0
-            dataManager.currentLockerIndex = 0
+            currentWalkList.remove(currentWalk)
+            currentWalk = currentWalkList.first()
+            currentLocker =
+                currentWalk.moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
+                    .first()
+
             updateComboBoxes()
         }
     }
@@ -900,7 +961,7 @@ class MainFrame : JFrame() {
 
     private fun codeTextFieldMouseClicked(evt: MouseEvent) {
         if (dataManager.currentUser is SuperUser) {
-            val dialog = EditCodesDialog(this, true)
+            val dialog = EditCodesDialog(this, true, currentLocker)
             dialog.isVisible = true
         }
     }
@@ -914,74 +975,114 @@ class MainFrame : JFrame() {
         )
 
         if (answer == JOptionPane.YES_OPTION) {
-            dataManager.currentLocker.empty()
+            currentLocker!!.empty()
             showLockerInformation()
         }
     }
 
+    fun createBuilding(name: String) {
+        //            dataManager.getBuildingList().add(new Building(entityNameTextField.getText()));
+//            dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
+//
+//            dataManager.getCurrentFloorList().add(new Floor("-"));
+//            dataManager.setCurrentFloorIndex(0);
+//
+//            dataManager.getCurrentWalkList().add(new Walk("-"));
+//            dataManager.setCurrentWalkIndex(0);
+//
+//            dataManager.getCurrentModuleWrapperList().add(new ModuleWrapper(new LockerCabinet()));
+//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentModuleWrapperList().size() - 1);
+//
+//            dataManager.setCurrentLockerIndex(0);
+    }
+
     private fun addBuildingButtonActionPerformed(evt: ActionEvent) {
-        val dialog = BuildingDialog(this, true, BuildingDialog.ADD)
-        dialog.isVisible = true
-    }
-
-    private fun addFloorButtonActionPerformed(evt: ActionEvent) {
-        val dialog = FloorDialog(this, true, FloorDialog.ADD)
-        dialog.isVisible = true
-    }
-
-    private fun editFloorButtonActionPerformed(evt: ActionEvent) {
-        val dialog = FloorDialog(this, true, FloorDialog.EDIT)
-        dialog.isVisible = true
-    }
-
-    private fun addWalkButtonActionPerformed(evt: ActionEvent) {
-        val dialog = WalkDialog(this, true, WalkDialog.ADD)
-        dialog.isVisible = true
-    }
-
-    private fun editWalkButtonActionPerformed(evt: ActionEvent) {
-        val dialog = WalkDialog(this, true, WalkDialog.EDIT)
+        val dialog = BuildingDialog(this, true, null, ::createBuilding)
         dialog.isVisible = true
     }
 
     private fun editBuildingButtonActionPerformed(evt: ActionEvent) {
-        val dialog = BuildingDialog(this, true, BuildingDialog.EDIT)
+        val dialog = BuildingDialog(this, true, currentBuilding, null)
+        dialog.isVisible = true
+    }
+
+    fun createFloor(name: String) {
+        //            dataManager.getCurrentFloorList().add(new Floor(entityNameTextField.getText()));
+//            dataManager.setCurrentFloorIndex(dataManager.getCurrentFloorList().size() - 1);
+//
+//            dataManager.getCurrentWalkList().add(new Walk("-"));
+//            dataManager.setCurrentWalkIndex(0);
+//
+//            dataManager.getCurrentModuleWrapperList().add(new ModuleWrapper(new LockerCabinet()));
+//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentModuleWrapperList().size() - 1);
+//
+//            dataManager.setCurrentLockerIndex(0);
+    }
+
+    private fun addFloorButtonActionPerformed(evt: ActionEvent) {
+        val dialog = FloorDialog(this, true, null, ::createFloor)
+        dialog.isVisible = true
+    }
+
+    private fun editFloorButtonActionPerformed(evt: ActionEvent) {
+        val dialog = FloorDialog(this, true, currentFloor, null)
+        dialog.isVisible = true
+    }
+
+    fun createWalk(name: String) {
+        //            dataManager.getCurrentWalkList().add(new Walk(name));
+//            dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
+//
+//            dataManager.getCurrentWalk().getModuleWrappers().add(new ModuleWrapper(new LockerCabinet()));
+//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getModuleWrappers().size() - 1);
+//
+//            dataManager.setCurrentLockerIndex(0);
+    }
+
+    private fun addWalkButtonActionPerformed(evt: ActionEvent) {
+        val dialog = WalkDialog(this, true, null, ::createWalk)
+        dialog.isVisible = true
+    }
+
+    private fun editWalkButtonActionPerformed(evt: ActionEvent) {
+        val dialog = WalkDialog(this, true, currentWalk, null)
         dialog.isVisible = true
     }
 
     private fun buildingComboBoxPopupMenuWillBecomeInvisible(evt: PopupMenuEvent) {
-        dataManager.currentBuildingIndex = buildingComboBox.selectedIndex
-        initializeComboBox(dataManager.currentFloorList, floorComboBox)
+        currentBuilding = dataManager.buildingList[buildingComboBox.selectedIndex]
+        initializeComboBox(currentFloorList, floorComboBox)
 
         // move on to next combobox
         floorComboBoxPopupMenuWillBecomeInvisible(null)
     }
 
     private fun floorComboBoxPopupMenuWillBecomeInvisible(evt: PopupMenuEvent?) {
-        dataManager.currentFloorIndex = floorComboBox.selectedIndex
-        initializeComboBox(dataManager.currentWalkList, walkComboBox)
+        currentFloor = currentFloorList[floorComboBox.selectedIndex]
+        initializeComboBox(currentWalkList, walkComboBox)
 
         // move on to next combobox
         walkComboBoxPopupMenuWillBecomeInvisible(null)
     }
 
     private fun walkComboBoxPopupMenuWillBecomeInvisible(evt: PopupMenuEvent?) {
-        dataManager.currentWalkIndex = walkComboBox.selectedIndex
-        dataManager.currentManagementUnitIndex = 0
+        currentWalk = currentWalkList[walkComboBox.selectedIndex]
         removeBuildingButton.isEnabled = dataManager.buildingList.size > 1
-        removeFloorButton.isEnabled = dataManager.currentFloorList.size > 1
-        removeWalkButton.isEnabled = dataManager.currentWalkList.size > 1
+        removeFloorButton.isEnabled = currentFloorList.size > 1
+        removeWalkButton.isEnabled = currentWalkList.size > 1
         drawLockerOverview()
     }
 
     private fun addAmountButtonActionPerformed(evt: ActionEvent) {
+        val currentLocker = currentLocker!!
+
         try {
             val amount: Int = currentAmountTextField.text.toInt()
-            dataManager.currentLocker.pupil.previouslyPaidAmount = amount
-            val iNewFullAmount = dataManager.currentLocker.pupil.paidAmount + amount
-            dataManager.currentLocker.pupil.paidAmount = iNewFullAmount
-            previousAmountTextField.text = Integer.toString(amount)
-            moneyTextField.text = Integer.toString(iNewFullAmount)
+            currentLocker.pupil.previouslyPaidAmount = amount
+            val iNewFullAmount = currentLocker.pupil.paidAmount + amount
+            currentLocker.pupil.paidAmount = iNewFullAmount
+            previousAmountTextField.text = amount.toString()
+            moneyTextField.text = iNewFullAmount.toString()
             currentAmountTextField.text = ""
         } catch (e: NumberFormatException) {
             JOptionPane.showMessageDialog(

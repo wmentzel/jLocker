@@ -1,14 +1,14 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
-import com.randomlychosenbytes.jlocker.model.Room;
+import com.randomlychosenbytes.jlocker.uicomponents.RoomPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RoomDialog extends JDialog {
-    private final Room room;
+    private final RoomPanel roomPanel;
 
-    public RoomDialog(Frame parent, boolean modal, Room room) {
+    public RoomDialog(Frame parent, boolean modal, RoomPanel roomPanel) {
         super(parent, modal);
         initComponents();
 
@@ -18,10 +18,10 @@ public class RoomDialog extends JDialog {
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
 
-        this.room = room;
+        this.roomPanel = roomPanel;
 
-        roomNameTextField.setText(room.getRoomName());
-        classNameTextField.setText(room.getSchoolClassName());
+        roomNameTextField.setText(roomPanel.getRoom().getName());
+        classNameTextField.setText(roomPanel.getRoom().getSchoolClassName());
     }
 
 
@@ -99,7 +99,7 @@ public class RoomDialog extends JDialog {
             JOptionPane.showMessageDialog(null, "Sie müssen einen Raumnamen angeben!", "Fehler", JOptionPane.OK_OPTION);
         }
 
-        room.setCaption(name, classNameTextField.getText());
+        roomPanel.setCaption(name, classNameTextField.getText());
 
         dispose();
     }

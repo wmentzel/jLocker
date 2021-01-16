@@ -313,7 +313,7 @@ class ShortenClassRoomDistances(
 
                             if (buildings[b].floors.size - 1 >= f + 1) {
                                 val currentMUnitID = createNodeId(b, f, w, m)
-                                val ids = findStaircasesOnFloor(b, f + 1, staircase.staircaseName)
+                                val ids = findStaircasesOnFloor(b, f + 1, staircase.name)
                                 for (id in ids) {
                                     val edge = weightedGraph.addEdge(currentMUnitID, id)
                                     weightedGraph.setEdgeWeight(edge, floorToFloorEdgeWeight.toDouble())
@@ -345,7 +345,7 @@ class ShortenClassRoomDistances(
             for (m in managementUnits.indices) {
                 val managementUnit = managementUnits[m]
                 if (managementUnit.module is Staircase) {
-                    if ((managementUnit.module as? Staircase)?.staircaseName == name) {
+                    if ((managementUnit.module as? Staircase)?.name == name) {
                         walkToManagementUnit.add(w to m)
                     }
                 }
@@ -371,7 +371,7 @@ class ShortenClassRoomDistances(
 
                         // connect every managementUnit with the munits above that have the same name
                         (munit.module as? Staircase)?.let { staircase ->
-                            val staircaseIds = findStaircasesForBuilding(b - 1, staircase.staircaseName)
+                            val staircaseIds = findStaircasesForBuilding(b - 1, staircase.name)
                             val currentStaircaseId = createNodeId(b, f, w, m)
                             for (staircaseId in staircaseIds) {
                                 val edge = weightedGraph.addEdge(currentStaircaseId, staircaseId)

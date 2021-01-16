@@ -37,7 +37,7 @@ class DataManagerTest {
         buildingList.add(Building("-"))
         currentFloorList.add(Floor("-"))
         currentWalkList.add(Walk("-"))
-        currentManagmentUnitList.add(ModuleWrapper(LockerCabinet()))
+        currentModuleWrapperList.add(ModuleWrapper(LockerCabinet()))
 
         jlockerTestDirectory.mkdirs()
         initPath(jlockerTestDirectory)

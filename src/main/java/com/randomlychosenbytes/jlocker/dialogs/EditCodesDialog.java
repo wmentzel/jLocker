@@ -3,6 +3,7 @@ package com.randomlychosenbytes.jlocker.dialogs;
 import com.randomlychosenbytes.jlocker.DataManager;
 import com.randomlychosenbytes.jlocker.MainFrame;
 import com.randomlychosenbytes.jlocker.State;
+import com.randomlychosenbytes.jlocker.model.Locker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,16 @@ public class EditCodesDialog extends JDialog {
     private int iCurCodeIndex;
     private DataManager dataManager = State.Companion.getDataManager();
 
+    private Locker currentLocker;
+
     /**
      * Creates new form EditCodesDialog
      */
-    public EditCodesDialog(java.awt.Frame parent, boolean modal) {
+    public EditCodesDialog(Frame parent, boolean modal, Locker currentLocker) {
         super(parent, modal);
         initComponents();
+
+        this.currentLocker = currentLocker;
 
         this.dataManager = dataManager;
 
@@ -27,7 +32,7 @@ public class EditCodesDialog extends JDialog {
         // focus in the middle
         setLocationRelativeTo(null);
 
-        iCurCodeIndex = dataManager.getCurrentLocker().getCurrentCodeIndex();
+        iCurCodeIndex = currentLocker.getCurrentCodeIndex();
 
         codeTextFields[0] = codeOneTextField;
         codeTextFields[1] = codeTwoTextField;
@@ -35,7 +40,7 @@ public class EditCodesDialog extends JDialog {
         codeTextFields[3] = codeFourTextField;
         codeTextFields[4] = codeFiveTextField;
 
-        String[] codes = dataManager.getCurrentLocker().getCodes(dataManager.getSuperUserMasterKey());
+        String[] codes = currentLocker.getCodes(dataManager.getSuperUserMasterKey());
 
         for (int i = 0; i < 5; i++) {
             codeTextFields[i].setText(codes[i]);
@@ -154,7 +159,7 @@ public class EditCodesDialog extends JDialog {
     }// </editor-fold>
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        dataManager.getCurrentLocker().setCurrentCodeIndex(iCurCodeIndex);
+        currentLocker.setCurrentCodeIndex(iCurCodeIndex);
         String[] codes = new String[5];
 
         for (int i = 0; i < 5; i++) {
@@ -181,7 +186,7 @@ public class EditCodesDialog extends JDialog {
             codes[i] = code;
         }
 
-        dataManager.getCurrentLocker().setCodes(codes, dataManager.getSuperUserMasterKey());
+        currentLocker.setCodes(codes, dataManager.getSuperUserMasterKey());
 
         ((MainFrame) this.getParent()).showLockerInformation();
 

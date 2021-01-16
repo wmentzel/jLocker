@@ -2,7 +2,6 @@ package com.randomlychosenbytes.jlocker.dialogs
 
 import com.randomlychosenbytes.jlocker.EntityCoordinates
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
-import com.randomlychosenbytes.jlocker.State.Companion.mainFrame
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.SuperUser
 import com.randomlychosenbytes.jlocker.utils.findLockers
@@ -51,27 +50,27 @@ class SearchFrame : JFrame() {
         // we don't know which index belongs to which locker. So, we have to search for the locker by id.
         val coords = getLockerFromRow(selectedRowIndex)
 
-        dataManager.currentBuildingIndex = coords.bValue
-        dataManager.currentFloorIndex = coords.fValue
-        dataManager.currentWalkIndex = coords.wValue
-        val iMUnitIndex = coords.mValue
-        val iLockerIndex = coords.lValue
-
-        // updateComboBoxes calls drawLockerOverview which itself
-        // sets the first available locker on the selected walk as the selected one.
-        // This behaviour is not as desired for this would overwrite the highlighted
-        // search result - the selected locker.
-        // So we save the indexes of the MUnit of the current locker and the index
-        // of the current locker itself and reset it after the call of this method.
-        mainFrame.updateComboBoxes()
-        dataManager.currentLocker.setAppropriateColor()
-
-        // reset
-        dataManager.currentManagementUnitIndex = iMUnitIndex
-        dataManager.currentLockerIndex = iLockerIndex
-        dataManager.currentLocker.setSelected()
-        mainFrame.showLockerInformation()
-        mainFrame.bringCurrentLockerInSight()
+//        dataManager.currentBuildingIndex = coords.bValue
+//        dataManager.currentFloorIndex = coords.fValue
+//        dataManager.currentWalkIndex = coords.wValue
+//        val iMUnitIndex = coords.mValue
+//        val iLockerIndex = coords.lValue
+//
+//        // updateComboBoxes calls drawLockerOverview which itself
+//        // sets the first available locker on the selected walk as the selected one.
+//        // This behaviour is not as desired for this would overwrite the highlighted
+//        // search result - the selected locker.
+//        // So we save the indexes of the MUnit of the current locker and the index
+//        // of the current locker itself and reset it after the call of this method.
+//        mainFrame.updateComboBoxes()
+//        //dataManager.currentLocker.setAppropriateColor()
+//
+//        // reset
+//        dataManager.currentManagementUnitIndex = iMUnitIndex
+//        dataManager.currentLockerIndex = iLockerIndex
+//        //dataManager.currentLocker.setSelected()
+//        mainFrame.showLockerInformation()
+//        mainFrame.bringCurrentLockerInSight()
     }
 
     /**

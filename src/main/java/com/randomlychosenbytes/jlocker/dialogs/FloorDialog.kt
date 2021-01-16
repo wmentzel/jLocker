@@ -1,124 +1,88 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager;
-import com.randomlychosenbytes.jlocker.MainFrame;
-import com.randomlychosenbytes.jlocker.State;
-import com.randomlychosenbytes.jlocker.model.Floor;
-import com.randomlychosenbytes.jlocker.model.LockerCabinet;
-import com.randomlychosenbytes.jlocker.model.ModuleWrapper;
-import com.randomlychosenbytes.jlocker.model.Walk;
+import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.model.Floor
+import java.awt.Frame
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
+import java.awt.event.ActionEvent
+import javax.swing.*
 
-public class FloorDialog extends javax.swing.JDialog {
-    public static final int EDIT = 0;
-    public static final int ADD = 1;
+class FloorDialog(parent: Frame, modal: Boolean, val currentFloor: Floor?, val createFloor: ((String) -> Unit)?) :
+    JDialog(parent, modal) {
+    private val dataManager = State.dataManager
 
-    private final int bMode;
-    private final DataManager dataManager = State.Companion.getDataManager();
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        centerPanel = JPanel()
+        entityNameLabel = JLabel()
+        entityNameTextField = JTextField()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        centerPanel!!.layout = GridBagLayout()
+        entityNameLabel!!.text = "Name"
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(0, 0, 10, 10)
+        centerPanel!!.add(entityNameLabel, gridBagConstraints)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.insets = Insets(0, 0, 10, 0)
+        centerPanel!!.add(entityNameTextField, gridBagConstraints)
+        okButton!!.text = "OK"
+        okButton!!.addActionListener { evt -> okButtonActionPerformed(evt) }
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(0, 0, 0, 10)
+        centerPanel!!.add(okButton, gridBagConstraints)
+        cancelButton!!.text = "Abbrechen"
+        cancelButton!!.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        centerPanel!!.add(cancelButton, GridBagConstraints())
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(10, 10, 10, 10)
+        contentPane.add(centerPanel, gridBagConstraints)
+        pack()
+    } // </editor-fold>
 
-    public FloorDialog(java.awt.Frame parent, boolean modal, int mode) {
-        super(parent, modal);
-        initComponents();
+    private fun okButtonActionPerformed(evt: ActionEvent) {
+        if (currentFloor != null) {
+            currentFloor.name = entityNameTextField.text
+        } else {
+            createFloor?.invoke(entityNameTextField.text)
+        }
+        (parent as MainFrame).updateComboBoxes()
+        dispose()
+    }
+
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
+
+    private lateinit var cancelButton: JButton
+    private lateinit var centerPanel: JPanel
+    private lateinit var entityNameLabel: JLabel
+    private lateinit var entityNameTextField: JTextField
+    private lateinit var okButton: JButton
+
+    init {
+        initComponents()
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().defaultButton = okButton
 
         // focus in the middle
-        setLocationRelativeTo(null);
-
-        bMode = mode;
-
-        if (bMode == EDIT) {
-            setTitle("Etagenname bearbeiten");
-            entityNameTextField.setText(dataManager.getCurrentFloor().getName());
+        setLocationRelativeTo(null)
+        if (currentFloor != null) {
+            title = "Etagenname bearbeiten"
+            entityNameTextField!!.text = currentFloor.name
         } else {
-            setTitle("Etage hinzufügen");
+            title = "Etage hinzufügen"
         }
     }
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        centerPanel = new javax.swing.JPanel();
-        entityNameLabel = new javax.swing.JLabel();
-        entityNameTextField = new javax.swing.JTextField();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        centerPanel.setLayout(new java.awt.GridBagLayout());
-
-        entityNameLabel.setText("Name");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        centerPanel.add(entityNameLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        centerPanel.add(entityNameTextField, gridBagConstraints);
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        centerPanel.add(okButton, gridBagConstraints);
-
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        centerPanel.add(cancelButton, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(centerPanel, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        if (bMode == EDIT) {
-            dataManager.getCurrentFloor().setName(entityNameTextField.getText());
-        } else {
-            dataManager.getCurrentFloorList().add(new Floor(entityNameTextField.getText()));
-            dataManager.setCurrentFloorIndex(dataManager.getCurrentFloorList().size() - 1);
-
-            dataManager.getCurrentWalkList().add(new Walk("-"));
-            dataManager.setCurrentWalkIndex(0);
-
-            dataManager.getCurrentManagmentUnitList().add(new ModuleWrapper(new LockerCabinet()));
-            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentManagmentUnitList().size() - 1);
-
-            dataManager.setCurrentLockerIndex(0);
-        }
-
-        ((MainFrame) this.getParent()).updateComboBoxes();
-
-        dispose();
-    }
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-    }
-
-
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel centerPanel;
-    private javax.swing.JLabel entityNameLabel;
-    private javax.swing.JTextField entityNameTextField;
-    private javax.swing.JButton okButton;
-
 }

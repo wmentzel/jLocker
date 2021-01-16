@@ -95,7 +95,7 @@ class CreateUsersDialogTest {
         whenever(dataManager.buildingList).thenReturn(buildings)
         whenever(dataManager.currentFloorList).thenReturn(floors)
         whenever(dataManager.currentWalkList).thenReturn(walks)
-        whenever(dataManager.currentManagmentUnitList).thenReturn(moduleWrappers)
+        whenever(dataManager.currentModuleWrapperList).thenReturn(moduleWrappers)
 
         whenever(superUserPasswordTextField.text).thenReturn("11111111")
         whenever(superUserRepeatPasswordTextField.text).thenReturn("11111111")

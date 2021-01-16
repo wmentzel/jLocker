@@ -2,25 +2,20 @@ package com.randomlychosenbytes.jlocker.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.utils.decrypt
 import com.randomlychosenbytes.jlocker.utils.encrypt
-import java.awt.Font
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import javax.crypto.SecretKey
-import javax.swing.JLabel
 
 class Locker(
-    id: String,
+    @Expose
+    var id: String,
     pupil: Pupil?,
     @Expose var lockCode: String,
     @Expose var isOutOfOrder: Boolean,
     @Expose var note: String,
     @Expose var currentCodeIndex: Int,
     encryptedCodes: Array<String>?
-) : JLabel() {
-
+) {
     @SerializedName("pupil")
     @Expose
     private var _pupil: Pupil? = pupil
@@ -29,22 +24,10 @@ class Locker(
 
     fun moveInNewOwner(pupil: Pupil) {
         _pupil = pupil
-        setAppropriateColor()
     }
 
     @Expose
-    var id: String = ""
-        set(value) {
-            text = value
-            field = value
-        }
-
-    @Expose
     var encryptedCodes: Array<String>? = encryptedCodes
-        private set
-
-    // transient
-    var isSelected = false
         private set
 
     fun getCodes(sukey: SecretKey) = (0..4).map { i ->
@@ -71,20 +54,6 @@ class Locker(
         }.toTypedArray()
     }
 
-    fun setAppropriateColor() {
-        listOf(
-            isOutOfOrder to Color.OutOfOrder,
-            isFree to Color.Free,
-            (_pupil?.let { it.remainingTimeInMonths <= 1 } == true) to Color.OneMonthRentRemaining,
-            (_pupil?.hasContract == true) to Color.Rented,
-            true to Color.NoContract
-        ).first { (predicate, _) ->
-            predicate
-        }.let { (_, color) ->
-            setColor(color)
-        }
-    }
-
     fun empty() {
         _pupil = null
         currentCodeIndex = if (encryptedCodes == null) {
@@ -92,27 +61,10 @@ class Locker(
         } else {
             (currentCodeIndex + 1) % encryptedCodes!!.size
         }
-        setAppropriateColor()
     }
 
     fun setNextCode() {
         currentCodeIndex = (currentCodeIndex + 1) % 5
-    }
-
-    fun setSelected() {
-        isSelected = true
-        setColor(Color.Selected)
-    }
-
-    private fun setUpMouseListener() {
-        if (this.mouseListeners.isEmpty()) {
-            addMouseListener(MouseListener())
-        }
-    }
-
-    private fun setColor(color: Color) {
-        background = color.background
-        foreground = color.foreground
     }
 
     val isFree: Boolean
@@ -120,12 +72,6 @@ class Locker(
 
     fun getCurrentCode(sukey: SecretKey): String {
         return getCode(currentCodeIndex, sukey)
-    }
-
-    private inner class MouseListener : MouseAdapter() {
-        override fun mouseReleased(e: MouseEvent) {
-            State.mainFrame.selectLocker(e.source as Locker)
-        }
     }
 
     constructor(id: String) : this(
@@ -157,54 +103,4 @@ class Locker(
         note = locker.note,
         encryptedCodes = locker.encryptedCodes
     )
-
-    init {
-        this.id = id
-
-        // standard color
-        setColor(Color.Free)
-        text = id
-
-        // If true the component paints every pixel within its bounds.
-        isOpaque = true
-
-        // change font
-        font = Font(Font.DIALOG, Font.BOLD, 20)
-
-        // font aligment
-        horizontalAlignment = CENTER
-
-        // assign mouse events
-        setUpMouseListener()
-    }
-
-    enum class Color(
-        val background: java.awt.Color,
-        val foreground: java.awt.Color
-    ) {
-        OutOfOrder(
-            java.awt.Color(255, 0, 0),
-            java.awt.Color(255, 255, 255),
-        ),
-        Rented(
-            java.awt.Color(0, 102, 0),
-            java.awt.Color(255, 255, 255),
-        ),
-        Free(
-            java.awt.Color(255, 255, 255),
-            java.awt.Color(0, 0, 0),
-        ),
-        Selected(
-            java.awt.Color(255, 255, 0),
-            java.awt.Color(0, 0, 0),
-        ),
-        NoContract(
-            java.awt.Color(0, 0, 255),
-            java.awt.Color(255, 255, 255),
-        ),
-        OneMonthRentRemaining(
-            java.awt.Color(255, 153, 0),
-            java.awt.Color(0, 0, 0)
-        )
-    }
 }

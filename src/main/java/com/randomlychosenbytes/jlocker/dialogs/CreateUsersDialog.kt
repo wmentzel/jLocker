@@ -2,7 +2,8 @@ package com.randomlychosenbytes.jlocker.dialogs
 
 import com.randomlychosenbytes.jlocker.MainFrame
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
-import com.randomlychosenbytes.jlocker.model.*
+import com.randomlychosenbytes.jlocker.model.RestrictedUser
+import com.randomlychosenbytes.jlocker.model.SuperUser
 import com.randomlychosenbytes.jlocker.utils.decryptKeyWithString
 import java.awt.*
 import java.awt.event.ActionEvent
@@ -239,15 +240,6 @@ class CreateUsersDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) 
                 }
 
                 dataManager.setNewUsers(superUser, restrictedUser, userMasterKey, superUserMasterKey)
-
-                if (isFirstRun) {
-                    // Create initial data
-                    dataManager.buildingList.add(Building("-"))
-                    dataManager.currentFloorList.add(Floor("-"))
-                    dataManager.currentWalkList.add(Walk("-"))
-                    dataManager.currentManagmentUnitList.add(ModuleWrapper(LockerCabinet()))
-                }
-
                 dataManager.saveAndCreateBackup()
                 dispose()
             }

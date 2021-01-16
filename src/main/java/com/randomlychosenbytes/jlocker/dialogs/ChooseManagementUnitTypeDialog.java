@@ -1,18 +1,21 @@
 package com.randomlychosenbytes.jlocker.dialogs;
 
+import com.randomlychosenbytes.jlocker.model.LockerCabinet;
 import com.randomlychosenbytes.jlocker.model.Module;
-import com.randomlychosenbytes.jlocker.model.*;
+import com.randomlychosenbytes.jlocker.model.Room;
+import com.randomlychosenbytes.jlocker.model.Staircase;
+import com.randomlychosenbytes.jlocker.uicomponents.ModulePanel;
 
 import javax.swing.*;
 
 public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
 
-    ModuleWrapper munit;
+    ModulePanel modulePanel;
 
     /**
      * Creates new form ChooseMUnitTypeDialog
      */
-    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ModuleWrapper mu) {
+    public ChooseManagementUnitTypeDialog(java.awt.Frame parent, boolean modal, ModulePanel modulePanel) {
         super(parent, modal);
         initComponents();
 
@@ -22,19 +25,19 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         // button that is clicked when you hit enter
         getRootPane().setDefaultButton(okButton);
 
-        munit = mu;
+        this.modulePanel = modulePanel;
 
         // Deactivate the radio button that represents the current type
 
-        if (munit.getModule() instanceof LockerCabinet) {
+        if (this.modulePanel.getModule() instanceof LockerCabinet) {
             lockerButton.setEnabled(false);
         }
 
-        if (munit.getModule() instanceof Room) {
+        if (this.modulePanel.getModule() instanceof Room) {
             roomButton.setEnabled(false);
         }
 
-        if (munit.getModule() instanceof Staircase) {
+        if (this.modulePanel.getModule() instanceof Staircase) {
             staircaseButton.setEnabled(false);
         }
     }
@@ -116,13 +119,13 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         if (lockerButton.isSelected()) {
             module = new LockerCabinet();
         } else if (roomButton.isSelected()) {
-            module = new Room();
+            module = new Room("", "");
         } else {
-            module = new Staircase();
+            module = new Staircase("");
         }
 
         String text = "Wollen Sie diesen "
-                + munit.getModule()
+                + modulePanel.getModule()
                 + " in einen "
                 + module
                 + " transformieren?";
@@ -130,7 +133,7 @@ public class ChooseManagementUnitTypeDialog extends javax.swing.JDialog {
         int answer = JOptionPane.showConfirmDialog(null, text, "Schließfach leeren", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
-            munit.setModule(module);
+            modulePanel.setModule(module);
         }
 
         // close after the selection
