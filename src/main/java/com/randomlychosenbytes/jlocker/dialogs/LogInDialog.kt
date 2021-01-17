@@ -83,10 +83,11 @@ class LogInDialog(parent: Frame, modal: Boolean) : JDialog(parent, modal) {
         //
         // Loading...
         //
-        if (resPath == null) {
+
+        resPath?.let {
+            dataManager.loadFromCustomFile(it, loadAsSuperUser = isSuperUser) // backup loading
+        } ?: kotlin.run {
             dataManager.loadFromCustomFile(loadAsSuperUser = isSuperUser)
-        } else {
-            dataManager.loadFromCustomFile(resPath!!, loadAsSuperUser = isSuperUser) // backup loading
         }
 
         //

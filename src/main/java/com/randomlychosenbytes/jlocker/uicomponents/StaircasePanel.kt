@@ -13,25 +13,19 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 
 class StaircasePanel(var staircase: Staircase) : JPanel() {
-    fun Staircase(name: String) {
+
+    init {
         initComponents()
-        setCaption(name)
+        setCaption(staircase.name)
     }
 
-    fun Staircase() {
-        initComponents()
-    }
-
-    fun setCaption(name: String?) {
+    fun setCaption(name: String) {
         this.name = name
         captionLabel.text =
-            "<html><div align=\"center\">Treppenhaus<br><br><div style='font-size:12pt;'>" + this.name + "</div></div></html>"
+            """<html><div align="center">Treppenhaus<br><br><div style="font-size: 12pt;">${this.name}</div></div></html>"""
     }
 
-    override fun toString(): String {
-        return "Treppenhaus"
-    }
-
+    override fun toString(): String = "Treppenhaus"
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private fun initComponents() {
@@ -48,7 +42,6 @@ class StaircasePanel(var staircase: Staircase) : JPanel() {
         })
         add(captionLabel, BorderLayout.CENTER)
     } // </editor-fold>
-
 
     private fun captionLabelMouseReleased(evt: MouseEvent) {
         // TODO mainframe as first argument

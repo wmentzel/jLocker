@@ -19,16 +19,17 @@ import kotlin.system.exitProcess
  */
 class MainFrame : JFrame() {
 
-    lateinit var currentModuleWrapperList: MutableList<ModuleWrapper>
-    var currentLocker: Locker? = null
-    lateinit var currentWalk: Walk
-    lateinit var currentFloor: Floor
-    lateinit var currentBuilding: Building
+    private lateinit var currentModuleWrapperList: MutableList<ModuleWrapper>
+    private lateinit var currentWalk: Walk
+    private lateinit var currentFloor: Floor
+    private lateinit var currentBuilding: Building
 
-    val currentFloorList: MutableList<Floor>
+    private var currentLocker: Locker? = null
+
+    private val currentFloorList: MutableList<Floor>
         get() = currentBuilding.floors
 
-    val currentWalkList: MutableList<Walk>
+    private val currentWalkList: MutableList<Walk>
         get() = currentFloor.walks
 
     private var searchFrame: SearchFrame? = null
@@ -96,9 +97,11 @@ class MainFrame : JFrame() {
         currentFloor = currentFloorList.first()
         currentWalk = currentWalkList.first()
         currentModuleWrapperList = currentWalk.moduleWrappers
-        currentLocker =
-            currentWalk.moduleWrappers.map { it.module }.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
-                .first()
+        currentLocker = currentWalk.moduleWrappers
+            .map(ModuleWrapper::module)
+            .filterIsInstance<LockerCabinet>()
+            .flatMap(LockerCabinet::lockers)
+            .first()
 
         //
         // Initialize UI
@@ -119,7 +122,7 @@ class MainFrame : JFrame() {
         // Remove old panels
         lockerOverviewPanel.removeAll()
 
-        fun addMUnitLeftLabelMouseReleased(modulePanel: ModulePanel) {
+        fun addModulePanelLeftOf(modulePanel: ModulePanel) {
             val index = currentModuleWrapperList.indexOfFirst {
                 it.module === modulePanel.module
             }
@@ -128,7 +131,7 @@ class MainFrame : JFrame() {
             drawLockerOverview()
         }
 
-        fun addMUnitRightLabelMouseReleased(modulePanel: ModulePanel) {
+        fun addModulePanelRightOf(modulePanel: ModulePanel) {
             val index = currentModuleWrapperList.indexOfFirst {
                 it.module === modulePanel.module
             }
@@ -136,7 +139,7 @@ class MainFrame : JFrame() {
             drawLockerOverview()
         }
 
-        fun removeThisMUnitLabelMouseReleased(modulePanel: ModulePanel) {
+        fun remove(modulePanel: ModulePanel) {
             if (currentModuleWrapperList.size <= 1) {
                 return
             }
@@ -153,13 +156,12 @@ class MainFrame : JFrame() {
             }
         }
 
-
         val modulePanels = currentModuleWrapperList.map { oldModuleWrapper ->
             ModulePanel(
                 oldModuleWrapper.module,
-                ::addMUnitLeftLabelMouseReleased,
-                ::addMUnitRightLabelMouseReleased,
-                ::removeThisMUnitLabelMouseReleased
+                ::addModulePanelLeftOf,
+                ::addModulePanelRightOf,
+                ::remove
             )
         }
 
@@ -183,8 +185,6 @@ class MainFrame : JFrame() {
             dataManager.currentManagementUnitIndex = moduleWrapperIndex
             dataManager.currentLockerIndex = 0
         }
-
-
 */
         showLockerInformation()
         lockerOverviewPanel.updateUI()
@@ -194,26 +194,11 @@ class MainFrame : JFrame() {
 
         dataManager.currentLockerPanel?.setAppropriateColor()
         dataManager.currentLockerPanel = lockerPanel
+        currentLocker = lockerPanel.locker
 
         lockerPanel.setSelectedColor()
 
         showLockerInformation()
-
-/*        val (mwIndex, lockerIndex) = dataManager.currentWalk.moduleWrappers.asSequence()
-            .mapIndexed { index, moduleWrapper ->
-                index to moduleWrapper
-            }.mapNotNull { (index, moduleWrapper) ->
-                (moduleWrapper.module as? LockerCabinet)?.let {
-                    index to it
-                }
-            }.mapNotNull { (index, lockerCabinet) ->
-                lockerCabinet.lockers.indexOfFirst { it === lockerPanel }.takeIf { it != -1 }?.let {
-                    index to it
-                }
-            }.single()
-
-        dataManager.currentLockerIndex = lockerIndex
-        dataManager.currentManagementUnitIndex = mwIndex*/
     }
 
     /**
@@ -221,7 +206,7 @@ class MainFrame : JFrame() {
      * GUI components (surname, name, etc.)
      */
     fun showLockerInformation() {
-        if (currentLocker != null) {
+        if (currentLocker == null) {
             containerPanel.isVisible = false
             return
         }
@@ -975,25 +960,30 @@ class MainFrame : JFrame() {
         )
 
         if (answer == JOptionPane.YES_OPTION) {
-            currentLocker!!.empty()
+            currentLocker?.empty()
             showLockerInformation()
         }
     }
 
     fun createBuilding(name: String) {
-        //            dataManager.getBuildingList().add(new Building(entityNameTextField.getText()));
-//            dataManager.setCurrentBuildingIndex(dataManager.getBuildingList().size() - 1);
-//
-//            dataManager.getCurrentFloorList().add(new Floor("-"));
-//            dataManager.setCurrentFloorIndex(0);
-//
-//            dataManager.getCurrentWalkList().add(new Walk("-"));
-//            dataManager.setCurrentWalkIndex(0);
-//
-//            dataManager.getCurrentModuleWrapperList().add(new ModuleWrapper(new LockerCabinet()));
-//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentModuleWrapperList().size() - 1);
-//
-//            dataManager.setCurrentLockerIndex(0);
+
+        currentBuilding = Building(name).apply {
+            dataManager.buildingList.add(this)
+        }
+
+        currentFloor = Floor(name).apply {
+            currentFloorList.add(this)
+        }
+
+        currentWalk = Walk("-").apply {
+            currentWalkList.add(this)
+        }
+
+        ModuleWrapper(LockerCabinet()).apply {
+            currentModuleWrapperList.add(this)
+        }
+
+        currentLocker = null
     }
 
     private fun addBuildingButtonActionPerformed(evt: ActionEvent) {
@@ -1007,16 +997,21 @@ class MainFrame : JFrame() {
     }
 
     fun createFloor(name: String) {
-        //            dataManager.getCurrentFloorList().add(new Floor(entityNameTextField.getText()));
-//            dataManager.setCurrentFloorIndex(dataManager.getCurrentFloorList().size() - 1);
-//
-//            dataManager.getCurrentWalkList().add(new Walk("-"));
-//            dataManager.setCurrentWalkIndex(0);
-//
-//            dataManager.getCurrentModuleWrapperList().add(new ModuleWrapper(new LockerCabinet()));
-//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentModuleWrapperList().size() - 1);
-//
-//            dataManager.setCurrentLockerIndex(0);
+
+        currentFloor = Floor(name).apply {
+            currentFloorList.add(this)
+        }
+
+
+        currentWalk = Walk("-").apply {
+            currentWalkList.add(this)
+        }
+
+        ModuleWrapper(LockerCabinet()).apply {
+            currentModuleWrapperList.add(this)
+        }
+
+        currentLocker = null
     }
 
     private fun addFloorButtonActionPerformed(evt: ActionEvent) {
@@ -1030,13 +1025,16 @@ class MainFrame : JFrame() {
     }
 
     fun createWalk(name: String) {
-        //            dataManager.getCurrentWalkList().add(new Walk(name));
-//            dataManager.setCurrentWalkIndex(dataManager.getCurrentWalkList().size() - 1);
-//
-//            dataManager.getCurrentWalk().getModuleWrappers().add(new ModuleWrapper(new LockerCabinet()));
-//            dataManager.setCurrentManagementUnitIndex(dataManager.getCurrentWalk().getModuleWrappers().size() - 1);
-//
-//            dataManager.setCurrentLockerIndex(0);
+
+        currentWalk = Walk(name).apply {
+            currentWalkList.add(this)
+        }
+
+        ModuleWrapper(LockerCabinet()).apply {
+            currentModuleWrapperList.add(this)
+        }
+
+        currentLocker = null
     }
 
     private fun addWalkButtonActionPerformed(evt: ActionEvent) {

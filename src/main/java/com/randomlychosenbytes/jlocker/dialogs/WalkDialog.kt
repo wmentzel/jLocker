@@ -1,7 +1,6 @@
 package com.randomlychosenbytes.jlocker.dialogs
 
 import com.randomlychosenbytes.jlocker.MainFrame
-import com.randomlychosenbytes.jlocker.State
 import com.randomlychosenbytes.jlocker.model.Walk
 import java.awt.Frame
 import java.awt.GridBagConstraints
@@ -11,12 +10,11 @@ import java.awt.event.ActionEvent
 import javax.swing.*
 
 class WalkDialog(
-    parent: Frame?,
+    parent: Frame,
     modal: Boolean,
-    val currentWalk: Walk?,
-    val createWalk: ((String) -> Unit)?
+    private val currentWalk: Walk?,
+    private val createWalk: ((String) -> Unit)?
 ) : JDialog(parent, modal) {
-    private val dataManager = State.dataManager
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private fun initComponents() {
@@ -29,25 +27,25 @@ class WalkDialog(
         defaultCloseOperation = DISPOSE_ON_CLOSE
         isResizable = false
         contentPane.layout = GridBagLayout()
-        centerPanel!!.layout = GridBagLayout()
-        entityNameLabel!!.text = "Name"
+        centerPanel.layout = GridBagLayout()
+        entityNameLabel.text = "Name"
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.fill = GridBagConstraints.BOTH
         gridBagConstraints.insets = Insets(0, 0, 10, 10)
-        centerPanel!!.add(entityNameLabel, gridBagConstraints)
+        centerPanel.add(entityNameLabel, gridBagConstraints)
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
         gridBagConstraints.insets = Insets(0, 0, 10, 0)
-        centerPanel!!.add(entityNameTextField, gridBagConstraints)
-        okButton!!.text = "OK"
-        okButton!!.addActionListener { evt -> okButtonActionPerformed(evt) }
+        centerPanel.add(entityNameTextField, gridBagConstraints)
+        okButton.text = "OK"
+        okButton.addActionListener { evt -> okButtonActionPerformed(evt) }
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 0, 0, 10)
-        centerPanel!!.add(okButton, gridBagConstraints)
-        cancelButton!!.text = "Abbrechen"
-        cancelButton!!.addActionListener { evt -> cancelButtonActionPerformed(evt) }
-        centerPanel!!.add(cancelButton, GridBagConstraints())
+        centerPanel.add(okButton, gridBagConstraints)
+        cancelButton.text = "Abbrechen"
+        cancelButton.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        centerPanel.add(cancelButton, GridBagConstraints())
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(10, 10, 10, 10)
         contentPane.add(centerPanel, gridBagConstraints)

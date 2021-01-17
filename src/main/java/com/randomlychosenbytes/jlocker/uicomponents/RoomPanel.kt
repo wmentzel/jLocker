@@ -14,14 +14,9 @@ import javax.swing.SwingConstants
 
 class RoomPanel(val room: Room) : JPanel() {
 
-    fun Room(name: String, classname: String) {
+    init {
         initComponents()
-        setCaption(name, classname)
-    }
-
-    fun Room() {
-        initComponents()
-        setCaption("", "")
+        setCaption(room.name, room.schoolClassName)
     }
 
     fun setCaption(name: String, schoolClassName: String) {
@@ -37,10 +32,7 @@ class RoomPanel(val room: Room) : JPanel() {
         captionLabel.text = caption
     }
 
-    override fun toString(): String {
-        return "Raum"
-    }
-
+    override fun toString(): String = "Raum"
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private fun initComponents() {
