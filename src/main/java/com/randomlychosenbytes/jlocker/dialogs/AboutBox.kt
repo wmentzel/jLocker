@@ -1,168 +1,133 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.State;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.randomlychosenbytes.jlocker.State.Companion.dataManager
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import javax.swing.*
 
 /**
  * A simple dialog that displays information about this program.
  */
-public class AboutBox extends javax.swing.JDialog {
+class AboutBox(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
     // TODO put in properties/resource file
-    final String[] names =
-            {
-                    "Babette Mentzel",
-                    "Torsten Brandes",
-                    "Heiko Niemeyer",
-                    "Indra Beeske",
-                    "Hang Ming Pham",
-                    "Anne Hauer",
-                    "Die Schließfach-AG der RLO"
-            };
+    val names = arrayOf(
+        "Babette Mentzel",
+        "Torsten Brandes",
+        "Heiko Niemeyer",
+        "Indra Beeske",
+        "Hang Ming Pham",
+        "Anne Hauer",
+        "Die Schließfach-AG der RLO"
+    )
+    var changeText: ActionListener = object : ActionListener {
+        private var textIndex = 1
+        override fun actionPerformed(evt: ActionEvent) {
+            appThanks2Label!!.text = names[textIndex]
+            if (++textIndex > names.size - 1) textIndex = 0
+        }
+    }
 
-    public AboutBox(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        imageLabel = JLabel()
+        dataPanel = JPanel()
+        westPanel = JPanel()
+        versionLabel = JLabel()
+        vendorLabel = JLabel()
+        technologyLabel = JLabel()
+        emailAddressLabel = JLabel()
+        thanks2Label = JLabel()
+        centerPanel = JPanel()
+        appVersionLabel = JLabel()
+        appVendorLabel = JLabel()
+        appTechnologyLabel = JLabel()
+        appEmailAddressLabel = JLabel()
+        appThanks2Label = JLabel()
+        closeButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        title = "Über jLocker"
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        imageLabel!!.icon = ImageIcon(javaClass.getResource("/jLocker_2014.png")) // NOI18N
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        contentPane.add(imageLabel, gridBagConstraints)
+        dataPanel!!.layout = GridBagLayout()
+        westPanel!!.layout = GridLayout(6, 0, 0, 5)
+        versionLabel!!.text = "Version:"
+        westPanel!!.add(versionLabel)
+        vendorLabel!!.text = "Geschrieben von:"
+        westPanel!!.add(vendorLabel)
+        technologyLabel!!.text = "Technologie:"
+        technologyLabel!!.toolTipText = ""
+        westPanel!!.add(technologyLabel)
+        emailAddressLabel!!.text = "E-Mail-Adresse:"
+        westPanel!!.add(emailAddressLabel)
+        thanks2Label!!.text = "Dank an:"
+        westPanel!!.add(thanks2Label)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(0, 0, 0, 30)
+        dataPanel!!.add(westPanel, gridBagConstraints)
+        centerPanel!!.layout = GridLayout(6, 0, 0, 5)
+        appVersionLabel!!.text = dataManager.appVersion
+        centerPanel!!.add(appVersionLabel)
+        appVendorLabel!!.text = "Willi Mentzel"
+        centerPanel!!.add(appVendorLabel)
+        val version = System.getProperty("java.version")
+        appTechnologyLabel!!.text = "Java $version"
+        centerPanel!!.add(appTechnologyLabel)
+        appEmailAddressLabel!!.text = "willi.mentzel@gmail.com"
+        centerPanel!!.add(appEmailAddressLabel)
+        centerPanel!!.add(appThanks2Label)
+        dataPanel!!.add(centerPanel, GridBagConstraints())
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.anchor = GridBagConstraints.WEST
+        gridBagConstraints.insets = Insets(10, 10, 0, 0)
+        contentPane.add(dataPanel, gridBagConstraints)
+        closeButton!!.text = "Schließen"
+        closeButton!!.addActionListener { evt -> closeButtonActionPerformed(evt) }
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(10, 0, 10, 0)
+        contentPane.add(closeButton, gridBagConstraints)
+        pack()
+    } // </editor-fold>
+
+    private fun closeButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
+
+    private lateinit var appEmailAddressLabel: JLabel
+    private lateinit var appTechnologyLabel: JLabel
+    private lateinit var appThanks2Label: JLabel
+    private lateinit var appVendorLabel: JLabel
+    private lateinit var appVersionLabel: JLabel
+    private lateinit var centerPanel: JPanel
+    private lateinit var closeButton: JButton
+    private lateinit var dataPanel: JPanel
+    private lateinit var emailAddressLabel: JLabel
+    private lateinit var imageLabel: JLabel
+    private lateinit var technologyLabel: JLabel
+    private lateinit var thanks2Label: JLabel
+    private lateinit var vendorLabel: JLabel
+    private lateinit var versionLabel: JLabel
+    private lateinit var westPanel: JPanel
+
+    init {
+        initComponents()
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(closeButton);
+        getRootPane().defaultButton = closeButton
 
         // focus in the middle
-        this.setLocationRelativeTo(null);
+        setLocationRelativeTo(null)
 
         // start with the first name
-        appThanks2Label.setText(names[0]);
-
-        Timer timer = new Timer(1500, changeText);
-        timer.setRepeats(true);
-        timer.start();
+        appThanks2Label!!.text = names[0]
+        val timer = Timer(1500, changeText)
+        timer.isRepeats = true
+        timer.start()
     }
-
-    ActionListener changeText = new ActionListener() {
-        private int textIndex = 1;
-
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            appThanks2Label.setText(names[textIndex]);
-
-            if (++textIndex > names.length - 1)
-                textIndex = 0;
-        }
-    };
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        imageLabel = new javax.swing.JLabel();
-        dataPanel = new javax.swing.JPanel();
-        westPanel = new javax.swing.JPanel();
-        versionLabel = new javax.swing.JLabel();
-        vendorLabel = new javax.swing.JLabel();
-        technologyLabel = new javax.swing.JLabel();
-        emailAddressLabel = new javax.swing.JLabel();
-        thanks2Label = new javax.swing.JLabel();
-        centerPanel = new javax.swing.JPanel();
-        appVersionLabel = new javax.swing.JLabel();
-        appVendorLabel = new javax.swing.JLabel();
-        appTechnologyLabel = new javax.swing.JLabel();
-        appEmailAddressLabel = new javax.swing.JLabel();
-        appThanks2Label = new javax.swing.JLabel();
-        closeButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Über jLocker");
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jLocker_2014.png"))); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        getContentPane().add(imageLabel, gridBagConstraints);
-
-        dataPanel.setLayout(new java.awt.GridBagLayout());
-
-        westPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 5));
-
-        versionLabel.setText("Version:");
-        westPanel.add(versionLabel);
-
-        vendorLabel.setText("Geschrieben von:");
-        westPanel.add(vendorLabel);
-
-        technologyLabel.setText("Technologie:");
-        technologyLabel.setToolTipText("");
-        westPanel.add(technologyLabel);
-
-        emailAddressLabel.setText("E-Mail-Adresse:");
-        westPanel.add(emailAddressLabel);
-
-        thanks2Label.setText("Dank an:");
-        westPanel.add(thanks2Label);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 30);
-        dataPanel.add(westPanel, gridBagConstraints);
-
-        centerPanel.setLayout(new java.awt.GridLayout(6, 0, 0, 5));
-
-        appVersionLabel.setText(State.Companion.getDataManager().getAppVersion());
-        centerPanel.add(appVersionLabel);
-
-        appVendorLabel.setText("Willi Mentzel");
-        centerPanel.add(appVendorLabel);
-
-        String version = System.getProperty("java.version");
-        appTechnologyLabel.setText("Java " + version + "");
-        centerPanel.add(appTechnologyLabel);
-
-        appEmailAddressLabel.setText("willi.mentzel@gmail.com");
-        centerPanel.add(appEmailAddressLabel);
-        centerPanel.add(appThanks2Label);
-
-        dataPanel.add(centerPanel, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        getContentPane().add(dataPanel, gridBagConstraints);
-
-        closeButton.setText("Schließen");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        getContentPane().add(closeButton, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
-    }
-
-    private javax.swing.JLabel appEmailAddressLabel;
-    private javax.swing.JLabel appTechnologyLabel;
-    private javax.swing.JLabel appThanks2Label;
-    private javax.swing.JLabel appVendorLabel;
-    private javax.swing.JLabel appVersionLabel;
-    private javax.swing.JPanel centerPanel;
-    private javax.swing.JButton closeButton;
-    private javax.swing.JPanel dataPanel;
-    private javax.swing.JLabel emailAddressLabel;
-    private javax.swing.JLabel imageLabel;
-    private javax.swing.JLabel technologyLabel;
-    private javax.swing.JLabel thanks2Label;
-    private javax.swing.JLabel vendorLabel;
-    private javax.swing.JLabel versionLabel;
-    private javax.swing.JPanel westPanel;
-
 }

@@ -1,119 +1,96 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.uicomponents.RoomPanel;
+import com.randomlychosenbytes.jlocker.uicomponents.RoomPanel
+import java.awt.Frame
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
+import java.awt.event.ActionEvent
+import javax.swing.*
 
-import javax.swing.*;
-import java.awt.*;
+class RoomDialog(parent: Frame?, modal: Boolean, roomPanel: RoomPanel) : JDialog(parent, modal) {
+    private val roomPanel: RoomPanel
 
-public class RoomDialog extends JDialog {
-    private final RoomPanel roomPanel;
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        centerPanel = JPanel()
+        roomNameLabel = JLabel()
+        roomNameTextField = JTextField()
+        classNameLabel = JLabel()
+        classNameTextField = JTextField()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        title = "Raum"
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        centerPanel.layout = GridBagLayout()
+        roomNameLabel.text = "Raumname"
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(0, 0, 10, 10)
+        centerPanel.add(roomNameLabel, gridBagConstraints)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.insets = Insets(0, 0, 10, 0)
+        centerPanel.add(roomNameTextField, gridBagConstraints)
+        classNameLabel.text = "Klassenname"
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(0, 0, 10, 10)
+        centerPanel.add(classNameLabel, gridBagConstraints)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.insets = Insets(0, 0, 10, 0)
+        centerPanel.add(classNameTextField, gridBagConstraints)
+        okButton.text = "OK"
+        okButton.addActionListener { evt -> okButtonActionPerformed(evt) }
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(0, 0, 0, 10)
+        centerPanel.add(okButton, gridBagConstraints)
+        cancelButton.text = "Abbrechen"
+        cancelButton.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        centerPanel.add(cancelButton, GridBagConstraints())
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.insets = Insets(10, 10, 10, 10)
+        contentPane.add(centerPanel, gridBagConstraints)
+        pack()
+    } // </editor-fold>
 
-    public RoomDialog(Frame parent, boolean modal, RoomPanel roomPanel) {
-        super(parent, modal);
-        initComponents();
+    private fun okButtonActionPerformed(evt: ActionEvent) {
+        val name = roomNameTextField.text
+        if (name.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Sie müssen einen Raumnamen angeben!", "Fehler", JOptionPane.OK_OPTION)
+        }
+        roomPanel.setCaption(name, classNameTextField.text)
+        dispose()
+    }
+
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
+
+    private lateinit var cancelButton: JButton
+    private lateinit var centerPanel: JPanel
+    private lateinit var classNameLabel: JLabel
+    private lateinit var classNameTextField: JTextField
+    private lateinit var okButton: JButton
+    private lateinit var roomNameLabel: JLabel
+    private lateinit var roomNameTextField: JTextField
+
+    init {
+        initComponents()
 
         // focus in the middle
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null)
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
-
-        this.roomPanel = roomPanel;
-
-        roomNameTextField.setText(roomPanel.getRoom().getName());
-        classNameTextField.setText(roomPanel.getRoom().getSchoolClassName());
+        getRootPane().defaultButton = okButton
+        this.roomPanel = roomPanel
+        roomNameTextField.text = roomPanel.room.name
+        classNameTextField.text = roomPanel.room.schoolClassName
     }
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        centerPanel = new javax.swing.JPanel();
-        roomNameLabel = new javax.swing.JLabel();
-        roomNameTextField = new javax.swing.JTextField();
-        classNameLabel = new javax.swing.JLabel();
-        classNameTextField = new javax.swing.JTextField();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Raum");
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        centerPanel.setLayout(new java.awt.GridBagLayout());
-
-        roomNameLabel.setText("Raumname");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        centerPanel.add(roomNameLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        centerPanel.add(roomNameTextField, gridBagConstraints);
-
-        classNameLabel.setText("Klassenname");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 10);
-        centerPanel.add(classNameLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        centerPanel.add(classNameTextField, gridBagConstraints);
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        centerPanel.add(okButton, gridBagConstraints);
-
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        centerPanel.add(cancelButton, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(centerPanel, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        String name = roomNameTextField.getText();
-
-        if (name.isBlank()) {
-            JOptionPane.showMessageDialog(null, "Sie müssen einen Raumnamen angeben!", "Fehler", JOptionPane.OK_OPTION);
-        }
-
-        roomPanel.setCaption(name, classNameTextField.getText());
-
-        dispose();
-    }
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        dispose();
-    }
-
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel centerPanel;
-    private javax.swing.JLabel classNameLabel;
-    private javax.swing.JTextField classNameTextField;
-    private javax.swing.JButton okButton;
-    private javax.swing.JLabel roomNameLabel;
-    private javax.swing.JTextField roomNameTextField;
-
 }

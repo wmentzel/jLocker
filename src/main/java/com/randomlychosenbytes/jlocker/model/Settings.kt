@@ -10,5 +10,5 @@ class Settings {
     var numOfBackups = 10
 
     @Expose
-    var lockerMinSizes = listOf(0, 0, 140, 150, 175)
+    var lockerMinSizes = mutableListOf(0, 0, 140, 150, 175)
 }

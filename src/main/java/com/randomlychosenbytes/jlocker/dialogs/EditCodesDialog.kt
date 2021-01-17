@@ -1,250 +1,194 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager;
-import com.randomlychosenbytes.jlocker.MainFrame;
-import com.randomlychosenbytes.jlocker.State;
-import com.randomlychosenbytes.jlocker.model.Locker;
+import com.randomlychosenbytes.jlocker.MainFrame
+import com.randomlychosenbytes.jlocker.State
+import com.randomlychosenbytes.jlocker.model.Locker
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.ItemEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.*
 
-import javax.swing.*;
-import java.awt.*;
+class EditCodesDialog(parent: Frame, modal: Boolean, currentLocker: Locker) : JDialog(parent, modal) {
+    private var codeTextFields: Array<JTextField>
+    private var iCurCodeIndex: Int
+    private val dataManager = State.dataManager
+    private val currentLocker: Locker
 
-public class EditCodesDialog extends JDialog {
-    private final JTextField[] codeTextFields = new JTextField[5];
-    private int iCurCodeIndex;
-    private DataManager dataManager = State.Companion.getDataManager();
+    private fun setCurCode(evt: MouseEvent) {
+        if (!allowEditCheckBox.isSelected) {
+            codeTextFields[iCurCodeIndex].background = Color(240, 240, 240)
+            for (i in 0..4) {
+                if (codeTextFields[i] === evt.source) {
+                    iCurCodeIndex = i
+                }
+            }
+            codeTextFields[iCurCodeIndex].background = Color(0, 102, 0)
+        }
+    }
 
-    private Locker currentLocker;
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        centerPanel = JPanel()
+        codeOneTextField = JTextField()
+        codeTwoTextField = JTextField()
+        codeThreeTextField = JTextField()
+        codeFourTextField = JTextField()
+        codeFiveTextField = JTextField()
+        allowEditCheckBox = JCheckBox()
+        bottomPanel = JPanel()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        title = "Codes bearbeiten"
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        centerPanel.border = BorderFactory.createTitledBorder("Verfügbare Codes")
+        centerPanel.layout = GridLayout(6, 1, 0, 10)
+        codeOneTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                codeOneTextFieldMouseClicked(evt)
+            }
+        })
+        centerPanel.add(codeOneTextField)
+        codeTwoTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                codeTwoTextFieldMouseClicked(evt)
+            }
+        })
+        centerPanel.add(codeTwoTextField)
+        codeThreeTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                codeThreeTextFieldMouseClicked(evt)
+            }
+        })
+        centerPanel.add(codeThreeTextField)
+        codeFourTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                codeFourTextFieldMouseClicked(evt)
+            }
+        })
+        centerPanel.add(codeFourTextField)
+        codeFiveTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                codeFiveTextFieldMouseClicked(evt)
+            }
+        })
+        centerPanel.add(codeFiveTextField)
+        allowEditCheckBox.text = "Editieren erlauben"
+        allowEditCheckBox.addItemListener { evt -> allowEditCheckBoxItemStateChanged(evt) }
+        centerPanel.add(allowEditCheckBox)
+        val gridBagConstraints: GridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        contentPane.add(centerPanel, gridBagConstraints)
+        okButton.text = "OK"
+        okButton.addActionListener { evt -> okButtonActionPerformed(evt) }
+        bottomPanel.add(okButton)
+        cancelButton.text = "Abbrechen"
+        cancelButton.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        bottomPanel.add(cancelButton)
+        contentPane.add(bottomPanel, GridBagConstraints())
+        pack()
+    } // </editor-fold>
+
+    private fun okButtonActionPerformed(evt: ActionEvent) {
+        currentLocker.currentCodeIndex = iCurCodeIndex
+        val codes = (0..4).map { i ->
+            var isValid = false
+            val code = codeTextFields[i].text.replace("-", "").replace(" ", "")
+
+            if (code.length == 6) {
+                try {
+                    code.toInt()
+                    isValid = true
+                } catch (e: NumberFormatException) {
+                }
+            }
+            if (!isValid) {
+                JOptionPane.showMessageDialog(null, "Der $i. Code ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE)
+                return
+            }
+            code
+        }
+        currentLocker.setCodes(codes.toTypedArray(), dataManager.superUserMasterKey)
+        (parent as MainFrame).showLockerInformation()
+        dispose()
+    }
+
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
+
+    private fun allowEditCheckBoxItemStateChanged(evt: ItemEvent) {
+        val editable = allowEditCheckBox.isSelected
+        for (i in 0..4) {
+            codeTextFields[i].isEditable = editable
+            if (editable) codeTextFields[i].background = Color(255, 255, 255) else codeTextFields[i].background =
+                Color(240, 240, 240)
+        }
+        if (!editable) {
+            iCurCodeIndex = 0
+            codeTextFields[iCurCodeIndex].background = Color(0, 102, 0)
+        }
+    }
+
+    private fun codeOneTextFieldMouseClicked(evt: MouseEvent) {
+        setCurCode(evt)
+    }
+
+    private fun codeTwoTextFieldMouseClicked(evt: MouseEvent) {
+        setCurCode(evt)
+    }
+
+    private fun codeThreeTextFieldMouseClicked(evt: MouseEvent) {
+        setCurCode(evt)
+    }
+
+    private fun codeFourTextFieldMouseClicked(evt: MouseEvent) {
+        setCurCode(evt)
+    }
+
+    private fun codeFiveTextFieldMouseClicked(evt: MouseEvent) {
+        setCurCode(evt)
+    }
+
+    private lateinit var allowEditCheckBox: JCheckBox
+    private lateinit var bottomPanel: JPanel
+    private lateinit var cancelButton: JButton
+    private lateinit var centerPanel: JPanel
+    private lateinit var codeFiveTextField: JTextField
+    private lateinit var codeFourTextField: JTextField
+    private lateinit var codeOneTextField: JTextField
+    private lateinit var codeThreeTextField: JTextField
+    private lateinit var codeTwoTextField: JTextField
+    private lateinit var okButton: JButton
 
     /**
      * Creates new form EditCodesDialog
      */
-    public EditCodesDialog(Frame parent, boolean modal, Locker currentLocker) {
-        super(parent, modal);
-        initComponents();
+    init {
+        initComponents()
 
-        this.currentLocker = currentLocker;
+        codeTextFields =
+            arrayOf(codeOneTextField, codeTwoTextField, codeThreeTextField, codeFourTextField, codeFiveTextField)
 
-        this.dataManager = dataManager;
+        this.currentLocker = currentLocker
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().defaultButton = okButton
 
         // focus in the middle
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null)
+        iCurCodeIndex = currentLocker.currentCodeIndex
 
-        iCurCodeIndex = currentLocker.getCurrentCodeIndex();
+        val codes = currentLocker.getCodes(dataManager.superUserMasterKey)
 
-        codeTextFields[0] = codeOneTextField;
-        codeTextFields[1] = codeTwoTextField;
-        codeTextFields[2] = codeThreeTextField;
-        codeTextFields[3] = codeFourTextField;
-        codeTextFields[4] = codeFiveTextField;
-
-        String[] codes = currentLocker.getCodes(dataManager.getSuperUserMasterKey());
-
-        for (int i = 0; i < 5; i++) {
-            codeTextFields[i].setText(codes[i]);
-
+        for (i in 0..4) {
+            codeTextFields[i].text = codes[i]
             if (i == iCurCodeIndex) {
-                codeTextFields[i].setBackground(new Color(0, 102, 0));
+                codeTextFields[i].background = Color(0, 102, 0)
             }
         }
     }
-
-    private void setCurCode(java.awt.event.MouseEvent evt) {
-        if (!allowEditCheckBox.isSelected()) {
-            codeTextFields[iCurCodeIndex].setBackground(new Color(240, 240, 240));
-
-            for (int i = 0; i < 5; i++) {
-                if (codeTextFields[i] == evt.getSource()) {
-                    iCurCodeIndex = i;
-                }
-            }
-
-            codeTextFields[iCurCodeIndex].setBackground(new Color(0, 102, 0));
-        }
-    }
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        centerPanel = new javax.swing.JPanel();
-        codeOneTextField = new javax.swing.JTextField();
-        codeTwoTextField = new javax.swing.JTextField();
-        codeThreeTextField = new javax.swing.JTextField();
-        codeFourTextField = new javax.swing.JTextField();
-        codeFiveTextField = new javax.swing.JTextField();
-        allowEditCheckBox = new javax.swing.JCheckBox();
-        bottomPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Codes bearbeiten");
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        centerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Verfügbare Codes"));
-        centerPanel.setLayout(new java.awt.GridLayout(6, 1, 0, 10));
-
-        codeOneTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                codeOneTextFieldMouseClicked(evt);
-            }
-        });
-        centerPanel.add(codeOneTextField);
-
-        codeTwoTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                codeTwoTextFieldMouseClicked(evt);
-            }
-        });
-        centerPanel.add(codeTwoTextField);
-
-        codeThreeTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                codeThreeTextFieldMouseClicked(evt);
-            }
-        });
-        centerPanel.add(codeThreeTextField);
-
-        codeFourTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                codeFourTextFieldMouseClicked(evt);
-            }
-        });
-        centerPanel.add(codeFourTextField);
-
-        codeFiveTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                codeFiveTextFieldMouseClicked(evt);
-            }
-        });
-        centerPanel.add(codeFiveTextField);
-
-        allowEditCheckBox.setText("Editieren erlauben");
-        allowEditCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                allowEditCheckBoxItemStateChanged(evt);
-            }
-        });
-        centerPanel.add(allowEditCheckBox);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        getContentPane().add(centerPanel, gridBagConstraints);
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        bottomPanel.add(okButton);
-
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        bottomPanel.add(cancelButton);
-
-        getContentPane().add(bottomPanel, new java.awt.GridBagConstraints());
-
-        pack();
-    }// </editor-fold>
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        currentLocker.setCurrentCodeIndex(iCurCodeIndex);
-        String[] codes = new String[5];
-
-        for (int i = 0; i < 5; i++) {
-            boolean isValid = false;
-
-            String code = codeTextFields[i].getText();
-
-            code = code.replace("-", "");
-            code = code.replace(" ", "");
-
-            if (code.length() == 6) {
-                try {
-                    Integer.parseInt(code);
-                    isValid = true;
-                } catch (NumberFormatException e) {
-                }
-            }
-
-            if (!isValid) {
-                JOptionPane.showMessageDialog(null, "Der " + i + ". Code ist ungültig!", "Fehler", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            codes[i] = code;
-        }
-
-        currentLocker.setCodes(codes, dataManager.getSuperUserMasterKey());
-
-        ((MainFrame) this.getParent()).showLockerInformation();
-
-        this.dispose();
-    }
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
-    }
-
-    private void allowEditCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {
-        boolean editable = allowEditCheckBox.isSelected();
-
-        for (int i = 0; i < 5; i++) {
-            codeTextFields[i].setEditable(editable);
-
-            if (editable)
-                codeTextFields[i].setBackground(new Color(255, 255, 255));
-            else
-                codeTextFields[i].setBackground(new Color(240, 240, 240));
-        }
-
-        if (!editable) {
-            iCurCodeIndex = 0;
-            codeTextFields[iCurCodeIndex].setBackground(new Color(0, 102, 0));
-        }
-
-    }
-
-    private void codeOneTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        setCurCode(evt);
-    }
-
-    private void codeTwoTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        setCurCode(evt);
-    }
-
-    private void codeThreeTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        setCurCode(evt);
-    }
-
-    private void codeFourTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        setCurCode(evt);
-    }
-
-    private void codeFiveTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        setCurCode(evt);
-    }
-
-    private javax.swing.JCheckBox allowEditCheckBox;
-    private javax.swing.JPanel bottomPanel;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel centerPanel;
-    private javax.swing.JTextField codeFiveTextField;
-    private javax.swing.JTextField codeFourTextField;
-    private javax.swing.JTextField codeOneTextField;
-    private javax.swing.JTextField codeThreeTextField;
-    private javax.swing.JTextField codeTwoTextField;
-    private javax.swing.JButton okButton;
-
 }

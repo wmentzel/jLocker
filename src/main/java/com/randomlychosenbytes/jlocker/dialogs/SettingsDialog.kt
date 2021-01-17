@@ -1,165 +1,125 @@
-package com.randomlychosenbytes.jlocker.dialogs;
+package com.randomlychosenbytes.jlocker.dialogs
 
-import com.randomlychosenbytes.jlocker.DataManager;
-import com.randomlychosenbytes.jlocker.State;
+import com.randomlychosenbytes.jlocker.State
+import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.*
+import javax.swing.event.ChangeEvent
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
+class SettingsDialog(parent: Frame?, modal: Boolean) : JDialog(parent, modal) {
+    private val dataManager = State.dataManager
+    fun updateLockerMinSizesTextField() {
+        var text = ""
+        val minSizes: List<Int> = dataManager.settings.lockerMinSizes
+        for (i in minSizes.indices) {
+            if (i != 0) {
+                text += ", "
+            }
+            text += minSizes[minSizes.size - i - 1].toString()
+        }
+        lockerMinSizesTextField.text = text
+    }
 
-public class SettingsDialog extends JDialog {
-    private final DataManager dataManager = State.Companion.getDataManager();
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private fun initComponents() {
+        var gridBagConstraints: GridBagConstraints
+        mainPanel = JPanel()
+        backupPanel = JPanel()
+        numBackupsLabel = JLabel()
+        numBackupsTextField = JTextField()
+        numBackupsSlider = JSlider()
+        lockerMinSizesLabel = JLabel()
+        lockerMinSizesTextField = JTextField()
+        buttonPanel = JPanel()
+        okButton = JButton()
+        cancelButton = JButton()
+        defaultCloseOperation = DISPOSE_ON_CLOSE
+        title = "Einstellungen"
+        isResizable = false
+        contentPane.layout = GridBagLayout()
+        mainPanel.layout = GridLayout(2, 2, 10, 10)
+        backupPanel.layout = GridBagLayout()
+        numBackupsLabel.text = "Anzahl der Backups"
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.weightx = 1.0
+        backupPanel.add(numBackupsLabel, gridBagConstraints)
+        numBackupsTextField.isEditable = false
+        numBackupsTextField.columns = 3
+        backupPanel.add(numBackupsTextField, GridBagConstraints())
+        mainPanel.add(backupPanel)
+        numBackupsSlider.addChangeListener { evt -> numBackupsSliderStateChanged(evt) }
+        mainPanel.add(numBackupsSlider)
+        lockerMinSizesLabel.text = "Mindestgrößen für Schließfächer"
+        mainPanel.add(lockerMinSizesLabel)
+        lockerMinSizesTextField.isEditable = false
+        lockerMinSizesTextField.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                lockerMinSizesTextFieldMouseClicked(evt)
+            }
+        })
+        mainPanel.add(lockerMinSizesTextField)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER
+        gridBagConstraints.fill = GridBagConstraints.BOTH
+        gridBagConstraints.insets = Insets(10, 10, 0, 10)
+        contentPane.add(mainPanel, gridBagConstraints)
+        buttonPanel.layout = FlowLayout(FlowLayout.RIGHT)
+        okButton.text = "OK"
+        okButton.addActionListener { evt -> okButtonActionPerformed(evt) }
+        buttonPanel.add(okButton)
+        cancelButton.text = "Abbrechen"
+        cancelButton.addActionListener { evt -> cancelButtonActionPerformed(evt) }
+        buttonPanel.add(cancelButton)
+        gridBagConstraints = GridBagConstraints()
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL
+        gridBagConstraints.insets = Insets(10, 0, 10, 0)
+        contentPane.add(buttonPanel, gridBagConstraints)
+        pack()
+    } // </editor-fold>
 
-    public SettingsDialog(Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
+    private fun okButtonActionPerformed(evt: ActionEvent) {
+        dataManager.settings.numOfBackups = numBackupsSlider.value
+        dispose()
+    }
+
+    private fun cancelButtonActionPerformed(evt: ActionEvent) {
+        dispose()
+    }
+
+    private fun numBackupsSliderStateChanged(evt: ChangeEvent) {
+        val num = numBackupsSlider.value
+        numBackupsTextField.text = Integer.toString(num)
+    }
+
+    private fun lockerMinSizesTextFieldMouseClicked(evt: MouseEvent) {
+        SetLockerMinimumSizesDialog(this, true).isVisible = true
+    }
+
+    private lateinit var backupPanel: JPanel
+    private lateinit var buttonPanel: JPanel
+    private lateinit var cancelButton: JButton
+    private lateinit var lockerMinSizesLabel: JLabel
+    private lateinit var lockerMinSizesTextField: JTextField
+    private lateinit var mainPanel: JPanel
+    private lateinit var numBackupsLabel: JLabel
+    private lateinit var numBackupsSlider: JSlider
+    private lateinit var numBackupsTextField: JTextField
+    private lateinit var okButton: JButton
+
+    init {
+        initComponents()
 
         // button that is clicked when you hit enter
-        getRootPane().setDefaultButton(okButton);
+        getRootPane().defaultButton = okButton
 
         // focus in the middle
-        setLocationRelativeTo(null);
-
-        int numBackups = dataManager.getSettings().getNumOfBackups();
-        numBackupsSlider.setValue(numBackups);
-        numBackupsTextField.setText(Integer.toString(numBackups));
-
-        updateLockerMinSizesTextField();
+        setLocationRelativeTo(null)
+        val numBackups = dataManager.settings.numOfBackups
+        numBackupsSlider.value = numBackups
+        numBackupsTextField.text = Integer.toString(numBackups)
+        updateLockerMinSizesTextField()
     }
-
-    public final void updateLockerMinSizesTextField() {
-        String text = "";
-
-        List<Integer> minSizes = dataManager.getSettings().getLockerMinSizes();
-
-        for (int i = 0; i < minSizes.size(); i++) {
-            if (i != 0) {
-                text += ", ";
-            }
-
-            text += minSizes.get(minSizes.size() - i - 1).toString();
-        }
-
-        lockerMinSizesTextField.setText(text);
-    }
-
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-
-        mainPanel = new javax.swing.JPanel();
-        backupPanel = new javax.swing.JPanel();
-        numBackupsLabel = new javax.swing.JLabel();
-        numBackupsTextField = new javax.swing.JTextField();
-        numBackupsSlider = new javax.swing.JSlider();
-        lockerMinSizesLabel = new javax.swing.JLabel();
-        lockerMinSizesTextField = new javax.swing.JTextField();
-        buttonPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Einstellungen");
-        setResizable(false);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        mainPanel.setLayout(new java.awt.GridLayout(2, 2, 10, 10));
-
-        backupPanel.setLayout(new java.awt.GridBagLayout());
-
-        numBackupsLabel.setText("Anzahl der Backups");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        backupPanel.add(numBackupsLabel, gridBagConstraints);
-
-        numBackupsTextField.setEditable(false);
-        numBackupsTextField.setColumns(3);
-        backupPanel.add(numBackupsTextField, new java.awt.GridBagConstraints());
-
-        mainPanel.add(backupPanel);
-
-        numBackupsSlider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                numBackupsSliderStateChanged(evt);
-            }
-        });
-        mainPanel.add(numBackupsSlider);
-
-        lockerMinSizesLabel.setText("Mindestgrößen für Schließfächer");
-        mainPanel.add(lockerMinSizesLabel);
-
-        lockerMinSizesTextField.setEditable(false);
-        lockerMinSizesTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lockerMinSizesTextFieldMouseClicked(evt);
-            }
-        });
-        mainPanel.add(lockerMinSizesTextField);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
-        getContentPane().add(mainPanel, gridBagConstraints);
-
-        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        buttonPanel.add(okButton);
-
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        buttonPanel.add(cancelButton);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        getContentPane().add(buttonPanel, gridBagConstraints);
-
-        pack();
-    }// </editor-fold>
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        dataManager.getSettings().setNumOfBackups(numBackupsSlider.getValue());
-
-        this.dispose();
-    }
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
-    }
-
-    private void numBackupsSliderStateChanged(javax.swing.event.ChangeEvent evt) {
-        int num = numBackupsSlider.getValue();
-        numBackupsTextField.setText(Integer.toString(num));
-    }
-
-    private void lockerMinSizesTextFieldMouseClicked(java.awt.event.MouseEvent evt) {
-        new SetLockerMinimumSizesDialog(this, true).setVisible(true);
-    }
-
-
-    private javax.swing.JPanel backupPanel;
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel lockerMinSizesLabel;
-    private javax.swing.JTextField lockerMinSizesTextField;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel numBackupsLabel;
-    private javax.swing.JSlider numBackupsSlider;
-    private javax.swing.JTextField numBackupsTextField;
-    private javax.swing.JButton okButton;
-
 }

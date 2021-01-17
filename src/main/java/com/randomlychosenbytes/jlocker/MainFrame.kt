@@ -946,7 +946,7 @@ class MainFrame : JFrame() {
 
     private fun codeTextFieldMouseClicked(evt: MouseEvent) {
         if (dataManager.currentUser is SuperUser) {
-            val dialog = EditCodesDialog(this, true, currentLocker)
+            val dialog = EditCodesDialog(this, true, currentLocker!!)
             dialog.isVisible = true
         }
     }
